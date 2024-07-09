@@ -42,4 +42,14 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    /**
+     * Roles
+     *
+     * @var array<int>
+     */
+	public function roles($id)
+    {
+        return 'App\Models\UserRoles'::where('user_id', $id)->first();
+    }
 }

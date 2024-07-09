@@ -11,6 +11,20 @@ return new class extends Migration
      */
     public function up(): void
     {
+        Schema::table('users', function (Blueprint $table) {
+            $table->integer('role_id')
+                    ->nullable(true)
+                    ->default(0);
+        });
+        DB::table('users')->insert(
+            array(
+                'name' => 'Petro Skotar',
+                'email' => 'petro.skotar.dev@gmail.com',
+                'password' => '$2y$12$JPkg10HFQIWfPRjgAkoWFus9nulZrHcywGI0aetbR/wHQgIeou3Fy', // admin@123
+                'role_id' => 1,
+            )
+        );
+
         Schema::create('roles', function (Blueprint $table) {
             $table->id();
             $table->string('role', 50)->nullable(true)->default('');
@@ -19,6 +33,7 @@ return new class extends Migration
         DB::table('roles')->insert(array('role' => 'Manager','position' => '1'));
         DB::table('roles')->insert(array('role' => 'Employee','position' => '2'));
         DB::table('roles')->insert(array('role' => 'Client','position' => '3'));
+
 
         Schema::create('users_roles', function (Blueprint $table) {
             $table->id();
