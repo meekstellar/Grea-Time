@@ -47,13 +47,15 @@
 {{-- Add common Javascript/Jquery code --}}
 
 @push('js')
+<script src="http://127.0.0.1:5173/vendor/almasaeed2010/adminlte/plugins/select2/js/select2.full.min.js"></script>
 <script>
 
     $(document).ready(function() {
-        // Add your common script logic here...
+        $('.select2').select2()
     });
 
 </script>
+<!-- Select2 -->
 @endpush
 
 {{-- Add common CSS customizations --}}
@@ -72,5 +74,6 @@
     */
 
 </style>
+<link rel="stylesheet" href="http://127.0.0.1:5173/vendor/almasaeed2010/adminlte/plugins/select2/css/select2.min.css">
 @vite(['resources/sass/app.scss', 'resources/js/app.js'])
 @endpush
