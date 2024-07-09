@@ -12,35 +12,22 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->integer('role_id')
+            $table->string('role',15)
                     ->nullable(true)
-                    ->default(0);
+                    ->default('');
         });
         DB::table('users')->insert(
             array(
                 'name' => 'Petro Skotar',
                 'email' => 'petro.skotar.dev@gmail.com',
+                'email_verified_at' => now(),
+                'created_at' => now(),
+                'updated_at' => now(),
                 'password' => '$2y$12$JPkg10HFQIWfPRjgAkoWFus9nulZrHcywGI0aetbR/wHQgIeou3Fy', // admin@123
-                'role_id' => 1,
+                'remember_token' => Str::random(10),
+                'role' => 'manager',
             )
         );
-
-        Schema::create('roles', function (Blueprint $table) {
-            $table->id();
-            $table->string('role', 50)->nullable(true)->default('');
-            $table->integer('position')->nullable(true)->default(0);
-        });
-        DB::table('roles')->insert(array('role' => 'Manager','position' => '1'));
-        DB::table('roles')->insert(array('role' => 'Employee','position' => '2'));
-        DB::table('roles')->insert(array('role' => 'Client','position' => '3'));
-
-
-        Schema::create('users_roles', function (Blueprint $table) {
-            $table->id();
-            $table->integer('user_id')->nullable(true)->default(0);
-            $table->integer('role_id')->nullable(true)->default(0);
-        });
-        DB::table('users_roles')->insert(array('user_id' => 1,'role_id' => 1));
 
     }
 
