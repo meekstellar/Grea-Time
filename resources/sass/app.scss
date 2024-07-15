@@ -6,3 +6,29 @@
 
 // Bootstrap
 // @import 'bootstrap/scss/bootstrap';
+
+.calendars-list{
+    display: flex;
+    flex-wrap: wrap;
+    .page-item{
+        max-width: 25%;
+        min-width: 25%;
+    }
+}
+
+.pagination-month .page-item .page-month {
+    font-size: 1rem;
+    font-weight: 400;
+}
+
+.select2-container--default .select2-selection--multiple .select2-selection__choice{
+    width: 100%;
+    white-space: normal;
+    line-height: 110%;
+    padding-top: 7px;
+    padding-bottom: 7px;
+}
+
+.table.client-table tr>td .progress{
+    margin-top: 9px;
+}

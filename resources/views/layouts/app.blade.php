@@ -7,6 +7,11 @@
     @hasSection('subtitle') | @yield('subtitle') @endif
 @stop
 
+@section('adminlte_css_pre')
+    <link rel="stylesheet" href="/vendor/adminlte/dist/plugins/select2/css/select2.min.css">
+    <link rel="stylesheet" href="/vendor/adminlte/dist/plugins/daterangepicker/daterangepicker.css">
+@stop
+
 {{-- Extend and customize the page content header --}}
 
 @section('content_header')
@@ -47,11 +52,14 @@
 {{-- Add common Javascript/Jquery code --}}
 
 @push('js')
-<script src="http://127.0.0.1:5173/vendor/almasaeed2010/adminlte/plugins/select2/js/select2.full.min.js"></script>
+<script src="vendor/adminlte/dist/plugins/select2/js/select2.min.js"></script>
+<script src="vendor/adminlte/dist/plugins/moment/moment.min.js"></script>
+<script src="vendor/adminlte/dist/plugins/daterangepicker/daterangepicker.js"></script>
 <script>
 
     $(document).ready(function() {
-        $('.select2').select2()
+        $('.select2').select2();
+        $('#reservation').daterangepicker()
     });
 
 </script>
@@ -74,6 +82,5 @@
     */
 
 </style>
-<link rel="stylesheet" href="http://127.0.0.1:5173/vendor/almasaeed2010/adminlte/plugins/select2/css/select2.min.css">
 @vite(['resources/sass/app.scss', 'resources/js/app.js'])
 @endpush
