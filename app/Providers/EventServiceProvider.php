@@ -34,14 +34,9 @@ class EventServiceProvider extends ServiceProvider
                 'icon' => 'nav-icon fa fa-users',
             ],
             [
-                'text' => 'Capacity сотрудников',
-                'url' => 'reports',
-                'icon' => 'nav-icon fas fa-columns',
-            ],
-            [
                 'text' => 'Клиенты',
                 'url' => 'clients',
-                'icon' => 'nav-icon fa fa-users',
+                'icon' => 'nav-icon fa fa-building',
             ]);
         });
     }

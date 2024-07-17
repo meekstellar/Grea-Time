@@ -39,12 +39,12 @@
 
 @section('footer')
     <div class="float-right">
-        Version: {{ config('app.version', '1.0.0') }}
+        Version: {{ config('app.version', 'beta 0.1') }}
     </div>
 
     <strong>
         <a href="{{ config('app.company_url', '#') }}">
-            {{ config('app.company_name', 'My company') }}
+            {{ config('app.company_name', 'TimeSheet') }}
         </a>
     </strong>
 @stop
@@ -59,7 +59,50 @@
 
     $(document).ready(function() {
         $('.select2').select2();
-        $('#reservation').daterangepicker()
+        $('#reservation').daterangepicker();
+
+        //Date range as a button
+        var start = moment();
+        var end = moment();
+
+        function cb(start, end) {
+            if(start.format('MMMM D, YYYY') != end.format('MMMM D, YYYY')){
+                $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'))
+            } else {
+                $('#reportrange span').html(start.format('MMMM D, YYYY'))
+            }
+        }
+        $('#daterange-btn').daterangepicker(
+        {
+            ranges   : {
+            'Today'       : [moment(), moment()],
+            'Yesterday'   : [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+            'This Week'   : [moment().startOf('week'), moment().endOf('week')],
+            'Last Week'   : [moment().subtract(1, 'week').startOf('week'), moment().subtract(1, 'week').endOf('week')],
+            'This Month'  : [moment().startOf('month'), moment().endOf('month')],
+            'Last Month'  : [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')],
+
+            //'Last 15 days of the last month'  : [moment().subtract(1, 'month').startOf('month').add('days', 15), moment().subtract(1, 'month').endOf('month')],
+            //'Fitsr 15 days of this month'  : [moment().startOf('month'), moment().startOf('month').add('days', 14)],
+            //'Last 15 days of this month'  : [moment().startOf('month').add('days', 15), moment().endOf('month')],
+
+            },
+            startDate: moment(),
+            endDate  : moment(),
+            "alwaysShowCalendars": true
+        },
+        cb
+        )
+        setTimeout(function() {
+            $('#reportrange span').html(moment().format('MMMM')+' '+moment().format('D')+', '+moment().format('YYYY'));
+        }, 100);
+
+
+        $(document).on('click', '.ranges li', function (e) {
+            $("#daterange-btn").focus();
+        });
+
+
     });
 
 </script>

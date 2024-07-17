@@ -17,7 +17,7 @@
                     {{ __('You are logged in!') }}
 
                     <br>
-                    {{ Auth::id(); }} 22341c
+                    {{ Auth::id(); }} 22341c12
                 </div>
             </div>
         </div>
