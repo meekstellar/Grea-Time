@@ -30,7 +30,7 @@ class EventServiceProvider extends ServiceProvider
             // Add some items to the menu...
             $event->menu->add([
                 'text' => 'Сотруднники',
-                'url' => 'workers',
+                'url' => 'workers/all/2024-05-25',
                 'icon' => 'nav-icon fa fa-users',
             ],
             [

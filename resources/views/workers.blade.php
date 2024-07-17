@@ -75,7 +75,7 @@
                                                 <li class="small"><span class="fa-li"><i class="far fa-envelope"></i></span> <a href="mailto:user.email@email.com">user.email@email.com</a></li>
                                             </ul>
                                         </div>
-                                        <div class="col-4 text-center"><img alt="user-avatar" class="user-avatar img-circle img-fluid" src="vendor/adminlte/dist/img/user1-128x128.jpg"></div>
+                                        <div class="col-4 text-center"><img alt="user-avatar" class="user-avatar img-circle img-fluid" src="{{ asset('vendor/adminlte/dist/img/user1-128x128.jpg') }}"></div>
                                     </div>
                                 </div><div class="card-body p-0">
                                     <table class="table table-sm client-table">
@@ -227,7 +227,7 @@
                                                 <li class="small"><span class="fa-li"><i class="far fa-envelope"></i></span> <a href="mailto:user.email@email.com">user.email@email.com</a></li>
                                             </ul>
                                         </div>
-                                        <div class="col-4 text-center"><img alt="user-avatar" class="user-avatar img-circle img-fluid" src="vendor/adminlte/dist/img/user2-160x160.jpg"></div>
+                                        <div class="col-4 text-center"><img alt="user-avatar" class="user-avatar img-circle img-fluid" src="{{ asset('vendor/adminlte/dist/img/user2-160x160.jpg') }}"></div>
                                     </div>
                                 </div><div class="card-body p-0">
                                     <table class="table table-sm client-table">
@@ -379,7 +379,7 @@
                                                 <li class="small"><span class="fa-li"><i class="far fa-envelope"></i></span> <a href="mailto:user.email@email.com">user.email@email.com</a></li>
                                             </ul>
                                         </div>
-                                        <div class="col-4 text-center"><img alt="user-avatar" class="user-avatar img-circle img-fluid" src="vendor/adminlte/dist/img/user-woman.jpg"></div>
+                                        <div class="col-4 text-center"><img alt="user-avatar" class="user-avatar img-circle img-fluid" src="{{ asset('vendor/adminlte/dist/img/user-woman.jpg') }}"></div>
                                     </div>
                                 </div><div class="card-body p-0">
                                     <table class="table table-sm client-table">
@@ -531,7 +531,7 @@
                                                 <li class="small"><span class="fa-li"><i class="far fa-envelope"></i></span> <a href="mailto:user.email@email.com">user.email@email.com</a></li>
                                             </ul>
                                         </div>
-                                        <div class="col-4 text-center"><img alt="user-avatar" class="user-avatar img-circle img-fluid" src="vendor/adminlte/dist/img/no-usericon.svg"></div>
+                                        <div class="col-4 text-center"><img alt="user-avatar" class="user-avatar img-circle img-fluid" src="{{ asset('vendor/adminlte/dist/img/no-usericon.svg') }}"></div>
                                     </div>
                                 </div><div class="card-body p-0">
                                     <table class="table table-sm client-table">
@@ -687,7 +687,7 @@
                                                 <li class="small"><span class="fa-li"><i class="far fa-envelope"></i></span> <a href="mailto:user.email@email.com">user.email@email.com</a></li>
                                             </ul>
                                         </div>
-                                        <div class="col-4 text-center"><img alt="user-avatar" class="user-avatar img-circle img-fluid" src="vendor/adminlte/dist/img/user1-128x128.jpg"></div>
+                                        <div class="col-4 text-center"><img alt="user-avatar" class="user-avatar img-circle img-fluid" src="{{ asset('vendor/adminlte/dist/img/user1-128x128.jpg') }}"></div>
                                     </div>
                                 </div><div class="card-body p-0">
                                     <table class="table table-sm client-table">
@@ -737,7 +737,7 @@
                                                 <li class="small"><span class="fa-li"><i class="far fa-envelope"></i></span> <a href="mailto:user.email@email.com">user.email@email.com</a></li>
                                             </ul>
                                         </div>
-                                        <div class="col-4 text-center"><img alt="user-avatar" class="user-avatar img-circle img-fluid" src="vendor/adminlte/dist/img/user2-160x160.jpg"></div>
+                                        <div class="col-4 text-center"><img alt="user-avatar" class="user-avatar img-circle img-fluid" src="{{ asset('vendor/adminlte/dist/img/user2-160x160.jpg') }}"></div>
                                     </div>
                                 </div><div class="card-body p-0">
                                     <table class="table table-sm client-table">
@@ -787,7 +787,7 @@
                                                 <li class="small"><span class="fa-li"><i class="far fa-envelope"></i></span> <a href="mailto:user.email@email.com">user.email@email.com</a></li>
                                             </ul>
                                         </div>
-                                        <div class="col-4 text-center"><img alt="user-avatar" class="user-avatar img-circle img-fluid" src="vendor/adminlte/dist/img/user-woman.jpg"></div>
+                                        <div class="col-4 text-center"><img alt="user-avatar" class="user-avatar img-circle img-fluid" src="{{ asset('vendor/adminlte/dist/img/user-woman.jpg') }}"></div>
                                     </div>
                                 </div><div class="card-body p-0">
                                     <table class="table table-sm client-table">
@@ -837,7 +837,7 @@
                                                 <li class="small"><span class="fa-li"><i class="far fa-envelope"></i></span> <a href="mailto:user.email@email.com">user.email@email.com</a></li>
                                             </ul>
                                         </div>
-                                        <div class="col-4 text-center"><img alt="user-avatar" class="user-avatar img-circle img-fluid" src="vendor/adminlte/dist/img/no-usericon.svg"></div>
+                                        <div class="col-4 text-center"><img alt="user-avatar" class="user-avatar img-circle img-fluid" src="{{ asset('vendor/adminlte/dist/img/no-usericon.svg') }}"></div>
                                     </div>
                                 </div><div class="card-body p-0">
                                     <table class="table table-sm client-table">
@@ -891,7 +891,7 @@
                                                 <li class="small"><span class="fa-li"><i class="far fa-envelope"></i></span> <a href="mailto:user.email@email.com">user.email@email.com</a></li>
                                             </ul>
                                         </div>
-                                        <div class="col-4 text-center"><img alt="user-avatar" class="user-avatar img-circle img-fluid" src="vendor/adminlte/dist/img/user1-128x128.jpg"></div>
+                                        <div class="col-4 text-center"><img alt="user-avatar" class="user-avatar img-circle img-fluid" src="{{ asset('vendor/adminlte/dist/img/user1-128x128.jpg') }}"></div>
                                     </div>
                                 </div><div class="card-body p-0">
                                     <table class="table table-sm client-table">
@@ -941,7 +941,7 @@
                                                 <li class="small"><span class="fa-li"><i class="far fa-envelope"></i></span> <a href="mailto:user.email@email.com">user.email@email.com</a></li>
                                             </ul>
                                         </div>
-                                        <div class="col-4 text-center"><img alt="user-avatar" class="user-avatar img-circle img-fluid" src="vendor/adminlte/dist/img/user2-160x160.jpg"></div>
+                                        <div class="col-4 text-center"><img alt="user-avatar" class="user-avatar img-circle img-fluid" src="{{ asset('vendor/adminlte/dist/img/user2-160x160.jpg') }}"></div>
                                     </div>
                                 </div><div class="card-body p-0">
                                     <table class="table table-sm client-table">
@@ -991,7 +991,7 @@
                                                 <li class="small"><span class="fa-li"><i class="far fa-envelope"></i></span> <a href="mailto:user.email@email.com">user.email@email.com</a></li>
                                             </ul>
                                         </div>
-                                        <div class="col-4 text-center"><img alt="user-avatar" class="user-avatar img-circle img-fluid" src="vendor/adminlte/dist/img/user-woman.jpg"></div>
+                                        <div class="col-4 text-center"><img alt="user-avatar" class="user-avatar img-circle img-fluid" src="{{ asset('vendor/adminlte/dist/img/user-woman.jpg') }}"></div>
                                     </div>
                                 </div><div class="card-body p-0">
                                     <table class="table table-sm client-table">
@@ -1041,7 +1041,7 @@
                                                 <li class="small"><span class="fa-li"><i class="far fa-envelope"></i></span> <a href="mailto:user.email@email.com">user.email@email.com</a></li>
                                             </ul>
                                         </div>
-                                        <div class="col-4 text-center"><img alt="user-avatar" class="user-avatar img-circle img-fluid" src="vendor/adminlte/dist/img/no-usericon.svg"></div>
+                                        <div class="col-4 text-center"><img alt="user-avatar" class="user-avatar img-circle img-fluid" src="{{ asset('vendor/adminlte/dist/img/no-usericon.svg') }}"></div>
                                     </div>
                                 </div><div class="card-body p-0">
                                     <table class="table table-sm client-table">

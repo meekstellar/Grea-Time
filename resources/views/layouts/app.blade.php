@@ -8,8 +8,9 @@
 @stop
 
 @section('adminlte_css_pre')
-    <link rel="stylesheet" href="/vendor/adminlte/dist/plugins/select2/css/select2.min.css">
-    <link rel="stylesheet" href="/vendor/adminlte/dist/plugins/daterangepicker/daterangepicker.css">
+    <base href="https://<?php echo $_SERVER['HTTP_HOST']; ?>/" />
+    <link rel="stylesheet" href="{{ asset('/vendor/adminlte/dist/plugins/select2/css/select2.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('/vendor/adminlte/dist/plugins/daterangepicker/daterangepicker.css') }}">
 @stop
 
 {{-- Extend and customize the page content header --}}
@@ -52,9 +53,9 @@
 {{-- Add common Javascript/Jquery code --}}
 
 @push('js')
-<script src="vendor/adminlte/dist/plugins/select2/js/select2.min.js"></script>
-<script src="vendor/adminlte/dist/plugins/moment/moment.min.js"></script>
-<script src="vendor/adminlte/dist/plugins/daterangepicker/daterangepicker.js"></script>
+<script src="{{ asset('vendor/adminlte/dist/plugins/select2/js/select2.min.js') }}"></script>
+<script src="{{ asset('vendor/adminlte/dist/plugins/moment/moment.min.js') }}"></script>
+<script src="{{ asset('vendor/adminlte/dist/plugins/daterangepicker/daterangepicker.js') }}"></script>
 <script>
 
     $(document).ready(function() {

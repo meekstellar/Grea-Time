@@ -24,6 +24,6 @@ class HomeController extends Controller
     public function index()
     {
         //return view('home'); dashboard
-        return redirect('/workers');
+        return redirect('/workers/all/2024-05-25');
     }
 }
