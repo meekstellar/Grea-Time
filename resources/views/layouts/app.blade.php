@@ -100,8 +100,15 @@
                 $("#daterange-btn").focus();
             });
             $(document).on('click', '.applyBtn', function (e) {
+                $('.preloader').css('height','100vh');
+                $('.preloader img').css('display','inline');
                 $('#FilterForm').submit();
             });
+            $(document).on('submit', '#FilterForm', function (e) {
+                $('.preloader').css('height','100vh');
+                $('.preloader img').css('display','inline');
+            });
+
         @endif
     });
 
