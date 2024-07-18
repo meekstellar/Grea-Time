@@ -47,10 +47,10 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label><i class="fa fa-users" aria-hidden="true"></i> Сотрудники:</label>
+                                <label><i class="fas fa-user-tie" aria-hidden="true"></i> Сотрудники:</label>
                                 <select name="w[]" class="select2" multiple="multiple" data-placeholder="Выберите сотрудника" style="width: 100%;">
-                                    @if(!empty($WorkerClient))
-                                        @foreach($WorkerClient->unique('worker_id') as $wc)
+                                    @if(!empty($AllWorkerClient))
+                                        @foreach($AllWorkerClient as $wc)
                                         <option value="{{ $wc->worker()->id }}" @if(!empty(request()->w) && in_array($wc->worker()->id,request()->w)){{ 'selected' }}@endif>{{ $wc->worker()->name }}</option>
                                         @endforeach
                                     @endif

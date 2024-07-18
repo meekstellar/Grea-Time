@@ -29,7 +29,7 @@ class WorkersController extends Controller
     public function index(Request $request)
     {
 
-        $workers_id[] = [];
+        $workers_id = [];
         if(!empty($request->w)){
             $workers_id = $request->w;
         }
@@ -57,8 +57,9 @@ class WorkersController extends Controller
         //$users['clients'] = User::where('role', 'client')->get();
 
         $WorkerClient = WorkerClient::whereBetween("created_at", [ $date_or_period_with_secounds[0], $date_or_period_with_secounds[1] ]);
+        $AllWorkerClient = $WorkerClient->get()->unique('worker_id');
         if(!empty($workers_id) && !empty($WorkerClient)){
-            //$WorkerClient = $WorkerClient->whereIn("worker_id", $workers_id);
+            $WorkerClient = $WorkerClient->whereIn("worker_id", $workers_id);
         }
         $WorkerClient = $WorkerClient->get();
         //$WorkerClient = WorkerClient::whereBetween("created_at", [ $date_or_period_with_secounds[0], $date_or_period_with_secounds[1] ])->pluck('worker_id')->toArray();
@@ -73,6 +74,7 @@ class WorkersController extends Controller
 			'workers_id'=>$workers_id,
 			'date_or_period'=>$date_or_period,
 			'WorkerClient'=>$WorkerClient,
+			'AllWorkerClient'=>$AllWorkerClient,
 			'selectCountDays'=>$selectCountDays,
 		]);
 
