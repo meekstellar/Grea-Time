@@ -21,13 +21,13 @@
     font-weight: 400;
 }
 
-.select2-container--default .select2-selection--multiple .select2-selection__choice{
+/*.select2-container--default .select2-selection--multiple .select2-selection__choice{
     width: 100%;
     white-space: normal;
     line-height: 110%;
     padding-top: 7px;
     padding-bottom: 7px;
-}
+}*/
 
 .table.client-table tr>td .progress{
     margin-top: 9px;
@@ -56,11 +56,10 @@
 }
 
 #reportrange{
-    border: 1px solid #ffe7c3;
+    border: 1px solid #ffdca8;
     border-radius: 3px;
     display: inline-block;
-    padding: 2px 7px;
-    margin-top: 11px;
+    padding: 6px 11px;
     background: #fff5e6;
 }
 
@@ -76,4 +75,13 @@
 
 .user-avatar{
     filter: grayscale(1);
+}
+
+#daterange-btn{
+    margin-right: 17px;
+    margin-bottom: 12px;
+}
+
+.select2-container--default .select2-results>.select2-results__options {
+    max-height: 300px !important;
 }

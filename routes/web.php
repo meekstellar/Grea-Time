@@ -15,12 +15,12 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     //return view('welcome');
-    return redirect('/workers/all/2024-05-25');
+    return redirect('/workers');
 });
 
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
-Route::get('/workers/{workers_id}/{date_period}', [App\Http\Controllers\WorkersController::class, 'index'])->name('workers');
+Route::get('/workers', [App\Http\Controllers\WorkersController::class, 'index'])->name('workers');
 Route::get('/clients', [App\Http\Controllers\ClientsController::class, 'index'])->name('clients');

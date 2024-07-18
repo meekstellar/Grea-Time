@@ -48,8 +48,9 @@ class User extends Authenticatable
      *
      * @var array<int>
      */
-	public function roles($id)
+	public function roles()
     {
         return 'App\Models\UserRoles'::where('user_id', $id)->first();
     }
+
 }

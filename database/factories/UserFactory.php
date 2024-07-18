@@ -23,13 +23,44 @@ class UserFactory extends Factory
      */
     public function definition(): array
     {
+        $randomImages =[
+            'vendor/adminlte/dist/img/user1-128x128.jpg',
+            'vendor/adminlte/dist/img/user2-160x160.jpg',
+            'vendor/adminlte/dist/img/user-woman.jpg',
+            'vendor/adminlte/dist/img/no-usericon.svg',
+       ];
+
+       $positions = [
+            'Brand Manager',
+            'Marketing Specialist',
+            'Public Relations Manager',
+            'Communications Strategist',
+            'Regulatory Affairs Analyst',
+            'Reputation Manager',
+            'Crisis Communications Specialist',
+            'Media Relations Coordinator',
+            'Content Strategist',
+            'ESG Consultant',
+            'Government Relations Specialist',
+            'Corporate Communications Manager',
+            'Digital Marketing Manager',
+            'Repositioning Strategist',
+            'Social Media Manager',
+            'Event Coordinator',
+            'Copywriter',
+            'Research Analyst',
+            'Strategic Planner',
+        ];
+
         return [
             'name' => fake()->name(),
             'email' => fake()->unique()->safeEmail(),
             'email_verified_at' => now(),
             'password' => static::$password ??= Hash::make('password'),
             'remember_token' => Str::random(10),
-            'role' => fake()->randomElement(['manager','worker','client']),
+            'role' => fake()->randomElement(['worker','worker','worker','client']),
+            'image' => $randomImages[rand(0,count($randomImages)-1)],
+            'position' => $positions[rand(0,count($positions)-1)],
         ];
     }
 

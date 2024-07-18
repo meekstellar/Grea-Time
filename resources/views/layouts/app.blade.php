@@ -60,54 +60,52 @@
 
     $(document).ready(function() {
         $('.select2').select2();
-        $('#reservation').daterangepicker();
 
-        //Date range as a button
-        var start = moment();
-        var end = moment();
-
-        function cb(start, end) {
-            if(start.format('MMMM D, YYYY') != end.format('MMMM D, YYYY')){
-                $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'))
-            } else {
-                $('#reportrange span').html(start.format('MMMM D, YYYY'))
+        @if(!empty($date_or_period))
+            $('#reservation').daterangepicker();
+            //Date range as a button
+            var start = moment({!! '"'.$date_or_period[0].'"' !!}, "DD-MM-YYYY");
+            var end = moment({!! (!empty($date_or_period[1]) ? '"'.$date_or_period[1].'"' : '"'.$date_or_period[0].'"') !!}, "DD-MM-YYYY");
+            function cb(start, end) {
+                if(start.format('D MMMM YYYY г.') != end.format('D MMMM YYYY г.')){
+                    $('#reportrange span').html(start.format('D MMMM YYYY г.') + ' — ' + end.format('D MMMM YYYY г.'))
+                    $('#reportrange input').val(start.format('DD-MM-YYYY') + '--' + end.format('DD-MM-YYYY'));
+                } else {
+                    $('#reportrange span').html(start.format('D MMMM YYYY г.'));
+                    $('#reportrange input').val(start.format('DD-MM-YYYY'));
+                }
             }
-        }
-        $('#daterange-btn').daterangepicker(
-        {
-            ranges   : {
-            'Today'       : [moment(), moment()],
-            'Yesterday'   : [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-            'This Week'   : [moment().startOf('week'), moment().endOf('week')],
-            'Last Week'   : [moment().subtract(1, 'week').startOf('week'), moment().subtract(1, 'week').endOf('week')],
-            'This Month'  : [moment().startOf('month'), moment().endOf('month')],
-            'Last Month'  : [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')],
+            $('#daterange-btn').daterangepicker(
+            {
+                ranges   : {
+                'Today'       : [moment(), moment()],
+                'Yesterday'   : [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                'Last Week'   : [moment().subtract(1, 'week').startOf('week'), moment().subtract(1, 'week').endOf('week')],
+                'This Week'   : [moment().startOf('week'), moment().endOf('week')],
+                'Last Month'  : [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')],
+                'This Month'  : [moment().startOf('month'), moment().endOf('month')],
 
-            //'Last 15 days of the last month'  : [moment().subtract(1, 'month').startOf('month').add('days', 15), moment().subtract(1, 'month').endOf('month')],
-            //'Fitsr 15 days of this month'  : [moment().startOf('month'), moment().startOf('month').add('days', 14)],
-            //'Last 15 days of this month'  : [moment().startOf('month').add('days', 15), moment().endOf('month')],
+                //'Last 15 days of the last month'  : [moment().subtract(1, 'month').startOf('month').add('days', 15), moment().subtract(1, 'month').endOf('month')],
+                //'Fitsr 15 days of this month'  : [moment().startOf('month'), moment().startOf('month').add('days', 14)],
+                //'Last 15 days of this month'  : [moment().startOf('month').add('days', 15), moment().endOf('month')],
 
+                },
+                startDate: moment({!! '"'.$date_or_period[0].'"' !!}, "DD-MM-YYYY"),
+                endDate  : moment({!! (!empty($date_or_period[1]) ? '"'.$date_or_period[1].'"' : '"'.$date_or_period[0].'"') !!}, "DD-MM-YYYY"),
+                "alwaysShowCalendars": true
             },
-            startDate: moment(),
-            endDate  : moment(),
-            "alwaysShowCalendars": true
-        },
-        cb
-        )
-        setTimeout(function() {
-            $('#reportrange span').html(moment().format('MMMM')+' '+moment().format('D')+', '+moment().format('YYYY'));
-        }, 100);
-
-
-        $(document).on('click', '.ranges li', function (e) {
-            $("#daterange-btn").focus();
-        });
-
-
+            cb
+            );
+            $(document).on('click', '.ranges li', function (e) {
+                $("#daterange-btn").focus();
+            });
+            $(document).on('click', '.applyBtn', function (e) {
+                $('#FilterForm').submit();
+            });
+        @endif
     });
 
 </script>
-<!-- Select2 -->
 @endpush
 
 {{-- Add common CSS customizations --}}
