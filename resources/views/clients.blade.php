@@ -21,6 +21,9 @@
     <!-- Main content -->
     <section class="content">
         <div class="container-fluid">
+            <div class="alert alert-danger" role="alert">
+                <h3>Страница в разработке</h3>
+            </div>
             @if (session('status'))
                 <div class="alert alert-success" role="alert">
                     {{ session('status') }}

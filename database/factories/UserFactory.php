@@ -27,7 +27,9 @@ class UserFactory extends Factory
             'vendor/adminlte/dist/img/user1-128x128.jpg',
             'vendor/adminlte/dist/img/user2-160x160.jpg',
             'vendor/adminlte/dist/img/user-woman.jpg',
-            'vendor/adminlte/dist/img/no-usericon.svg',
+            'vendor/adminlte/dist/img/w22.jpg',
+            'vendor/adminlte/dist/img/w33.jpg',
+            //'vendor/adminlte/dist/img/no-usericon.svg',
        ];
 
        $positions = [
@@ -56,6 +58,7 @@ class UserFactory extends Factory
             'name' => fake()->name(),
             'email' => fake()->unique()->safeEmail(),
             'email_verified_at' => now(),
+            'phone' => fake()->phoneNumber,
             'password' => static::$password ??= Hash::make('password'),
             'remember_token' => Str::random(10),
             'role' => fake()->randomElement(['worker','worker','worker','client']),

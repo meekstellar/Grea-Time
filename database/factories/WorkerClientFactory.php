@@ -64,7 +64,7 @@ class WorkerClientFactory extends Factory
             16,
         ];
 
-        $created_at = fake()->dateTimeBetween('-65 days', now());
+        $created_at = fake()->dateTimeBetween('-65 days', '+30 days');
 
         return [
             'worker_id' => $workers_id[rand(0,count($workers_id)-1)],

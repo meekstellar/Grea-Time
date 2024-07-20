@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
+use App\Models\WorkerClient;
+
 class ClientsController extends Controller
 {
     /**
@@ -23,6 +25,8 @@ class ClientsController extends Controller
      */
     public function index()
     {
+        WorkerClient::where('hours',0)->delete();
+
         return view('clients');
     }
 }

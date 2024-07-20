@@ -11,6 +11,7 @@
     <base href="https://<?php echo $_SERVER['HTTP_HOST']; ?>/" />
     <link rel="stylesheet" href="{{ asset('/vendor/adminlte/dist/plugins/select2/css/select2.min.css') }}">
     <link rel="stylesheet" href="{{ asset('/vendor/adminlte/dist/plugins/daterangepicker/daterangepicker.css') }}">
+    <link rel="stylesheet" href="{{ asset('/vendor/adminlte/dist/plugins/toastr/toastr.min.css') }}">
 @stop
 
 {{-- Extend and customize the page content header --}}
@@ -56,10 +57,24 @@
 <script src="{{ asset('vendor/adminlte/dist/plugins/select2/js/select2.min.js') }}"></script>
 <script src="{{ asset('vendor/adminlte/dist/plugins/moment/moment.min.js') }}"></script>
 <script src="{{ asset('vendor/adminlte/dist/plugins/daterangepicker/daterangepicker.js') }}"></script>
+<script src="{{ asset('vendor/adminlte/dist/plugins/toastr/toastr.min.js') }}"></script>
 <script>
 
     $(document).ready(function() {
+
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+
         $('.select2').select2();
+
+
+        setTimeout(function() {
+            $('.alert-success').slideUp();
+        }, 4000);
+
 
         @if(!empty($date_or_period))
             $('#reservation').daterangepicker();
@@ -68,10 +83,10 @@
             var end = moment({!! (!empty($date_or_period[1]) ? '"'.$date_or_period[1].'"' : '"'.$date_or_period[0].'"') !!}, "DD-MM-YYYY");
             function cb(start, end) {
                 if(start.format('D MMMM YYYY г.') != end.format('D MMMM YYYY г.')){
-                    $('#reportrange span').html(start.format('D MMMM YYYY г.') + ' — ' + end.format('D MMMM YYYY г.'))
+                    $('#daterange-btn span').html(start.format('D MMMM YYYY г.') + ' — ' + end.format('D MMMM YYYY г.'))
                     $('#reportrange input').val(start.format('DD-MM-YYYY') + '--' + end.format('DD-MM-YYYY'));
                 } else {
-                    $('#reportrange span').html(start.format('D MMMM YYYY г.'));
+                    $('#daterange-btn span').html(start.format('D MMMM YYYY г.'));
                     $('#reportrange input').val(start.format('DD-MM-YYYY'));
                 }
             }
@@ -107,6 +122,53 @@
             $(document).on('submit', '#FilterForm', function (e) {
                 $('.preloader').css('height','100vh');
                 $('.preloader img').css('display','inline');
+            });
+
+            // Change work_hours_of_day
+            $(document).on('change', '[name=work_hours_of_day]', function (e) {
+                var _this = $(this);
+                var worker_id = $(this).closest('form').data('worker_id');
+                var wc_id = $(this).data('wc_id');
+                var newHours = $(this).val()*1;
+                var oldHours = $('#work_hours_of_day_'+wc_id).val()*1;
+                var totalHours = 0;
+                var data = {
+                    'wc_id' : wc_id,
+                    'newHours' : newHours
+                };
+                $.ajax({
+                    url: "{{ route('changeClientsHours') }}",
+                    type: "POST",
+                    data: data,
+                    success: function (data) {
+                        if (data.status) {
+                            _this.closest('form').find('[name="work_hours_of_day"]').each(function() {
+                                totalHours += $(this).val()*1;
+                            });
+                            toastr.success(data.messages)
+                            $('#wc_'+worker_id).html(totalHours);
+                        } else {
+                            console.log('error');
+                        }
+                    },
+                    error: function (data) {
+                        console.log('error');
+                    }
+                });
+
+            });
+
+            $(document).on('click', '.addClientHoursButton', function (e) {
+                var _this = $(this);
+                var created_at = '{{$date_or_period[0]}}';
+                if($(this).data('worker_id')){
+                    var worker_id = $(this).data('worker_id');
+                    $('#addClientHours [name="worker_id"]').val(worker_id).trigger('change');
+                } else {
+                    $('#addClientHours [name="worker_id"]').val($('#addClientHours [name="worker_id"] option:first').val()).trigger('change');
+                }
+                $('#addClientHours [name="created_at"]').val(created_at);
+                console.log(worker_id, created_at);
             });
 
         @endif
