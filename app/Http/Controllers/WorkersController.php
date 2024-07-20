@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
 
 use App\Models\User;
 use App\Models\WorkerClient;
@@ -29,6 +30,10 @@ class WorkersController extends Controller
      */
     public function index(Request $request)
     {
+
+        if(auth()->user()->role == 'worker'){
+            return redirect()->route('worker');
+        }
 
         $workers_id = [];
         if(!empty($request->w)){
@@ -75,6 +80,16 @@ class WorkersController extends Controller
 			'users'=>$users,
 		]);
 
+    }
+
+    /**
+     * Worker
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function worker(Request $request)
+    {
+        return view('worker');
     }
 
     /**
@@ -127,7 +142,6 @@ class WorkersController extends Controller
         $new_user->save();
 
         return redirect($lastUrlForReditect)->with('status', 'Добавлен новый пользоватль');
-
 
     }
 
