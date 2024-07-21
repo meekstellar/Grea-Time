@@ -11,7 +11,9 @@
                 </h1>
             </div>
             <div class="col-sm-5 text-right">
-                <button class="btn btn-info btn-sm mr-2 addClientHoursButton" data-toggle="modal" data-target="#addClientHours"><i class="far fa-clock"></i> &nbsp;Добавить часы работы</button>
+                @if($selectCountDays == 1)
+                    <button class="btn btn-info btn-sm mr-2 addClientHoursButton" data-toggle="modal" data-target="#addClientHours"><i class="far fa-clock"></i> &nbsp;Добавить часы работы</button>
+                @endif
                 <a href="#" class="btn btn-success btn-sm" data-toggle="modal" data-target="#addNewClient"><i class="fas fa-user-tie" aria-hidden="true"></i> &nbsp;Новый сотрудник</a>
             </div>
         </div>
@@ -43,9 +45,9 @@
                                     <div class="form-group">
                                         <label><i class="fas fa-user-tie" aria-hidden="true"></i> Сотрудники:</label>
                                         <select name="w[]" class="select2" multiple="multiple" data-placeholder="Отображать всех" style="width: 100%;">
-                                            @if(!empty($AllWorkerClient))
-                                                @foreach($AllWorkerClient as $wc)
-                                                <option value="{{ $wc->worker()->id }}" @if(!empty(request()->w) && in_array($wc->worker()->id,request()->w)){{ 'selected' }}@endif>{{ $wc->worker()->name }}</option>
+                                            @if(!empty($users['workers']))
+                                                @foreach($users['workers'] as $worker)
+                                                    <option value="{{ $worker->id }}" @if(!empty(request()->w) && in_array($worker->id,request()->w)){{ 'selected' }}@endif>{{ $worker->name }}</option>
                                                 @endforeach
                                             @endif
                                         </select>
@@ -81,7 +83,7 @@
                         @if(!empty($WorkerClient))
                             @foreach($WorkerClient->unique('worker_id') as $wc)
                                 <div class="col-xl-4 col-lg-6">
-                                    <form data-worker_id="{{ $wc->worker_id }}" class="card {{ (($selectCountDays == 7 && $WorkerClient->where('worker_id',$wc->worker_id)->sum('hours') < 36 || in_array($selectCountDays, [28,29,30,31]) && $WorkerClient->where('worker_id',$wc->worker_id)->sum('hours') < 150) ? 'few-days' : (($selectCountDays == 7 && $WorkerClient->where('worker_id',$wc->worker_id)->sum('hours') > 44 || in_array($selectCountDays, [28,29,30,31]) && $WorkerClient->where('worker_id',$wc->worker_id)->sum('hours') > 180) ? 'many-days' : 'bg-white')) }} d-flex flex-fill">
+                                    <form id="u{{ $wc->worker_id }}" data-worker_id="{{ $wc->worker_id }}" class="card {{ (($selectCountDays == 7 && $WorkerClient->where('worker_id',$wc->worker_id)->sum('hours') < 36 || in_array($selectCountDays, [28,29,30,31]) && $WorkerClient->where('worker_id',$wc->worker_id)->sum('hours') < 150) ? 'few-days' : (($selectCountDays == 7 && $WorkerClient->where('worker_id',$wc->worker_id)->sum('hours') > 44 || in_array($selectCountDays, [28,29,30,31]) && $WorkerClient->where('worker_id',$wc->worker_id)->sum('hours') > 180) ? 'many-days' : 'bg-white')) }} d-flex flex-fill">
                                         <div class="card-body pt-3">
                                             <div class="row">
                                                 <div class="col-8">
@@ -127,40 +129,52 @@
                                     </form>
                                 </div>
                             @endforeach
-                            @if($selectCountDays == 1)
-                                <form class="modal fade" id="addClientHours" action="{{ route('addClientHours') }}" method="POST">
-                                    @csrf
-                                    <div class="modal-dialog modal-lg">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h4 class="modal-title"><i class="far fa-clock"></i> Добавить часы работы</h4>
-                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                    <span aria-hidden="true">&times;</span>
-                                                </button>
+                        @endif
+
+                        <form class="modal fade" id="addClientHours" action="{{ route('addClientHours') }}" method="POST">
+                            @csrf
+                            <div class="modal-dialog modal-lg">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h4 class="modal-title"><i class="far fa-clock"></i> Добавить часы работы</h4>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="row">
+                                            <div class="col-lg-8">
+                                                <div class="form-group">
+                                                    <label><i class="nav-icon fas fa-user-tie "></i> Сотрудник</label>
+                                                    <select required class="form-control select2" style="width: 100%;" name="worker_id" placeholder="Выбрать сотрудника">
+                                                        @foreach($users['workers'] as $worker)
+                                                        <option value="{{ $worker->id }}">{{ $worker->name }}</option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label><i class="nav-icon fas fa-user-secret "></i> Клиент</label>
+                                                    <select required class="form-control select2" style="width: 100%;" name="client_id">
+                                                        @foreach($users['clients'] as $clients)
+                                                        <option value="{{ $clients->id }}">{{ $clients->name }}</option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
                                             </div>
-                                            <div class="modal-body">
+                                            <div class="col-lg-4">
                                                 <div class="row">
-                                                    <div class="col-lg-5">
+                                                    <div class="col-6 col-lg-12">
                                                         <div class="form-group">
-                                                            <label><i class="nav-icon fas fa-user-tie "></i> Сотрудник</label>
-                                                            <select required class="form-control select2" style="width: 100%;" name="worker_id" placeholder="Выбрать сотрудника">
-                                                                @foreach($users['workers'] as $workers)
-                                                                <option value="{{ $workers->id }}">{{ $workers->name }}</option>
-                                                                @endforeach
-                                                            </select>
-                                                        </div>
+                                                            <label>Дата:</label>
+                                                            <div class="input-group date" id="reservationdate" data-target-input="nearest">
+                                                                <input type="text" name="created_at" class="form-control datetimepicker-input" data-target="#reservationdate" />
+                                                                    <div class="input-group-append" data-target="#reservationdate" data-toggle="datetimepicker">
+                                                                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
                                                     </div>
-                                                    <div class="col-lg-5">
-                                                        <div class="form-group">
-                                                            <label><i class="nav-icon fas fa-user-secret "></i> Клиент</label>
-                                                            <select required class="form-control select2" style="width: 100%;" name="client_id">
-                                                                @foreach($users['clients'] as $clients)
-                                                                <option value="{{ $clients->id }}">{{ $clients->name }}</option>
-                                                                @endforeach
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-lg-2">
+                                                    <div class="col-6 col-lg-12">
                                                         <div class="form-group">
                                                             <label><i class="far fa-clock"></i> Часы работы</label>
                                                             <select required class="form-control select2" name="hours" style="width: 100%;">
@@ -172,17 +186,16 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="modal-footer justify-content-between">
-                                                <button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
-                                                <button type="submit" class="btn btn-primary">Добавить</button>
-                                                <input type="hidden" value="{{ Request::fullUrl() }}" name="lastUrl" />
-                                                <input type="hidden" value="" name="created_at" />
-                                            </div>
                                         </div>
                                     </div>
-                                </form>
-                            @endif
-                        @endif
+                                    <div class="modal-footer justify-content-between">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
+                                        <button type="submit" class="btn btn-primary">Добавить</button>
+                                        <input type="hidden" value="{{ Request::fullUrl() }}" name="lastUrl" />
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
 
                         <form class="modal fade" id="addNewClient" action="{{ route('addNewClient') }}" method="POST">
                             @csrf

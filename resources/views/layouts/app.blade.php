@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="{{ asset('/vendor/adminlte/dist/plugins/select2/css/select2.min.css') }}">
     <link rel="stylesheet" href="{{ asset('/vendor/adminlte/dist/plugins/daterangepicker/daterangepicker.css') }}">
     <link rel="stylesheet" href="{{ asset('/vendor/adminlte/dist/plugins/toastr/toastr.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('/vendor/adminlte/dist/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css') }}">
 @stop
 
 {{-- Extend and customize the page content header --}}
@@ -58,6 +59,7 @@
 <script src="{{ asset('vendor/adminlte/dist/plugins/moment/moment.min.js') }}"></script>
 <script src="{{ asset('vendor/adminlte/dist/plugins/daterangepicker/daterangepicker.js') }}"></script>
 <script src="{{ asset('vendor/adminlte/dist/plugins/toastr/toastr.min.js') }}"></script>
+<script src="{{ asset('vendor/adminlte/dist/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js') }}"></script>
 <script>
 
     $(document).ready(function() {
@@ -70,13 +72,17 @@
 
         $('.select2').select2();
 
-
         setTimeout(function() {
             $('.alert-success').slideUp();
         }, 4000);
 
 
         @if(!empty($date_or_period))
+
+            $('#reservationdate').datetimepicker({
+                format: 'DD-MM-YYYY'
+            });
+
             $('#reservation').daterangepicker();
             //Date range as a button
             var start = moment({!! '"'.$date_or_period[0].'"' !!}, "DD-MM-YYYY");
