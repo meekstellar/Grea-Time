@@ -59,6 +59,8 @@ class UserFactory extends Factory
             'email' => fake()->unique()->safeEmail(),
             'email_verified_at' => now(),
             'phone' => fake()->phoneNumber,
+            'address' => fake()->streetAddress(),
+            'salary' => ceil(rand(30000,120000)/1000)*1000,
             'password' => static::$password ??= Hash::make('password'),
             'remember_token' => Str::random(10),
             'role' => fake()->randomElement(['worker','worker','worker','client']),

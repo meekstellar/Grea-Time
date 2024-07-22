@@ -5,14 +5,13 @@
     <section class="content-header">
         <div class="container-fluid">
         <div class="row mb-2">
-            <div class="col-sm-6">
+            <div class="col-sm-7 pb-3 pb-sm-0">
                 <h1>
                     Клиенты
                 </h1>
             </div>
-            <div class="col-sm-6 text-right">
-                <a href="#" class="btn btn-success btn-sm"><i class="fas fa-file-pdf"></i> &nbsp;PDF</a>
-                <a href="#" class="btn btn-success btn-sm"><i class="fas fa-file-alt"></i> &nbsp;XLS</a>
+            <div class="col-sm-5 text-right">
+                <a href="#" class="btn btn-success btn-sm" data-toggle="modal" data-target="#addNewClient"><i class="fas fa-user-tie" aria-hidden="true"></i> &nbsp;Новый клиент</a>
             </div>
         </div>
         </div><!-- /.container-fluid -->
@@ -21,315 +20,179 @@
     <!-- Main content -->
     <section class="content">
         <div class="container-fluid">
-            <div class="alert alert-danger" role="alert">
-                <h3>Страница в разработке</h3>
-            </div>
             @if (session('status'))
                 <div class="alert alert-success" role="alert">
-                    {{ session('status') }}
+                    {!! session('status') !!}
                 </div>
             @endif
-            <form class="row">
-                <div class="col-md-4">
-                    <div class="card card-primary card-outline">
+            <div class="row">
+                <form class="col-md-4" action="{{ route('clients') }}" id="FilterForm" method="GET">
+                    <div class="card card-primary card-outline sticky-top">
                         <div class="card-header">
                           <h5 class="card-title"><i class="fa fa-filter" aria-hidden="true"></i> Фильтр</h5>
+                          <div class="card-tools">
+                            <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
+                                <i class="fas fa-minus"></i>
+                            </button>
+                          </div>
                         </div>
                         <div class="card-body">
-                            <div class="form-group">
-                                <div class="input-group">
-                                    <button type="button" class="btn btn-default float-right" id="daterange-btn">
-                                        <i class="far fa-calendar-alt"></i> Выберите дату или период
-                                        <i class="fas fa-caret-down"></i>
-                                    </button>
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <label><i class="far fa-calendar-alt"></i> Дата или период:</label>
+                                        <div class="input-group" style="align-items: flex-start;">
+                                            <button type="button" class="btn btn-default float-right" id="daterange-btn">
+                                                <i class="far fa-calendar-alt"></i> <span>{{ Date::parse($date_or_period[0])->format('j F Y') }}@if(!empty($date_or_period[1])) — {{ Date::parse($date_or_period[1])->format('j F Y') }}@endif</span>
+                                                <i class="fas fa-caret-down"></i>
+                                            </button>
+                                            <div id="reportrange">
+                                                <input type="hidden" name="date_or_period" value="{{ $date_or_period[0] }}@if(!empty($date_or_period[1]))--{{ $date_or_period[1] }}@endif" />
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div id="reportrange"><span></span></div>
-                            </div>
-                            <div class="form-group">
-                                <label><i class="fa fa-building" aria-hidden="true"></i> Клиенты:</label>
-                                <select class="select2" multiple="multiple" data-placeholder="Выберите клиента" style="width: 100%;">
-                                    <option>Клиент 1</option>
-                                    <option>Клиент 2</option>
-                                    <option>Клиент 3</option>
-                                </select>
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <label><i class="nav-icon fas fa-user-secret" aria-hidden="true"></i> Клиенты:</label>
+                                        <select name="w[]" class="select2" multiple="multiple" data-placeholder="Отображать всех клиентов" style="width: 100%;">
+                                            @if(!empty($users['clients']))
+                                                @foreach($users['clients'] as $worker)
+                                                    <option value="{{ $worker->id }}" @if(!empty(request()->w) && in_array($worker->id,request()->w)){{ 'selected' }}@endif>{{ $worker->name }}</option>
+                                                @endforeach
+                                            @endif
+                                        </select>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div class="card-footer">
-                            <div class="form-group text-right">
+                            <div class="form-group text-right mb-0">
                                 <button type="submit" class="btn btn-primary">Применить</button>
                             </div>
                         </div>
                       </div>
-                </div>
+                </form>
                 <div class="col-md-8">
-                    <div class="col-12 py-3">
-                        <h4>Если выбрана неделя:</h4>
-                    </div>
+
                     <div class="row">
-                        <div class="col-lg-6">
-                            <div class="card">
-                                <div class="card-header">
-                                  <h3 class="card-title"><b>Клиент 1</b></h3>
-                                  <span class="data-total"><i class="far fa-clock"></i> 24</span>
+
+                        @if(!empty($WorkerClient))
+                            @foreach($WorkerClient->unique('client_id') as $wc)
+                                <div class="col-12">
+                                    <form id="u{{ $wc->client_id }}" data-client_id="{{ $wc->client_id }}" class="card bg-white d-flex flex-fill">
+                                        <div class="card-body pt-3">
+                                            <div class="row align-items-center">
+                                                <div class="col-8">
+                                                    <h2 class="lead"><b>{{ $wc->client()->name }}</b></h2>
+                                                    @if(!empty($wc->client()->phone) || !empty($wc->client()->email))
+                                                    <ul class="ml-4 mb-0 fa-ul text-muted">
+                                                        <li class="small"><span class="fa-li"><i class="fas fa-envelope"></i></span> <a href="mailto:{{ $wc->client()->email }}">{{ $wc->client()->email }}</a></li>
+                                                        @if(!empty($wc->client()->phone))<li class="small"><span class="fa-li"><i class="fas fa-phone"></i></span> <a href="tel:{{ $wc->client()->phone }}">{{ $wc->client()->phone }}</a></li>@endif
+                                                        @if(!empty($wc->client()->address))<li class="small"><span class="fa-li"><i class="fas fa-map-marker-alt"></i></span> {{ $wc->client()->address }}</li>@endif
+                                                    </ul>
+                                                    @endif
+                                                </div>
+                                                <div class="col-4 text-right">
+                                                    <img alt="user-avatar" class="client-avatar img-circle img-fluid" src="{{ asset($wc->client()->image) }}">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="card-body p-0">
+                                            <table class="table table-sm client-table">
+                                                <tbody>
+                                                    @php
+                                                        $processed = [];
+                                                    @endphp
+                                                    @foreach($WorkerClient->where('client_id',$wc->client_id) as $wc_workers)
+                                                        @if(!in_array($wc_workers->worker_id,$processed))
+                                                        <tr>
+                                                            <td style="width: 10px">{{ $loop->iteration }}.</td>
+                                                            <td>{{ $wc_workers->worker()->name }} <span class="worker_positon">({{ $wc_workers->worker()->position }})</span></td>
+                                                            <td style="width: 80px; text-align: right;">{{ $WorkerClient->where('client_id',$wc->client_id)->where('worker_id',$wc_workers->worker_id)->sum('hours') }}</td>
+                                                        </tr>
+                                                        @php
+                                                            $processed[] = $wc_workers->worker_id;
+                                                        @endphp
+                                                        @endif
+                                                    @endforeach
+                                                </tbody>
+                                              </table>
+                                            </table>
+                                        </div>
+                                        <div class="card-footer">
+                                            <div class="row">
+                                                <div class="col-12">
+                                                    @if(in_array($selectCountDays, [28,29,30,31]))
+                                                        @include('components/clients/card-footer-month')
+                                                    @else
+                                                        @include('components/clients/card-footer-week')
+                                                    @endif
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
                                 </div>
-                                <!-- /.card-header -->
-                                <div class="card-body p-0">
-                                  <table class="table table-sm client-table">
-                                    <tbody>
-                                      <tr>
-                                        <td style="width: 10px">1.</td>
-                                        <td>Сотрудник 2</td>
-                                        <td style="width: 80px; text-align: right;">10</td>
-                                      </tr>
-                                      <tr>
-                                        <td>2.</td>
-                                        <td>Сотрудник 2</td>
-                                        <td style="width: 80px; text-align: right;">20</td>
-                                      </tr>
-                                      <tr>
-                                        <td>3.</td>
-                                        <td>Сотрудник 3</td>
-                                        <td style="width: 80px; text-align: right;">15</td>
-                                      </tr>
-                                    </tbody>
-                                  </table>
+                            @endforeach
+                        @endif
+
+                        <form class="modal fade" id="addNewClient" action="{{ route('addNewClient') }}" method="POST">
+                            @csrf
+                            <div class="modal-dialog modal-lg">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h4 class="modal-title"><i class="fas fa-user-plus"></i> Добавление нового клиента</h4>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="row">
+                                            <div class="col-lg-6">
+                                                <div class="form-group">
+                                                    <label>Имя клиента</label>
+                                                    <input required class="form-control" type="text" name="name">
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <div class="form-group">
+                                                    <label>Адрес</label>
+                                                    <input class="form-control" type="text" name="address">
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <div class="form-group">
+                                                    <label>Email</label>
+                                                    <input required class="form-control" type="text" name="email">
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-3">
+                                                <div class="form-group">
+                                                    <label>Пароль</label>
+                                                    <input required class="form-control" type="text" name="password">
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-3">
+                                                <div class="form-group">
+                                                    <label>Телефон</label>
+                                                    <input class="form-control" type="text" name="phone">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer justify-content-between">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
+                                        <button type="submit" class="btn btn-primary">Добавить</button>
+                                        <input type="hidden" value="{{ Request::fullUrl() }}" name="lastUrl" />
+                                    </div>
                                 </div>
-                                <!-- /.card-body -->
                             </div>
-                        </div>
-                        <div class="col-lg-6">
-                            <div class="card">
-                                <div class="card-header">
-                                  <h3 class="card-title"><b>Клиент 2</b></h3>
-                                  <span class="data-total"><i class="far fa-clock"></i> 24</span>
-                                </div>
-                                <!-- /.card-header -->
-                                <div class="card-body p-0">
-                                  <table class="table table-sm client-table">
-                                    <tbody>
-                                      <tr>
-                                        <td style="width: 10px">1.</td>
-                                        <td>Сотрудник 2</td>
-                                        <td style="width: 80px; text-align: right;">10</td>
-                                      </tr>
-                                      <tr>
-                                        <td>2.</td>
-                                        <td>Сотрудник 2</td>
-                                        <td style="width: 80px; text-align: right;">20</td>
-                                      </tr>
-                                      <tr>
-                                        <td>3.</td>
-                                        <td>Сотрудник 3</td>
-                                        <td style="width: 80px; text-align: right;">15</td>
-                                      </tr>
-                                    </tbody>
-                                  </table>
-                                </div>
-                                <!-- /.card-body -->
-                            </div>
-                        </div>
-                        <div class="col-lg-6">
-                            <div class="card">
-                                <div class="card-header">
-                                  <h3 class="card-title"><b>Клиент 3</b></h3>
-                                  <span class="data-total"><i class="far fa-clock"></i> 24</span>
-                                </div>
-                                <!-- /.card-header -->
-                                <div class="card-body p-0">
-                                  <table class="table table-sm client-table">
-                                    <tbody>
-                                      <tr>
-                                        <td style="width: 10px">1.</td>
-                                        <td>Сотрудник 2</td>
-                                        <td style="width: 80px; text-align: right;">10</td>
-                                      </tr>
-                                      <tr>
-                                        <td>2.</td>
-                                        <td>Сотрудник 2</td>
-                                        <td style="width: 80px; text-align: right;">20</td>
-                                      </tr>
-                                      <tr>
-                                        <td>3.</td>
-                                        <td>Сотрудник 3</td>
-                                        <td style="width: 80px; text-align: right;">15</td>
-                                      </tr>
-                                    </tbody>
-                                  </table>
-                                </div>
-                                <!-- /.card-body -->
-                            </div>
-                        </div>
-                        <div class="col-12 py-3">
-                            <h4>Если выбран месяц:</h4>
-                        </div>
-                        <div class="col-lg-6">
-                            <div class="card">
-                                <div class="card-header">
-                                  <h3 class="card-title"><b>Клиент 1</b></h3>
-                                </div>
-                                <!-- /.card-header -->
-                                <div class="card-body p-0">
-                                  <table class="table table-sm client-table">
-                                    <tbody>
-                                      <tr>
-                                        <td style="width: 10px">1.</td>
-                                        <td>Сотрудник 2</td>
-                                        <td style="width: 80px; text-align: right;">300000</td>
-                                      </tr>
-                                      <tr>
-                                        <td>2.</td>
-                                        <td>Сотрудник 2</td>
-                                        <td style="width: 80px; text-align: right;">2300</td>
-                                      </tr>
-                                      <tr>
-                                        <td>3.</td>
-                                        <td>Сотрудник 3</td>
-                                        <td style="width: 80px; text-align: right;">2300</td>
-                                      </tr>
-                                    </tbody>
-                                    <tfoot>
-                                        <tr>
-                                            <td colspan="2" style="border-top: 2px solid #dfdfdf;">ИТОГО Себестоимость</td>
-                                            <td style="border-top: 2px solid #dfdfdf; text-align: right;">129500</td>
-                                        </tr>
-                                        <tr>
-                                            <td colspan="2">OPEX (35%)</td>
-                                            <td style="text-align: right;">105000</td>
-                                        </tr>
-                                        <tr>
-                                            <td colspan="2">ГОНОРАР</td>
-                                            <td style="text-align: right;">300000</td>
-                                        </tr>
-                                        <tr>
-                                            <td colspan="2">ПРИБЫЛЬ</td>
-                                            <td style="text-align: right; font-weight: bold;">65500</td>
-                                        </tr>
-                                        <tr>
-                                            <td colspan="2">МАРЖИНАЛЬНОСТЬ</td>
-                                            <td style="text-align: right; font-weight: bold;">22%</td>
-                                        </tr>
-                                    </tfoot>
-                                  </table>
-                                </div>
-                                <!-- /.card-body -->
-                            </div>
-                        </div>
-                        <div class="col-lg-6">
-                            <div class="card">
-                                <div class="card-header">
-                                  <h3 class="card-title"><b>Клиент 2</b></h3>
-                                </div>
-                                <!-- /.card-header -->
-                                <div class="card-body p-0">
-                                  <table class="table table-sm client-table">
-                                    <tbody>
-                                      <tr>
-                                        <td style="width: 10px">1.</td>
-                                        <td>Сотрудник 2</td>
-                                        <td style="width: 80px; text-align: right;">300000</td>
-                                      </tr>
-                                      <tr>
-                                        <td>2.</td>
-                                        <td>Сотрудник 2</td>
-                                        <td style="width: 80px; text-align: right;">2300</td>
-                                      </tr>
-                                      <tr>
-                                        <td>3.</td>
-                                        <td>Сотрудник 3</td>
-                                        <td style="width: 80px; text-align: right;">2300</td>
-                                      </tr>
-                                    </tbody>
-                                    <tfoot>
-                                        <tr>
-                                            <td colspan="2" style="border-top: 2px solid #dfdfdf;">ИТОГО Себестоимость</td>
-                                            <td style="border-top: 2px solid #dfdfdf; text-align: right;">129500</td>
-                                        </tr>
-                                        <tr>
-                                            <td colspan="2">OPEX (35%)</td>
-                                            <td style="text-align: right;">105000</td>
-                                        </tr>
-                                        <tr>
-                                            <td colspan="2">ГОНОРАР</td>
-                                            <td style="text-align: right;">300000</td>
-                                        </tr>
-                                        <tr>
-                                            <td colspan="2">ПРИБЫЛЬ</td>
-                                            <td style="text-align: right; font-weight: bold;">65500</td>
-                                        </tr>
-                                        <tr>
-                                            <td colspan="2">МАРЖИНАЛЬНОСТЬ</td>
-                                            <td style="text-align: right; font-weight: bold;">22%</td>
-                                        </tr>
-                                    </tfoot>
-                                  </table>
-                                </div>
-                                <!-- /.card-body -->
-                            </div>
-                        </div>
-                        <div class="col-lg-6">
-                            <div class="card">
-                                <div class="card-header">
-                                  <h3 class="card-title"><b>Клиент 3</b></h3>
-                                </div>
-                                <!-- /.card-header -->
-                                <div class="card-body p-0">
-                                  <table class="table table-sm client-table">
-                                    <tbody>
-                                      <tr>
-                                        <td style="width: 10px">1.</td>
-                                        <td>Сотрудник 2</td>
-                                        <td style="width: 80px; text-align: right;">300000</td>
-                                      </tr>
-                                      <tr>
-                                        <td>2.</td>
-                                        <td>Сотрудник 2</td>
-                                        <td style="width: 80px; text-align: right;">2300</td>
-                                      </tr>
-                                      <tr>
-                                        <td>3.</td>
-                                        <td>Сотрудник 3</td>
-                                        <td style="width: 80px; text-align: right;">2300</td>
-                                      </tr>
-                                    </tbody>
-                                    <tfoot>
-                                        <tr>
-                                            <td colspan="2" style="border-top: 2px solid #dfdfdf;">ИТОГО Себестоимость</td>
-                                            <td style="border-top: 2px solid #dfdfdf; text-align: right;">129500</td>
-                                        </tr>
-                                        <tr>
-                                            <td colspan="2">OPEX (35%)</td>
-                                            <td style="text-align: right;">105000</td>
-                                        </tr>
-                                        <tr>
-                                            <td colspan="2">ГОНОРАР</td>
-                                            <td style="text-align: right;">300000</td>
-                                        </tr>
-                                        <tr>
-                                            <td colspan="2">ПРИБЫЛЬ</td>
-                                            <td style="text-align: right; font-weight: bold;">65500</td>
-                                        </tr>
-                                        <tr>
-                                            <td colspan="2">МАРЖИНАЛЬНОСТЬ</td>
-                                            <td style="text-align: right; font-weight: bold;">22%</td>
-                                        </tr>
-                                    </tfoot>
-                                  </table>
-                                </div>
-                                <!-- /.card-body -->
-                            </div>
-                        </div>
+                        </form>
+
                     </div>
-
-
-
-
-
-
-
-
 
                 </div>
-            </form>
+            </div>
         </div>
     </section>
 

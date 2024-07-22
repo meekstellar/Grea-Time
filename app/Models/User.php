@@ -44,13 +44,16 @@ class User extends Authenticatable
     ];
 
     /**
-     * Roles
+     * Fee
      *
      * @var array<int>
      */
-	public function roles()
+	public function fee($year, $month)
     {
-        return 'App\Models\UserRoles'::where('user_id', $id)->first();
+        return $this->hasOne('App\Models\ClientsFees', 'client_id')
+            ->where('year', $year)
+            ->where('month', $month)
+            ->first();
     }
 
 }

@@ -12,12 +12,6 @@ return new class extends Migration
     public function up(): void
     {
 
-        Schema::table('users', function (Blueprint $table) {
-            $table->string('role',15)->nullable(true)->default('');
-            $table->string('image',255)->nullable(true)->default('');
-            $table->string('position',255)->nullable(true)->default('');
-        });
-
         DB::table('users')->insert(
             array(
                 'name' => 'Petro Skotar',

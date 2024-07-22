@@ -4,19 +4,19 @@
 
     <section class="content-header">
         <div class="container-fluid">
-        <div class="row mb-2">
-            <div class="col-sm-7 pb-3 pb-sm-0">
-                <h1>
-                    Cотрудники
-                </h1>
+            <div class="row mb-2">
+                <div class="col-sm-7 pb-3 pb-sm-0">
+                    <h1>
+                        Cотрудники
+                    </h1>
+                </div>
+                <div class="col-sm-5 text-right">
+                    @if($selectCountDays == 1)
+                        <button class="btn btn-info btn-sm mr-2 addClientHoursButton" data-toggle="modal" data-target="#addClientHours"><i class="far fa-clock"></i> &nbsp;Добавить часы работы</button>
+                    @endif
+                    <a href="#" class="btn btn-success btn-sm" data-toggle="modal" data-target="#addNewWorker"><i class="fas fa-user-tie" aria-hidden="true"></i> &nbsp;Новый сотрудник</a>
+                </div>
             </div>
-            <div class="col-sm-5 text-right">
-                @if($selectCountDays == 1)
-                    <button class="btn btn-info btn-sm mr-2 addClientHoursButton" data-toggle="modal" data-target="#addClientHours"><i class="far fa-clock"></i> &nbsp;Добавить часы работы</button>
-                @endif
-                <a href="#" class="btn btn-success btn-sm" data-toggle="modal" data-target="#addNewClient"><i class="fas fa-user-tie" aria-hidden="true"></i> &nbsp;Новый сотрудник</a>
-            </div>
-        </div>
         </div><!-- /.container-fluid -->
     </section>
 
@@ -29,8 +29,8 @@
                 </div>
             @endif
             <div class="row">
-                <form class="col-12" action="{{ route('workers') }}" id="FilterForm" method="GET">
-                    <div class="card card-primary card-outline">
+                <form class="col-md-4" action="{{ route('workers') }}" id="FilterForm" method="GET">
+                    <div class="card card-primary card-outline sticky-top">
                         <div class="card-header">
                           <h5 class="card-title"><i class="fa fa-filter" aria-hidden="true"></i> Фильтр</h5>
                           <div class="card-tools">
@@ -41,19 +41,7 @@
                         </div>
                         <div class="card-body">
                             <div class="row">
-                                <div class="col-md-8">
-                                    <div class="form-group">
-                                        <label><i class="fas fa-user-tie" aria-hidden="true"></i> Сотрудники:</label>
-                                        <select name="w[]" class="select2" multiple="multiple" data-placeholder="Отображать всех" style="width: 100%;">
-                                            @if(!empty($users['workers']))
-                                                @foreach($users['workers'] as $worker)
-                                                    <option value="{{ $worker->id }}" @if(!empty(request()->w) && in_array($worker->id,request()->w)){{ 'selected' }}@endif>{{ $worker->name }}</option>
-                                                @endforeach
-                                            @endif
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
+                                <div class="col-12">
                                     <div class="form-group">
                                         <label><i class="far fa-calendar-alt"></i> Дата или период:</label>
                                         <div class="input-group" style="align-items: flex-start;">
@@ -67,22 +55,34 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <label><i class="fas fa-user-tie" aria-hidden="true"></i> Сотрудники:</label>
+                                        <select name="w[]" class="select2" multiple="multiple" data-placeholder="Отображать всех сотрудников" style="width: 100%;">
+                                            @if(!empty($users['workers']))
+                                                @foreach($users['workers'] as $worker)
+                                                    <option value="{{ $worker->id }}" @if(!empty(request()->w) && in_array($worker->id,request()->w)){{ 'selected' }}@endif>{{ $worker->name }}</option>
+                                                @endforeach
+                                            @endif
+                                        </select>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div class="card-footer">
                             <div class="form-group text-right mb-0">
-                                <button type="submit" class="btn btn-primary">Применить</button>
+                                <button type="submit" class="btn btn-sm btn-primary">Применить</button>
                             </div>
                         </div>
                       </div>
                 </form>
-                <div class="col-12">
+                <div class="col-md-8">
 
                     <div class="row">
 
                         @if(!empty($WorkerClient))
                             @foreach($WorkerClient->unique('worker_id') as $wc)
-                                <div class="col-xl-4 col-lg-6">
+                                <div class="col-12">
                                     <form id="u{{ $wc->worker_id }}" data-worker_id="{{ $wc->worker_id }}" class="card {{ (($selectCountDays == 7 && $WorkerClient->where('worker_id',$wc->worker_id)->sum('hours') < 36 || in_array($selectCountDays, [28,29,30,31]) && $WorkerClient->where('worker_id',$wc->worker_id)->sum('hours') < 150) ? 'few-days' : (($selectCountDays == 7 && $WorkerClient->where('worker_id',$wc->worker_id)->sum('hours') > 44 || in_array($selectCountDays, [28,29,30,31]) && $WorkerClient->where('worker_id',$wc->worker_id)->sum('hours') > 180) ? 'many-days' : 'bg-white')) }} d-flex flex-fill">
                                         <div class="card-body pt-3">
                                             <div class="row">
@@ -100,14 +100,16 @@
                                                     </ul>
                                                     @endif
                                                 </div>
-                                                <div class="col-4 text-center"><img alt="user-avatar" class="user-avatar img-circle img-fluid" src="{{ asset($wc->worker()->image) }}"></div>
+                                                <div class="col-4 text-right">
+                                                    <img alt="user-avatar" class="worker-avatar img-circle img-fluid" src="{{ asset($wc->worker()->image) }}">
+                                                </div>
                                             </div>
                                         </div>
                                         <div class="card-body p-0">
                                             @if($selectCountDays == 1)
-                                                @include('components/user-data-days-edit')
+                                                @include('components/workers/user-data-day')
                                             @else
-                                                @include('components/user-data-days-view')
+                                                @include('components/workers/user-data-period')
                                             @endif
                                         </div>
                                         <div class="card-footer">
@@ -197,7 +199,7 @@
                             </div>
                         </form>
 
-                        <form class="modal fade" id="addNewClient" action="{{ route('addNewClient') }}" method="POST">
+                        <form class="modal fade" id="addNewWorker" action="{{ route('addNewWorker') }}" method="POST">
                             @csrf
                             <div class="modal-dialog modal-lg">
                                 <div class="modal-content">
@@ -217,26 +219,32 @@
                                             </div>
                                             <div class="col-lg-6">
                                                 <div class="form-group">
-                                                    <label>Email</label>
-                                                    <input required class="form-control" type="text" name="email">
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-6">
-                                                <div class="form-group">
                                                     <label>Должность</label>
                                                     <input class="form-control" type="text" name="position">
                                                 </div>
                                             </div>
-                                            <div class="col-lg-3">
+                                            <div class="col-sm-6 col-lg-3">
                                                 <div class="form-group">
-                                                    <label>Телефон</label>
-                                                    <input class="form-control" type="text" name="phone">
+                                                    <label>Email</label>
+                                                    <input required class="form-control" type="email" name="email">
                                                 </div>
                                             </div>
-                                            <div class="col-lg-3">
+                                            <div class="col-sm-6 col-lg-3">
                                                 <div class="form-group">
                                                     <label>Пароль</label>
                                                     <input required class="form-control" type="text" name="password">
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-6 col-lg-3">
+                                                <div class="form-group">
+                                                    <label>Заработная плата</label>
+                                                    <input required class="form-control" type="text" name="salary">
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-6 col-lg-3">
+                                                <div class="form-group">
+                                                    <label>Телефон</label>
+                                                    <input class="form-control" type="phone" name="phone">
                                                 </div>
                                             </div>
                                         </div>

@@ -6,8 +6,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 
-use App\Models\User;
 use App\Models\WorkerClient;
+use App\Models\User;
 
 use Carbon\Carbon;
 
@@ -31,9 +31,9 @@ class WorkersController extends Controller
     public function index(Request $request)
     {
 
-        if(auth()->user()->role == 'worker'){
+        /*if(auth()->user()->role != 'manager'){
             return redirect()->route('worker');
-        }
+        }*/
 
         $workers_id = [];
         if(!empty($request->w)){
@@ -53,6 +53,7 @@ class WorkersController extends Controller
 
             $diff = date_diff($date1, $date2);
             $selectCountDays = $diff->format('%a')+1;
+
         }
 
         $date_or_period_with_secounds[] = new Carbon($date_or_period[0]);
@@ -126,10 +127,11 @@ class WorkersController extends Controller
     }
 
     /**
-     * Add New Client
+     * Add New Worker
      *
      */
-    public function addNewClient(Request $request){
+    public function addNewWorker(Request $request){
+
         $lastUrlForReditect = $request->lastUrl;
 
         $new_user = new User;
@@ -138,10 +140,11 @@ class WorkersController extends Controller
         $new_user->position = $request->position;
         $new_user->phone = $request->phone;
         $new_user->role = 'worker';
+        $new_user->image = 'vendor/adminlte/dist/img/no-usericon.svg';
         $new_user->password = Hash::make($request->password);
         $new_user->save();
 
-        return redirect($lastUrlForReditect)->with('status', 'Добавлен новый пользоватль');
+        return redirect($lastUrlForReditect)->with('status', 'Добавлен новый сотрудник: <b>'.$request->name.'</b>');
 
     }
 
