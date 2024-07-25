@@ -12,7 +12,9 @@
         font-weight: 600;
     }
     */
-
+    .card-footer {
+        display: none;
+    }
 </style>
 @vite(['resources/sass/app.scss'])
 @endpush
