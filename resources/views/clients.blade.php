@@ -218,7 +218,7 @@
                                         <button type="button" class="btn btn-default modal-close" data-dismiss="modal">Отмена</button>
                                         <button type="submit" class="btn btn-primary">Установить</button>
                                         <input type="hidden" value="{{ Request::fullUrl() }}" name="lastUrl" />
-                                        <input type="text" value="0" name="client_id" />
+                                        <input type="hidden" value="0" name="client_id" />
                                     </div>
                                 </div>
                             </div>
