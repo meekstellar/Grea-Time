@@ -23,7 +23,7 @@
                 </div>
             @endif
 
-            @if(date('H')>=17 && date('H')<=23)
+            @if(date('H')>=1 && date('H')<=23)
 
                 <div class="callout callout-success">
                     <h5>Заполните данные</h5>
