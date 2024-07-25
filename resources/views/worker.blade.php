@@ -22,12 +22,13 @@
                     {!! session('status') !!}
                 </div>
             @endif
-            <div class="callout callout-success">
-                <h5>Заполните данные</h5>
-                <p>Вы можете устанавливать часы работы каждый день между 17:00 и 23:59</p>
-            </div>
 
             @if(date('H')>=17 && date('H')<=23)
+
+                <div class="callout callout-success">
+                    <h5>Заполните данные</h5>
+                    <p>Вы можете устанавливать часы работы каждый день между 17:00 и 23:59</p>
+                </div>
 
                 @if(!empty($users['clients']))
                     <form class="card card-primary card-outline sticky-top" action="{{ route('saveWorker') }}" id="saveWorker" method="POST">
