@@ -156,11 +156,10 @@ class WorkersController extends Controller
                 $WorkerClient = new WorkerClient();
                 $WorkerClient->fill($data);
                 $WorkerClient->save();
-                dd($WorkerClient);
             }
         }
 
-        return redirect('worker')->with('status', 'Часы работы были успешно установлены.');
+        return redirect('worker')->with('status', 'Часы работы были успешно сохранены.');
 
     }
 
