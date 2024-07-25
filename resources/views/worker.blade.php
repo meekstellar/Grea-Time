@@ -7,7 +7,7 @@
         <div class="row mb-2">
             <div class="col-sm-7 pb-3 pb-sm-0">
                 <h1>
-                    Часы работы на клиентов
+                    Часы работы
                 </h1>
             </div>
         </div>
@@ -33,7 +33,7 @@
                             <tr>
                                 <th style="width: 10px">#</th>
                                 <th>Клиенты</th>
-                                <th style="width: 220px">Часы работы</th>
+                                <th style="width: 220px">Часы</th>
                             </tr>
                         </thead>
                         <tbody>
