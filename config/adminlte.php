@@ -63,7 +63,7 @@ return [
     |
     */
 
-    'logo' => '<b>Time</b>Sheet',
+    'logo' => '<b>Grea-Time</b>',
     'logo_img' => 'vendor/adminlte/dist/img/AdminLTELogo.svg',
     'logo_img_class' => 'brand-image img-circle elevation-3-off',
     'logo_img_xl' => null,
@@ -114,7 +114,7 @@ return [
         'mode' => 'fullscreen',
         'img' => [
             'path' => 'vendor/adminlte/dist/img/AdminLTELogo.svg',
-            'alt' => 'AdminLTE Preloader Image',
+            'alt' => 'Grea-Time',
             'effect' => 'animation__shake',
             'width' => 60,
             'height' => 60,

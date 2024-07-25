@@ -47,7 +47,7 @@
 
     <strong>
         <a href="{{ config('app.company_url', '#') }}">
-            {{ config('app.company_name', 'TimeSheet') }}
+            {{ config('app.company_name', 'Grea-Time') }}
         </a>
     </strong>
 @stop
