@@ -23,6 +23,7 @@ Auth::routes();
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 Route::get('/worker', [App\Http\Controllers\WorkersController::class, 'worker'])->name('worker');
+Route::post('/worker', [App\Http\Controllers\WorkersController::class, 'saveWorker'])->name('saveWorker');
 Route::get('/workers', [App\Http\Controllers\WorkersController::class, 'index'])->name('workers');
 Route::post('/addNewWorker', [App\Http\Controllers\WorkersController::class, 'addNewWorker'])->name('addNewWorker');
 Route::get('/clients', [App\Http\Controllers\ClientsController::class, 'index'])->name('clients');

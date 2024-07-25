@@ -115,15 +115,53 @@ class WorkersController extends Controller
         $date_or_period_with_secounds[1] = new Carbon(date('d-m-Y', time())); // Final date
         $date_or_period_with_secounds[1]->addHour(23)->addMinutes(59)->addSeconds(59);
 
-        $WorkerClient = WorkerClient::whereBetween("created_at", [ $date_or_period_with_secounds[0], $date_or_period_with_secounds[1] ])
-            ->where("worker_id", auth()->user()->id)->get();
+        $WorkerClientArray = WorkerClient::whereBetween("created_at", [ $date_or_period_with_secounds[0], $date_or_period_with_secounds[1] ])
+            ->where("worker_id", auth()->user()->id)->get()->keyBy('client_id')->toArray();
 
         $users['clients'] = User::where('role', 'client')->get()->sortBy('name');
 
         return view('worker')->with([
-			'WorkerClient'=>$WorkerClient,
+			'WorkerClientArray'=>$WorkerClientArray,
 			'users'=>$users,
 		]);
+    }
+
+    /**
+     * Save Worker data
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function saveWorker(Request $request)
+    {
+
+        $date_or_period_with_secounds[0] = new Carbon(date('d-m-Y', time()));
+        $date_or_period_with_secounds[1] = new Carbon(date('d-m-Y', time())); // Final date
+        $date_or_period_with_secounds[1]->addHour(23)->addMinutes(59)->addSeconds(59);
+
+        foreach($request->clients as $client_id=>$hours){
+            $data = [
+                'worker_id' => auth()->user()->id,
+                'client_id' => $client_id,
+                'hours' => $hours,
+            ];
+
+            $WorkerClient = WorkerClient::whereBetween("created_at", [ $date_or_period_with_secounds[0], $date_or_period_with_secounds[1] ])
+                ->where('worker_id',auth()->user()->id)
+                ->where("client_id", $client_id)
+                ->first();
+
+            if(!empty($WorkerClient->id)){
+                $WorkerClient->update($data);
+            } else {
+                $WorkerClient = new WorkerClient();
+                $WorkerClient->fill($data);
+                $WorkerClient->save();
+                dd($WorkerClient);
+            }
+        }
+
+        return redirect('worker')->with('status', 'Часы работы были успешно установлены.');
+
     }
 
     /**
