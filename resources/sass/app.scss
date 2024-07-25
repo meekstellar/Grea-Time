@@ -78,6 +78,7 @@
     mix-blend-mode: multiply;
     max-height: 110px;
     max-width: 160px;
+    width: 100%;
 }
 
 #daterange-btn{
@@ -110,4 +111,8 @@
     font-style: italic;
     font-size: .9rem;
     margin-left: .3rem;
+}
+
+.setFee-btn{
+    font-size: .85rem;
 }

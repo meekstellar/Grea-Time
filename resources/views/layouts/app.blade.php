@@ -174,7 +174,49 @@
                     $('#addClientHours [name="worker_id"]').val($('#addClientHours [name="worker_id"] option:first').val()).trigger('change');
                 }
                 $('#addClientHours [name="created_at"]').val(created_at);
-                console.log(worker_id, created_at);
+            });
+
+            $(document).on('click', '.setFee-btn', function (e) {
+                $('#setFee').find('[name="client_id"]').val($(this).data('client_id'));
+            });
+
+            $(document).on('submit', '#setFee', function (e) {
+                e.preventDefault();
+                var _this = $(this);
+                var client_id = $(this).find('[name="client_id"]').val();
+                var fee = $(this).find('[name="fee"]').val();
+                var profit = 0;
+                var data = {
+                    'client_id' : client_id,
+                    'fee' : fee*1,
+                    'year' : {{ Date::parse($date_or_period[0])->format('Y')*1 }},
+                    'month' : {{ Date::parse($date_or_period[0])->format('m')*1 }},
+                };
+                console.log(data);
+                $.ajax({
+                    url: "{{ route('setFee') }}",
+                    type: "POST",
+                    data: data,
+                    success: function (data) {
+                        if (data.status) {
+
+                            $('.modal-close').trigger('click');
+                            toastr.success(data.messages);
+                            $('#u'+client_id).find('.setedFee').text(fee);
+                            $('#u'+client_id).find('.setedOPEX').text(parseFloat(fee*0.35).toFixed(0));
+                            profit = parseFloat(fee-fee*0.35-$('#u'+client_id).find('.setedCostPrice').text()*1).toFixed(0);
+                            $('#u'+client_id).find('.seted_profit').text(profit);
+                            $('#u'+client_id).find('.marginality').text(parseFloat(profit*100/fee).toFixed(2)+'%');
+
+                        } else {
+                            console.log('error1');
+                        }
+                    },
+                    error: function (data) {
+                        console.log('error2');
+                    }
+                });
+
             });
 
         @endif

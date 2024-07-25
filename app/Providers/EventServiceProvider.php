@@ -37,11 +37,6 @@ class EventServiceProvider extends ServiceProvider
                 'text' => 'Клиенты',
                 'url' => 'clients',
                 'icon' => 'nav-icon fas fa-user-secret',
-            ],
-            [
-                'text' => 'TEMP',
-                'url' => 'temp',
-                'icon' => 'nav-icon fas fa-user-secret',
             ]);
         });
     }

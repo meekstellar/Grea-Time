@@ -11,6 +11,8 @@
                 </h1>
             </div>
             <div class="col-sm-5 text-right">
+                <a href="#" class="btn btn-info btn-sm"><i class="fas fa-file-pdf"></i> &nbsp;PDF</a>
+                <a href="#" class="btn btn-info btn-sm mr-2"><i class="fas fa-file-alt"></i> &nbsp;XLS</a>
                 <a href="#" class="btn btn-success btn-sm" data-toggle="modal" data-target="#addNewClient"><i class="fas fa-user-tie" aria-hidden="true"></i> &nbsp;Новый клиент</a>
             </div>
         </div>
@@ -110,6 +112,9 @@
                                                             <td style="width: 10px">{{ $loop->iteration }}.</td>
                                                             <td>{{ $wc_workers->worker()->name }} <span class="worker_positon">({{ $wc_workers->worker()->position }})</span></td>
                                                             <td style="width: 80px; text-align: right;">{{ $WorkerClient->where('client_id',$wc->client_id)->where('worker_id',$wc_workers->worker_id)->sum('hours') }}</td>
+                                                            @if(in_array($selectCountDays, [28,29,30,31]))
+                                                            <td style="width: 80px; text-align: right;">{{ $WorkerClient->where('client_id',$wc->client_id)->where('worker_id',$wc_workers->worker_id)->sum('hours')*1000 }}</td>
+                                                            @endif
                                                         </tr>
                                                         @php
                                                             $processed[] = $wc_workers->worker_id;
@@ -184,6 +189,36 @@
                                         <button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
                                         <button type="submit" class="btn btn-primary">Добавить</button>
                                         <input type="hidden" value="{{ Request::fullUrl() }}" name="lastUrl" />
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+
+                        <form class="modal fade" id="setFee" action="{{ route('setFee') }}" method="POST">
+                            @csrf
+                            <div class="modal-dialog modal-sm">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h4 class="modal-title"><i class="fas fa-dollar-sign"></i> Установить гонорар</h4>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <div class="form-group">
+                                                    <label>Гонорар</label>
+                                                    <input required class="form-control text-center" type="text" name="fee">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer justify-content-between">
+                                        <button type="button" class="btn btn-default modal-close" data-dismiss="modal">Отмена</button>
+                                        <button type="submit" class="btn btn-primary">Установить</button>
+                                        <input type="hidden" value="{{ Request::fullUrl() }}" name="lastUrl" />
+                                        <input type="text" value="0" name="client_id" />
                                     </div>
                                 </div>
                             </div>

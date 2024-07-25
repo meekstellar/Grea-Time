@@ -82,7 +82,7 @@
 
                         @if(!empty($WorkerClient))
                             @foreach($WorkerClient->unique('worker_id') as $wc)
-                                <div class="col-12">
+                                <div class="col-xl-6">
                                     <form id="u{{ $wc->worker_id }}" data-worker_id="{{ $wc->worker_id }}" class="card {{ (($selectCountDays == 7 && $WorkerClient->where('worker_id',$wc->worker_id)->sum('hours') < 36 || in_array($selectCountDays, [28,29,30,31]) && $WorkerClient->where('worker_id',$wc->worker_id)->sum('hours') < 150) ? 'few-days' : (($selectCountDays == 7 && $WorkerClient->where('worker_id',$wc->worker_id)->sum('hours') > 44 || in_array($selectCountDays, [28,29,30,31]) && $WorkerClient->where('worker_id',$wc->worker_id)->sum('hours') > 180) ? 'many-days' : 'bg-white')) }} d-flex flex-fill">
                                         <div class="card-body pt-3">
                                             <div class="row">

@@ -29,4 +29,4 @@ Route::post('/addClientHours', [App\Http\Controllers\WorkersController::class, '
 Route::post('/addNewWorker', [App\Http\Controllers\WorkersController::class, 'addNewWorker'])->name('addNewWorker');
 Route::post('/addNewClient', [App\Http\Controllers\ClientsController::class, 'addNewClient'])->name('addNewClient');
 Route::get('/clients', [App\Http\Controllers\ClientsController::class, 'index'])->name('clients');
-Route::get('/temp', [App\Http\Controllers\ClientsController::class, 'temp'])->name('temp');
+Route::post('/setFee', [App\Http\Controllers\ClientsController::class, 'setFee'])->name('setFee');

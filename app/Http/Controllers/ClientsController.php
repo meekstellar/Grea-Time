@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 
 use App\Models\WorkerClient;
+use App\Models\ClientsFees;
 use App\Models\User;
 
 use Carbon\Carbon;
@@ -80,10 +81,6 @@ class ClientsController extends Controller
 		]);
     }
 
-    public function temp(){
-        return view('clients-old');
-    }
-
     /**
      * Add New Client
      *
@@ -103,6 +100,31 @@ class ClientsController extends Controller
 
         return redirect($lastUrlForReditect)->with('status', 'Добавлен новый клиент: <b>'.$request->name.'</b>');
 
+    }
+
+    /**
+     * Set Fee For Client
+     *
+     */
+    public function setFee(Request $request){
+        $ClientsFees = ClientsFees::where('client_id', $request->client_id)
+            ->where('year',$request->year)
+            ->where('month',$request->month)
+            ->first();
+        if(!is_null($ClientsFees)){
+            $ClientsFees->fee = $request->fee;
+            $ClientsFees->save();
+        } else {
+            $ClientsFees = new ClientsFees;
+            $ClientsFees->client_id = $request->client_id;
+            $ClientsFees->year = $request->year;
+            $ClientsFees->month = $request->month;
+            $ClientsFees->fee = $request->fee;
+            $ClientsFees->save();
+        }
+
+        $user = User::where('id',$request->client_id)->first();
+        return response()->json(['status' => true, 'messages' => 'Гонорар установлен для клиента '.$user->name.$ClientsFees->id.'']);
     }
 
 }
