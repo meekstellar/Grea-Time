@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Event;
+use JeroenNoten\LaravelAdminLte\Events\BuildingMenu;
 
 use App\Models\WorkerClient;
 use App\Models\ClientsFees;
@@ -22,6 +24,7 @@ class ClientsController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
+
     }
 
     /**
@@ -32,9 +35,27 @@ class ClientsController extends Controller
     public function index(Request $request)
     {
 
-        /*if(auth()->user()->role != 'manager'){
+        if(auth()->user()->role != 'worker'){
+
+            Event::listen(BuildingMenu::class, function (BuildingMenu $event) {
+                // Add some items to the menu...
+                $event->menu->add([
+                    'text' => 'Сотруднники',
+                    'url' => 'workers',
+                    'icon' => 'nav-icon fas fa-user-tie',
+                ],
+                [
+                    'text' => 'Клиенты',
+                    'url' => 'clients',
+                    'icon' => 'nav-icon fas fa-user-secret',
+                ]);
+            });
+
+        }
+
+        if(auth()->user()->role == 'worker'){
             return redirect()->route('worker');
-        }*/
+        }
 
         $clients_id = [];
         if(!empty($request->w)){

@@ -26,7 +26,7 @@ class EventServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        Event::listen(BuildingMenu::class, function (BuildingMenu $event) {
+        /* Event::listen(BuildingMenu::class, function (BuildingMenu $event) {
             // Add some items to the menu...
             $event->menu->add([
                 'text' => 'Сотруднники',
@@ -38,7 +38,7 @@ class EventServiceProvider extends ServiceProvider
                 'url' => 'clients',
                 'icon' => 'nav-icon fas fa-user-secret',
             ]);
-        });
+        }); */
     }
 
     /**

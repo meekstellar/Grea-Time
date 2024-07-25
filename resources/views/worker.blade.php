@@ -22,9 +22,20 @@
                     {!! session('status') !!}
                 </div>
             @endif
-            <div class="alert alert-danger" role="alert">
-                <h3>Страница в разработке</h3>
+
+            @if(!empty($users['clients']))
+                @foreach($users['clients'] as $worker)
+            <div class="row">
+                <div class="col-md-9">
+                    {{ $worker->name }}
+                </div>
+                <div class="col-md-3">
+                    <input type="text" class="form-control" value="" placeholder="Время работы" />
+                </div>
             </div>
+                @endforeach
+            @endif
+
         </div>
     </section>
 

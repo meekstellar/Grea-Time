@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Event;
+use JeroenNoten\LaravelAdminLte\Events\BuildingMenu;
 
 use App\Models\WorkerClient;
 use App\Models\User;
@@ -21,6 +23,7 @@ class WorkersController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
+
     }
 
     /**
@@ -31,9 +34,27 @@ class WorkersController extends Controller
     public function index(Request $request)
     {
 
-        /*if(auth()->user()->role != 'manager'){
+        if(auth()->user()->role != 'worker'){
+
+            Event::listen(BuildingMenu::class, function (BuildingMenu $event) {
+                // Add some items to the menu...
+                $event->menu->add([
+                    'text' => 'Сотруднники',
+                    'url' => 'workers',
+                    'icon' => 'nav-icon fas fa-user-tie',
+                ],
+                [
+                    'text' => 'Клиенты',
+                    'url' => 'clients',
+                    'icon' => 'nav-icon fas fa-user-secret',
+                ]);
+            });
+
+        }
+
+        if(auth()->user()->role == 'worker'){
             return redirect()->route('worker');
-        }*/
+        }
 
         $workers_id = [];
         if(!empty($request->w)){
@@ -90,7 +111,19 @@ class WorkersController extends Controller
      */
     public function worker(Request $request)
     {
-        return view('worker');
+        $date_or_period_with_secounds[0] = new Carbon(date('d-m-Y', time()));
+        $date_or_period_with_secounds[1] = new Carbon(date('d-m-Y', time())); // Final date
+        $date_or_period_with_secounds[1]->addHour(23)->addMinutes(59)->addSeconds(59);
+
+        $WorkerClient = WorkerClient::whereBetween("created_at", [ $date_or_period_with_secounds[0], $date_or_period_with_secounds[1] ])
+            ->where("worker_id", auth()->user()->id)->get();
+
+        $users['clients'] = User::where('role', 'client')->get()->sortBy('name');
+
+        return view('worker')->with([
+			'WorkerClient'=>$WorkerClient,
+			'users'=>$users,
+		]);
     }
 
     /**
