@@ -8,6 +8,13 @@
 @stop
 
 @section('adminlte_css_pre')
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('/apple-touch-icon.png') }}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('/favicon-32x32.png') }}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('/favicon-16x16.png') }}">
+    <link rel="manifest" href="{{ asset('/site.webmanifest') }}">
+    <meta name="msapplication-TileColor" content="#00c2f3">
+    <meta name="theme-color" content="#ffffff">
+
     <base href="https://<?php echo $_SERVER['HTTP_HOST']; ?>/" />
     <link rel="stylesheet" href="{{ asset('/vendor/adminlte/dist/plugins/select2/css/select2.min.css') }}">
     <link rel="stylesheet" href="{{ asset('/vendor/adminlte/dist/plugins/daterangepicker/daterangepicker.css') }}">
@@ -70,7 +77,7 @@
             }
         });
 
-        $('.select2').select2();
+        $('.select2').select2({closeOnSelect:false});
 
         setTimeout(function() {
             $('.alert-success').slideUp();

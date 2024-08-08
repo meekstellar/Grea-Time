@@ -39,7 +39,7 @@ class WorkersController extends Controller
             Event::listen(BuildingMenu::class, function (BuildingMenu $event) {
                 // Add some items to the menu...
                 $event->menu->add([
-                    'text' => 'Сотруднники',
+                    'text' => 'Сотрудники',
                     'url' => 'workers',
                     'icon' => 'nav-icon fas fa-user-tie',
                 ],
