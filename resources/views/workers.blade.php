@@ -28,6 +28,19 @@
                     {!! session('status') !!}
                 </div>
             @endif
+
+            @if(count($errors) > 0)
+            <div class="alert alert-danger alert-dismissible">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+            <h5><i class="icon fas fa-ban"></i> Ошибка</h5>
+                    <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{!! $error !!}</li>
+                    @endforeach
+                    </ul>
+            </div>
+            @endif
+
             <div class="row">
                 <form class="col-md-4" action="{{ route('workers') }}" id="FilterForm" method="GET">
                     <div class="card card-primary card-outline sticky-top">
@@ -86,7 +99,7 @@
                                     <form id="u{{ $wc->worker_id }}" data-worker_id="{{ $wc->worker_id }}" class="card {{ (($selectCountDays == 7 && $WorkerClient->where('worker_id',$wc->worker_id)->sum('hours') < 36 || in_array($selectCountDays, [28,29,30,31]) && $WorkerClient->where('worker_id',$wc->worker_id)->sum('hours') < 150) ? 'few-days' : (($selectCountDays == 7 && $WorkerClient->where('worker_id',$wc->worker_id)->sum('hours') > 44 || in_array($selectCountDays, [28,29,30,31]) && $WorkerClient->where('worker_id',$wc->worker_id)->sum('hours') > 180) ? 'many-days' : 'bg-white')) }} d-flex flex-fill">
                                         <div class="card-body pt-3">
                                             <div class="row">
-                                                <div class="col-8">
+                                                <div class="col-9">
                                                     @if(!empty($wc->worker()->position))
                                                     <div class="text-muted pb-1" title="{{ $wc->worker()->position }}" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
                                                         {{ $wc->worker()->position }}
@@ -96,12 +109,12 @@
                                                     @if(!empty($wc->worker()->phone) || !empty($wc->worker()->email))
                                                     <ul class="ml-4 mb-0 fa-ul text-muted">
                                                         <li class="small"><span class="fa-li"><i class="far fa-envelope"></i></span> <a href="mailto:{{ $wc->worker()->email }}">{{ $wc->worker()->email }}</a></li>
-                                                        @if(!empty($wc->worker()->phone))<li class="small"><span class="fa-li"><i class="fas fa-phone"></i></span> <a href="tel:{{ $wc->worker()->phone }}">{{ $wc->worker()->phone }}</a></li>@endif
+                                                        @if(!empty($wc->worker()->phone)){{--<li class="small"><span class="fa-li"><i class="fas fa-phone"></i></span> <a href="tel:{{ $wc->worker()->phone }}">{{ $wc->worker()->phone }}</a></li>--}}@endif
                                                     </ul>
                                                     @endif
                                                 </div>
-                                                <div class="col-4 text-right">
-                                                    <img alt="user-avatar" class="worker-avatar img-circle img-fluid" src="{{ asset($wc->worker()->image) }}">
+                                                <div class="col-3 text-right">
+                                                    <img alt="user-avatar" class="worker-avatar img-circle img-fluid" src="{{ (!empty($wc->worker()->image && File::exists('storage/'.$wc->worker()->image)) ? asset('storage/'.$wc->worker()->image) : asset('vendor/adminlte/dist/img/no-usericon.svg')) }}">
                                                 </div>
                                             </div>
                                         </div>
@@ -199,7 +212,7 @@
                             </div>
                         </form>
 
-                        <form class="modal fade" id="addNewWorker" action="{{ route('addNewWorker') }}" method="POST">
+                        <form class="modal fade" id="addNewWorker" action="{{ route('addNewWorker') }}" method="POST" enctype="multipart/form-data">
                             @csrf
                             <div class="modal-dialog modal-lg">
                                 <div class="modal-content">
@@ -214,7 +227,7 @@
                                             <div class="col-lg-6">
                                                 <div class="form-group">
                                                     <label>Имя сотрудника</label>
-                                                    <input required class="form-control" type="text" name="name">
+                                                    <input required1 class="form-control" type="text" name="name">
                                                 </div>
                                             </div>
                                             <div class="col-lg-6">
@@ -223,30 +236,38 @@
                                                     <input class="form-control" type="text" name="position">
                                                 </div>
                                             </div>
-                                            <div class="col-sm-6 col-lg-3">
+                                            <div class="col-sm-6 col-lg-6">
                                                 <div class="form-group">
                                                     <label>Email</label>
-                                                    <input required class="form-control" type="email" name="email">
+                                                    <input required1 class="form-control" type="email" name="email">
                                                 </div>
                                             </div>
                                             <div class="col-sm-6 col-lg-3">
                                                 <div class="form-group">
                                                     <label>Пароль</label>
-                                                    <input required class="form-control" type="text" name="password">
+                                                    <input required1 class="form-control" type="text" name="password">
                                                 </div>
                                             </div>
                                             <div class="col-sm-6 col-lg-3">
                                                 <div class="form-group">
                                                     <label>Заработная плата</label>
-                                                    <input required class="form-control" type="text" name="salary">
+                                                    <input required1 class="form-control" type="text" name="salary">
                                                 </div>
                                             </div>
+                                            <div class="col-sm-6 col-lg-6">
+                                                <div class="form-group">
+                                                    <label>Фото</label>
+                                                    <div class="custom-file-">
+                                                        <input type="file" name="image" class="custom-file-input-" id="image">
+                                                    </div>
+                                                </div>
+                                            </div>{{--
                                             <div class="col-sm-6 col-lg-3">
                                                 <div class="form-group">
                                                     <label>Телефон</label>
                                                     <input class="form-control" type="phone" name="phone">
                                                 </div>
-                                            </div>
+                                            </div>--}}
                                         </div>
                                     </div>
                                     <div class="modal-footer justify-content-between">

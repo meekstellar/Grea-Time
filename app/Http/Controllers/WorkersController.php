@@ -201,6 +201,9 @@ class WorkersController extends Controller
      *
      */
     public function addNewWorker(Request $request){
+        $request->validate([
+            'name' => 'required',
+        ]);
 
         $lastUrlForReditect = $request->lastUrl;
 
@@ -210,7 +213,12 @@ class WorkersController extends Controller
         $new_user->position = $request->position;
         $new_user->phone = $request->phone;
         $new_user->role = 'worker';
-        $new_user->image = 'vendor/adminlte/dist/img/no-usericon.svg';
+        if($request->hasFile('image')) {
+            $new_user->image = $request->file('image')->store('users','public');
+        } else {
+            $new_user->image = 'vendor/adminlte/dist/img/no-usericon.svg';
+        }
+
         $new_user->password = Hash::make($request->password);
         $new_user->save();
 
