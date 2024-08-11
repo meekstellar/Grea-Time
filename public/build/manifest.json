@@ -1,4 +1,8 @@
 {
+  "public/img/check-mark-svgrepo-com.svg": {
+    "file": "assets/check-mark-svgrepo-com-BmKqumgd.svg",
+    "src": "public/img/check-mark-svgrepo-com.svg"
+  },
   "resources/js/app.js": {
     "file": "assets/app-BkDPDVeP.js",
     "name": "app",
@@ -6,7 +10,7 @@
     "isEntry": true
   },
   "resources/sass/app.scss": {
-    "file": "assets/app-CsAI13Ob.css",
+    "file": "assets/app-CIdTP-2l.css",
     "src": "resources/sass/app.scss",
     "isEntry": true
   }
