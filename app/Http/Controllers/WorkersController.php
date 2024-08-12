@@ -216,7 +216,7 @@ class WorkersController extends Controller
         if($request->hasFile('image')) {
             $new_user->image = $request->file('image')->store('users','public');
         } else {
-            $new_user->image = 'vendor/adminlte/dist/img/no-usericon.svg';
+            // $new_user->image = 'vendor/adminlte/dist/img/no-usericon.svg';
         }
 
         $new_user->password = Hash::make($request->password);
@@ -224,6 +224,36 @@ class WorkersController extends Controller
 
         return redirect($lastUrlForReditect)->with('status', 'Добавлен новый сотрудник: <b>'.$request->name.'</b>');
 
+    }
+
+    /**
+     * Edit Worker From Client
+     *
+     */
+    public function editWorkerFromClient(Request $request){
+        /*$request->validate([
+            'name' => 'required',
+        ]);
+
+        $lastUrlForReditect = $request->lastUrl;
+
+        $new_user = new User;
+        $new_user->name = $request->name;
+        $new_user->email = $request->email;
+        $new_user->position = $request->position;
+        $new_user->phone = $request->phone;
+        $new_user->role = 'worker';
+        if($request->hasFile('image')) {
+            $new_user->image = $request->file('image')->store('users','public');
+        } else {
+            // $new_user->image = 'vendor/adminlte/dist/img/no-usericon.svg';
+        }
+
+        $new_user->password = Hash::make($request->password);
+        $new_user->save();
+
+        return redirect($lastUrlForReditect)->with('status', 'Добавлен новый сотрудник: <b>'.$request->name.'</b>');
+*/
     }
 
 }

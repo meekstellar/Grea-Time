@@ -64,13 +64,26 @@
     margin-top: -5px;
     margin-right: -5px;
 }
+.b600{
+    font-weight: 600; color: inherit;
+}
 
 .worker-avatar{
     filter: grayscale(1);
     mix-blend-mode: multiply;
-    max-height: 95px;
-    max-width: 95px;
-    width: 100%;
+    height: 78px !important;
+    width: 78px !important;
+    max-width: 78px !important;
+    max-height: 78px !important;
+    object-fit: cover;
+}
+@media only screen and (max-width: 1199px) and (min-width: 460px)  {
+    .worker-avatar{
+        height: 90px !important;
+        width: 90px !important;
+        max-width: 90px !important;
+        max-height: 90px !important;
+    }
 }
 .client-avatar{
     //filter: grayscale(1);

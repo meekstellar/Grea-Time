@@ -22,7 +22,7 @@
 
     <!-- Main content -->
     <section class="content">
-        <div class="container-fluid">
+        <div class="container-fluid pb-4">
             @if (session('status'))
                 <div class="alert alert-success" role="alert">
                     {!! session('status') !!}
@@ -95,20 +95,20 @@
 
                         @if(!empty($WorkerClient))
                             @foreach($WorkerClient->unique('worker_id') as $wc)
-                                <div class="col-xl-6">
+                                <div class="col-xl-6 d-flex">
                                     <form id="u{{ $wc->worker_id }}" data-worker_id="{{ $wc->worker_id }}" class="card {{ (($selectCountDays == 7 && $WorkerClient->where('worker_id',$wc->worker_id)->sum('hours') < 36 || in_array($selectCountDays, [28,29,30,31]) && $WorkerClient->where('worker_id',$wc->worker_id)->sum('hours') < 150) ? 'few-days' : (($selectCountDays == 7 && $WorkerClient->where('worker_id',$wc->worker_id)->sum('hours') > 44 || in_array($selectCountDays, [28,29,30,31]) && $WorkerClient->where('worker_id',$wc->worker_id)->sum('hours') > 180) ? 'many-days' : 'bg-white')) }} d-flex flex-fill">
-                                        <div class="card-body pt-3">
+                                        <div class="card-body pt-3" style="flex: none;">
                                             <div class="row">
                                                 <div class="col-9">
                                                     @if(!empty($wc->worker()->position))
-                                                    <div class="text-muted pb-1" title="{{ $wc->worker()->position }}" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                                                    <div class="text-muted pb-1 data_position" title="{{ $wc->worker()->position }}" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
                                                         {{ $wc->worker()->position }}
                                                     </div>
                                                     @endif
-                                                    <h2 class="lead"><b>{{ $wc->worker()->name }}</b></h2>
+                                                    <h2 class="lead"><a href="#" class="b600 editWorkerFromClientClick data_name" data-toggle="modal" data-target="#editWorkerFromClient">{{ $wc->worker()->name }}</a></h2>
                                                     @if(!empty($wc->worker()->phone) || !empty($wc->worker()->email))
                                                     <ul class="ml-4 mb-0 fa-ul text-muted">
-                                                        <li class="small"><span class="fa-li"><i class="far fa-envelope"></i></span> <a href="mailto:{{ $wc->worker()->email }}">{{ $wc->worker()->email }}</a></li>
+                                                        <li class="small"><span class="fa-li"><i class="far fa-envelope"></i></span> <a href="mailto:{{ $wc->worker()->email }}" class="data_email">{{ $wc->worker()->email }}</a></li>
                                                         @if(!empty($wc->worker()->phone)){{--<li class="small"><span class="fa-li"><i class="fas fa-phone"></i></span> <a href="tel:{{ $wc->worker()->phone }}">{{ $wc->worker()->phone }}</a></li>--}}@endif
                                                     </ul>
                                                     @endif
@@ -118,14 +118,14 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="card-body p-0">
+                                        <div class="card-body p-0" style="flex: 100%;">
                                             @if($selectCountDays == 1)
                                                 @include('components/workers/user-data-day')
                                             @else
                                                 @include('components/workers/user-data-period')
                                             @endif
                                         </div>
-                                        <div class="card-footer">
+                                        <div class="card-footer" style="flex: none;">
                                             <div class="row">
                                                 <div class="col-sm-6">
                                                     @if($selectCountDays == 1)
@@ -227,7 +227,7 @@
                                             <div class="col-lg-6">
                                                 <div class="form-group">
                                                     <label>Имя сотрудника</label>
-                                                    <input required1 class="form-control" type="text" name="name">
+                                                    <input required class="form-control" type="text" name="name">
                                                 </div>
                                             </div>
                                             <div class="col-lg-6">
@@ -239,19 +239,19 @@
                                             <div class="col-sm-6 col-lg-6">
                                                 <div class="form-group">
                                                     <label>Email</label>
-                                                    <input required1 class="form-control" type="email" name="email">
+                                                    <input required class="form-control" type="email" name="email">
                                                 </div>
                                             </div>
                                             <div class="col-sm-6 col-lg-3">
                                                 <div class="form-group">
                                                     <label>Пароль</label>
-                                                    <input required1 class="form-control" type="text" name="password">
+                                                    <input required class="form-control" type="text" name="password">
                                                 </div>
                                             </div>
                                             <div class="col-sm-6 col-lg-3">
                                                 <div class="form-group">
                                                     <label>Заработная плата</label>
-                                                    <input required1 class="form-control" type="text" name="salary">
+                                                    <input required class="form-control" type="text" name="salary">
                                                 </div>
                                             </div>
                                             <div class="col-sm-6 col-lg-6">
@@ -274,6 +274,74 @@
                                         <button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
                                         <button type="submit" class="btn btn-primary">Добавить</button>
                                         <input type="hidden" value="{{ Request::fullUrl() }}" name="lastUrl" />
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+
+                        <form class="modal fade" id="editWorkerFromClient" action="{{ route('editWorkerFromClient') }}" method="POST" enctype="multipart/form-data">
+                            @csrf
+                            <div class="modal-dialog modal-lg">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h4 class="modal-title"><i class="fas fa-edit"></i> <span>Henri Bradtke</span> - редактирование</h4>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="row">
+                                            <div class="col-lg-6">
+                                                <div class="form-group">
+                                                    <label>Имя сотрудника</label>
+                                                    <input required class="form-control" type="text" name="name">
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <div class="form-group">
+                                                    <label>Должность</label>
+                                                    <input class="form-control" type="text" name="position">
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-6 col-lg-6">
+                                                <div class="form-group">
+                                                    <label>Email</label>
+                                                    <input required class="form-control" type="email" name="email">
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-6 col-lg-3">
+                                                <div class="form-group">
+                                                    <label>Пароль</label>
+                                                    <input required class="form-control" type="text" name="password">
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-6 col-lg-3">
+                                                <div class="form-group">
+                                                    <label>Заработная плата</label>
+                                                    <input required class="form-control" type="text" name="salary">
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-6 col-lg-6">
+                                                <div class="form-group">
+                                                    <label>Фото</label>
+                                                    <div class="custom-file-">
+                                                        <input type="file" name="image" class="custom-file-input-" id="image">
+                                                    </div>
+                                                </div>
+                                            </div>{{--
+                                            <div class="col-sm-6 col-lg-3">
+                                                <div class="form-group">
+                                                    <label>Телефон</label>
+                                                    <input class="form-control" type="phone" name="phone">
+                                                </div>
+                                            </div>--}}
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer justify-content-between">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
+                                        <button type="submit" class="btn btn-primary">Добавить</button>
+                                        <input type="hidden" value="{{ Request::fullUrl() }}" name="lastUrl" />
+                                        <input type="hidden" value="" name="worker_id" />
                                     </div>
                                 </div>
                             </div>

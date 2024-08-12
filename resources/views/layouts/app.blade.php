@@ -226,6 +226,16 @@
 
             });
 
+            $(document).on('click', '.editWorkerFromClientClick', function (e) {
+                var _thisWorker = $(this).closest('form');
+                $('#editWorkerFromClient [name="name"]').val(_thisWorker.find('.data_name').text());
+                $('#editWorkerFromClient [name="position"]').val(_thisWorker.find('.data_position').attr('title'));
+                $('#editWorkerFromClient [name="email"]').val(_thisWorker.find('.data_email').text());
+                $('#editWorkerFromClient [name="worker_id"]').val(_thisWorker.data('worker_id'));
+            });
+
+            //editWorkerFromClient
+
         @endif
     });
 

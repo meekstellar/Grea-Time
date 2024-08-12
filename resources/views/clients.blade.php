@@ -86,7 +86,7 @@
                                         <div class="card-body pt-3">
                                             <div class="row align-items-center">
                                                 <div class="col-8">
-                                                    <h2 class="lead"><b>{{ $wc->client()->name }}</b></h2>
+                                                    <h2 class="lead"><a href="#" class="b600">{{ $wc->client()->name }}</a></h2>
                                                     @if(!empty($wc->client()->phone) || !empty($wc->client()->email))
                                                     <ul class="ml-4 mb-0 fa-ul text-muted">
                                                         <li class="small"><span class="fa-li"><i class="fas fa-envelope"></i></span> <a href="mailto:{{ $wc->client()->email }}">{{ $wc->client()->email }}</a></li>
