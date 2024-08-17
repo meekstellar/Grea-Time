@@ -227,11 +227,22 @@
             });
 
             $(document).on('click', '.editWorkerFromClientClick', function (e) {
-                var _thisWorker = $(this).closest('form');
-                $('#editWorkerFromClient [name="name"]').val(_thisWorker.find('.data_name').text());
-                $('#editWorkerFromClient [name="position"]').val(_thisWorker.find('.data_position').attr('title'));
-                $('#editWorkerFromClient [name="email"]').val(_thisWorker.find('.data_email').text());
-                $('#editWorkerFromClient [name="worker_id"]').val(_thisWorker.data('worker_id'));
+                var _thisForm = $(this).closest('form');
+                $('#popup__editWorkerFromClient [name="name"]').val(_thisForm.find('.data_name').text());
+                $('#popup__editWorkerFromClient [name="email"]').val(_thisForm.find('.data_email').text());
+                $('#popup__editWorkerFromClient .user-photo-preview').attr('src',_thisForm.find('.worker-avatar').attr('src'));
+                $('#popup__editWorkerFromClient [name="position"]').val(_thisForm.data('position'));
+                $('#popup__editWorkerFromClient [name="id"]').val(_thisForm.data('id'));
+                $('#popup__editWorkerFromClient [name="password"]').val('');
+                $('#popup__editWorkerFromClient [name="salary"]').val(_thisForm.data('salary'));
+            });
+
+            $(document).on('click', '.editClientClick', function (e) {
+                var _thisForm = $(this).closest('form');
+                $('#popup__editClient [name="name"]').val(_thisForm.find('.data_name').text());
+                $('#popup__editClient [name="email"]').val(_thisForm.find('.data_email').text());
+                $('#popup__editClient .user-logo-preview').attr('src',_thisForm.find('.client-avatar').attr('src'));
+                $('#popup__editClient [name="id"]').val(_thisForm.data('id'));
             });
 
             //editWorkerFromClient

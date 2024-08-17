@@ -24,6 +24,7 @@ return new class extends Migration
             $table->string('phone', 50)->nullable(true)->default('');
             $table->string('role',15)->nullable(true)->default('');
             $table->string('image',255)->nullable(true)->default('');
+            $table->integer('active')->default(1);
             $table->timestamps();
         });
     }

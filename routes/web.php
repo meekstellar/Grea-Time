@@ -20,15 +20,17 @@ Route::get('/', function () {
 
 Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/home',                     [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
-Route::get('/worker', [App\Http\Controllers\WorkersController::class, 'worker'])->name('worker');
-Route::post('/worker', [App\Http\Controllers\WorkersController::class, 'saveWorker'])->name('saveWorker');
-Route::get('/workers', [App\Http\Controllers\WorkersController::class, 'index'])->name('workers');
-Route::post('/addNewWorker', [App\Http\Controllers\WorkersController::class, 'addNewWorker'])->name('addNewWorker');
-Route::post('/editWorkerFromClient', [App\Http\Controllers\WorkersController::class, 'editWorkerFromClient'])->name('editWorkerFromClient');
-Route::get('/clients', [App\Http\Controllers\ClientsController::class, 'index'])->name('clients');
-Route::post('/addNewClient', [App\Http\Controllers\ClientsController::class, 'addNewClient'])->name('addNewClient');
-Route::post('/addClientHours', [App\Http\Controllers\WorkersController::class, 'addClientHours'])->name('addClientHours');
-Route::post('/changeClientsHours', [App\Http\Controllers\WorkersController::class, 'changeClientsHours'])->name('changeClientsHours');
-Route::post('/setFee', [App\Http\Controllers\ClientsController::class, 'setFee'])->name('setFee');
+Route::get('/worker',                   [App\Http\Controllers\WorkersController::class, 'worker'])->name('worker');
+Route::post('/worker',                  [App\Http\Controllers\WorkersController::class, 'saveWorker'])->name('saveWorker');
+Route::get('/workers',                  [App\Http\Controllers\WorkersController::class, 'index'])->name('workers');
+Route::post('/addNewWorker',            [App\Http\Controllers\WorkersController::class, 'addNewWorker'])->name('addNewWorker');
+Route::post('/editWorkerFromClient',    [App\Http\Controllers\WorkersController::class, 'editWorkerFromClient'])->name('editWorkerFromClient');
+Route::post('/addClientHours',          [App\Http\Controllers\WorkersController::class, 'addClientHours'])->name('addClientHours');
+Route::post('/changeClientsHours',      [App\Http\Controllers\WorkersController::class, 'changeClientsHours'])->name('changeClientsHours');
+
+Route::get('/clients',                  [App\Http\Controllers\ClientsController::class, 'index'])->name('clients');
+Route::post('/addNewClient',            [App\Http\Controllers\ClientsController::class, 'addNewClient'])->name('addNewClient');
+Route::post('/editClient',              [App\Http\Controllers\ClientsController::class, 'editClient'])->name('editClient');
+Route::post('/setFee',                  [App\Http\Controllers\ClientsController::class, 'setFee'])->name('setFee');

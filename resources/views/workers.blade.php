@@ -5,12 +5,12 @@
     <section class="content-header">
         <div class="container-fluid">
             <div class="row mb-2">
-                <div class="col-sm-7 pb-3 pb-sm-0">
+                <div class="col-sm-3 pb-3 pb-sm-0">
                     <h1>
                         Cотрудники
                     </h1>
                 </div>
-                <div class="col-sm-5 text-right">
+                <div class="col-sm-9 text-right">
                     @if($selectCountDays == 1)
                         <button class="btn btn-info btn-sm mr-2 addClientHoursButton" data-toggle="modal" data-target="#addClientHours"><i class="far fa-clock"></i> &nbsp;Добавить часы работы</button>
                     @endif
@@ -95,26 +95,27 @@
 
                         @if(!empty($WorkerClient))
                             @foreach($WorkerClient->unique('worker_id') as $wc)
-                                <div class="col-xl-6 d-flex">
-                                    <form id="u{{ $wc->worker_id }}" data-worker_id="{{ $wc->worker_id }}" class="card {{ (($selectCountDays == 7 && $WorkerClient->where('worker_id',$wc->worker_id)->sum('hours') < 36 || in_array($selectCountDays, [28,29,30,31]) && $WorkerClient->where('worker_id',$wc->worker_id)->sum('hours') < 150) ? 'few-days' : (($selectCountDays == 7 && $WorkerClient->where('worker_id',$wc->worker_id)->sum('hours') > 44 || in_array($selectCountDays, [28,29,30,31]) && $WorkerClient->where('worker_id',$wc->worker_id)->sum('hours') > 180) ? 'many-days' : 'bg-white')) }} d-flex flex-fill">
+                                @if($wc->worker()->active)
+                                <div class="col-xl-12 d-flex">
+                                    <form id="u{{ $wc->worker_id }}" data-id="{{ $wc->worker_id }}" data-salary="{{ $wc->worker()->salary }}" data-position="{{ $wc->worker()->position }}" class="card {{ (($selectCountDays == 7 && $WorkerClient->where('worker_id',$wc->worker_id)->sum('hours') < 36 || in_array($selectCountDays, [28,29,30,31]) && $WorkerClient->where('worker_id',$wc->worker_id)->sum('hours') < 150) ? 'few-days' : (($selectCountDays == 7 && $WorkerClient->where('worker_id',$wc->worker_id)->sum('hours') > 44 || in_array($selectCountDays, [28,29,30,31]) && $WorkerClient->where('worker_id',$wc->worker_id)->sum('hours') > 180) ? 'many-days' : 'bg-white')) }} d-flex flex-fill">
                                         <div class="card-body pt-3" style="flex: none;">
                                             <div class="row">
                                                 <div class="col-9">
                                                     @if(!empty($wc->worker()->position))
-                                                    <div class="text-muted pb-1 data_position" title="{{ $wc->worker()->position }}" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                                                    <div class="text-muted pb-1" title="{{ $wc->worker()->position }}" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
                                                         {{ $wc->worker()->position }}
                                                     </div>
                                                     @endif
-                                                    <h2 class="lead"><a href="#" class="b600 editWorkerFromClientClick data_name" data-toggle="modal" data-target="#editWorkerFromClient">{{ $wc->worker()->name }}</a></h2>
+                                                    <h2 class="lead"><a href="#" class="b600 editWorkerFromClientClick data_name" data-toggle="modal" data-target="#popup__editWorkerFromClient">{{ $wc->worker()->name }}</a></h2>
                                                     @if(!empty($wc->worker()->phone) || !empty($wc->worker()->email))
                                                     <ul class="ml-4 mb-0 fa-ul text-muted">
                                                         <li class="small"><span class="fa-li"><i class="far fa-envelope"></i></span> <a href="mailto:{{ $wc->worker()->email }}" class="data_email">{{ $wc->worker()->email }}</a></li>
-                                                        @if(!empty($wc->worker()->phone)){{--<li class="small"><span class="fa-li"><i class="fas fa-phone"></i></span> <a href="tel:{{ $wc->worker()->phone }}">{{ $wc->worker()->phone }}</a></li>--}}@endif
+                                                        @if(!empty($wc->worker()->phone) && 2==3)<li class="small"><span class="fa-li"><i class="fas fa-phone"></i></span> <a href="tel:{{ $wc->worker()->phone }}">{{ $wc->worker()->phone }}</a></li>@endif
                                                     </ul>
                                                     @endif
                                                 </div>
                                                 <div class="col-3 text-right">
-                                                    <img alt="user-avatar" class="worker-avatar img-circle img-fluid" src="{{ (!empty($wc->worker()->image && File::exists('storage/'.$wc->worker()->image)) ? asset('storage/'.$wc->worker()->image) : asset('vendor/adminlte/dist/img/no-usericon.svg')) }}">
+                                                    <img alt="{{ $wc->worker()->name }}" class="worker-avatar img-circle img-fluid" src="{{ (!empty($wc->worker()->image) && File::exists('storage/'.$wc->worker()->image) ? asset('storage/'.$wc->worker()->image) : asset('vendor/adminlte/dist/img/no-usericon.svg')) }}">
                                                 </div>
                                             </div>
                                         </div>
@@ -143,6 +144,7 @@
                                         </div>
                                     </form>
                                 </div>
+                                @endif
                             @endforeach
                         @endif
 
@@ -279,12 +281,12 @@
                             </div>
                         </form>
 
-                        <form class="modal fade" id="editWorkerFromClient" action="{{ route('editWorkerFromClient') }}" method="POST" enctype="multipart/form-data">
+                        <form class="modal fade" id="popup__editWorkerFromClient" action="{{ route('editWorkerFromClient') }}" method="POST" enctype="multipart/form-data">
                             @csrf
                             <div class="modal-dialog modal-lg">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h4 class="modal-title"><i class="fas fa-edit"></i> <span>Henri Bradtke</span> - редактирование</h4>
+                                        <h4 class="modal-title"><i class="fas fa-edit"></i>Редактирование сотрудника</h4>
                                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                             <span aria-hidden="true">&times;</span>
                                         </button>
@@ -312,7 +314,7 @@
                                             <div class="col-sm-6 col-lg-3">
                                                 <div class="form-group">
                                                     <label>Пароль</label>
-                                                    <input required class="form-control" type="text" name="password">
+                                                    <input class="form-control" type="text" name="password" placeholder="Новый пароль">
                                                 </div>
                                             </div>
                                             <div class="col-sm-6 col-lg-3">
@@ -323,7 +325,18 @@
                                             </div>
                                             <div class="col-sm-6 col-lg-6">
                                                 <div class="form-group">
-                                                    <label>Фото</label>
+                                                    <label>Текущее фото</label>
+                                                    <div class="pt-3">
+                                                        <img src="{{ asset('vendor/adminlte/dist/img/no-usericon.svg') }}" width="120" class="user-photo-preview" alt="Фото сотрудника">
+                                                    </div>
+                                                    <label>
+                                                        <input type="checkbox" value="1" name="delete_photo" /> Удалить это фото
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-6 col-lg-6">
+                                                <div class="form-group">
+                                                    <label>Загрузить новое фото</label>
                                                     <div class="custom-file-">
                                                         <input type="file" name="image" class="custom-file-input-" id="image">
                                                     </div>
@@ -339,9 +352,10 @@
                                     </div>
                                     <div class="modal-footer justify-content-between">
                                         <button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
-                                        <button type="submit" class="btn btn-primary">Добавить</button>
+                                        <button type="submit" class="btn btn-default" name="delete_user" value="1" onclick="return confirm('Действительно удалить этого сотрудника?');"><i class="fa fa-trash"></i>Удалить сотрудника</button>
+                                        <button type="submit" class="btn btn-primary"><i class="far fa-save"></i> Сохранить</button>
                                         <input type="hidden" value="{{ Request::fullUrl() }}" name="lastUrl" />
-                                        <input type="hidden" value="" name="worker_id" />
+                                        <input type="hidden" value="" name="id" />
                                     </div>
                                 </div>
                             </div>

@@ -16,7 +16,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        \App\Models\User::factory(50)->create();
+        \App\Models\User::factory(40)->create();
         \App\Models\WorkerClient::factory(3000)->create();
 
         // select random client

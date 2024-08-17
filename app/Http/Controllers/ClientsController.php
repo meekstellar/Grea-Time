@@ -81,7 +81,7 @@ class ClientsController extends Controller
         $date_or_period_with_secounds[] = new Carbon((!empty($date_or_period[1]) ? $date_or_period[1] : $date_or_period[0])); // Final date
         $date_or_period_with_secounds[1]->addHour(23)->addMinutes(59)->addSeconds(59);
 
-        $users['clients'] = User::where('role', 'client')->get()->sortBy('name');
+        $users['clients'] = User::where('role', 'client')->where('active', 1)->get()->sortBy('name');
 
         WorkerClient::where('hours',0)->delete();
 
@@ -110,16 +110,66 @@ class ClientsController extends Controller
 
         $lastUrlForReditect = $request->lastUrl;
 
-        $new_user = new User;
-        $new_user->name = $request->name;
-        $new_user->email = $request->email;
-        $new_user->address = $request->address;
-        $new_user->phone = $request->phone;
-        $new_user->role = 'client';
-        $new_user->password = Hash::make($request->password);
-        $new_user->save();
+        $user = new User;
+        $user->name = $request->name;
+        $user->email = $request->email;
+        $user->address = $request->address;
+        //$user->phone = $request->phone;
+        $user->role = 'client';
+        if($request->hasFile('image')) {
+            $user->image = $request->file('image')->store('users','public');
+        }
+
+        if(!empty($request->password)){
+            $request->password = 'password';
+        }
+        $user->password = Hash::make($request->password);
+        $user->save();
 
         return redirect($lastUrlForReditect)->with('status', 'Добавлен новый клиент: <b>'.$request->name.'</b>');
+
+    }
+
+    /**
+     * Edit Client
+     *
+     */
+    public function editClient(Request $request){
+
+        $request->validate([
+            'name' => 'required',
+            'email' => 'required',
+        ]);
+
+        $lastUrlForReditect = $request->lastUrl;
+
+        $user = User::find($request->id);
+        $user->name = $request->name;
+        $user->email = $request->email;
+
+        if(!empty($request->delete_photo)){
+            $user->image = '';
+        }
+
+        if($request->hasFile('image')) {
+            $user->image = $request->file('image')->store('users','public');
+        }
+
+        if(!empty($request->password)){
+            $user->password = Hash::make($request->password);
+        }
+
+        $user->save();
+
+
+        // delete user
+        if(!empty($request->delete_user)){
+            $user->active = 0;
+            $user->save();
+            return redirect($lastUrlForReditect)->with('status', 'Клиент <b>'.$user->name.'</b> были удален.');
+        } else {
+            return redirect($lastUrlForReditect)->with('status', 'Данные клиента <b>'.$request->name.'</b> были обновлены.');
+        }
 
     }
 

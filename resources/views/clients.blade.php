@@ -11,9 +11,9 @@
                 </h1>
             </div>
             <div class="col-sm-5 text-right">
+                <a href="#" class="btn btn-success btn-sm mr-2" data-toggle="modal" data-target="#addNewClient"><i class="fas fa-user-tie" aria-hidden="true"></i> &nbsp;Новый клиент</a>
                 <a href="#" class="btn btn-info btn-sm"><i class="fas fa-file-pdf"></i> &nbsp;PDF</a>
-                <a href="#" class="btn btn-info btn-sm mr-2"><i class="fas fa-file-alt"></i> &nbsp;XLS</a>
-                <a href="#" class="btn btn-success btn-sm" data-toggle="modal" data-target="#addNewClient"><i class="fas fa-user-tie" aria-hidden="true"></i> &nbsp;Новый клиент</a>
+                <a href="#" class="btn btn-info btn-sm"><i class="fas fa-file-alt"></i> &nbsp;XLS</a>
             </div>
         </div>
         </div><!-- /.container-fluid -->
@@ -82,21 +82,21 @@
                         @if(!empty($WorkerClient))
                             @foreach($WorkerClient->unique('client_id') as $wc)
                                 <div class="col-12">
-                                    <form id="u{{ $wc->client_id }}" data-client_id="{{ $wc->client_id }}" class="card bg-white d-flex flex-fill">
+                                    <form id="u{{ $wc->client_id }}" data-client_id="{{ $wc->client_id }}" data-id="{{ $wc->client_id }}" class="card bg-white d-flex flex-fill">
                                         <div class="card-body pt-3">
                                             <div class="row align-items-center">
                                                 <div class="col-8">
-                                                    <h2 class="lead"><a href="#" class="b600">{{ $wc->client()->name }}</a></h2>
+                                                    <h2 class="lead"><a href="#" class="b600 editClientClick data_name" data-toggle="modal" data-target="#popup__editClient">{{ $wc->client()->name }}</a></h2>
                                                     @if(!empty($wc->client()->phone) || !empty($wc->client()->email))
                                                     <ul class="ml-4 mb-0 fa-ul text-muted">
-                                                        <li class="small"><span class="fa-li"><i class="fas fa-envelope"></i></span> <a href="mailto:{{ $wc->client()->email }}">{{ $wc->client()->email }}</a></li>
-                                                        @if(!empty($wc->client()->phone))<li class="small"><span class="fa-li"><i class="fas fa-phone"></i></span> <a href="tel:{{ $wc->client()->phone }}">{{ $wc->client()->phone }}</a></li>@endif
-                                                        @if(!empty($wc->client()->address))<li class="small"><span class="fa-li"><i class="fas fa-map-marker-alt"></i></span> {{ $wc->client()->address }}</li>@endif
+                                                        <li class="small"><span class="fa-li"><i class="fas fa-envelope"></i></span> <a href="mailto:{{ $wc->client()->email }}" class="data_email">{{ $wc->client()->email }}</a></li>
+                                                        @if(!empty($wc->client()->phone) && 2==3)<li class="small"><span class="fa-li"><i class="fas fa-phone"></i></span> <a href="tel:{{ $wc->client()->phone }}">{{ $wc->client()->phone }}</a></li>@endif
+                                                        @if(!empty($wc->client()->address) && 2==3)<li class="small"><span class="fa-li"><i class="fas fa-map-marker-alt"></i></span> {{ $wc->client()->address }}</li>@endif
                                                     </ul>
                                                     @endif
                                                 </div>
                                                 <div class="col-4 text-right">
-                                                    <img alt="user-avatar" class="client-avatar img-circle img-fluid" src="{{ asset($wc->client()->image) }}">
+                                                    <img alt="Фото клиента" class="client-avatar img-circle img-fluid" src="{{ (!empty($wc->client()->image) && File::exists('storage/'.$wc->client()->image) ? asset('storage/'.$wc->client()->image) : asset('vendor/adminlte/dist/img/no-logo.jpg')) }}">
                                                 </div>
                                             </div>
                                         </div>
@@ -110,7 +110,7 @@
                                                         @if(!in_array($wc_workers->worker_id,$processed))
                                                         <tr>
                                                             <td style="width: 10px">{{ $loop->iteration }}.</td>
-                                                            <td>{{ $wc_workers->worker()->name }} <span class="worker_positon">({{ $wc_workers->worker()->position }})</span></td>
+                                                            <td class="user_active_{{$wc_workers->worker()->active}}">{{ $wc_workers->worker()->name }} <span class="worker_positon">({{ $wc_workers->worker()->position }})</span></td>
                                                             <td style="width: 80px; text-align: right;">{{ $WorkerClient->where('client_id',$wc->client_id)->where('worker_id',$wc_workers->worker_id)->sum('hours') }}</td>
                                                             @if(in_array($selectCountDays, [28,29,30,31]))
                                                             <td style="width: 80px; text-align: right;">{{ $WorkerClient->where('client_id',$wc->client_id)->where('worker_id',$wc_workers->worker_id)->sum('hours')*1000 }}</td>
@@ -143,10 +143,71 @@
 
                         <form class="modal fade" id="addNewClient" action="{{ route('addNewClient') }}" method="POST">
                             @csrf
-                            <div class="modal-dialog modal-lg">
+                            <div class="modal-dialog modal-sm">
                                 <div class="modal-content">
                                     <div class="modal-header">
                                         <h4 class="modal-title"><i class="fas fa-user-plus"></i> Добавление нового клиента</h4>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <div class="form-group">
+                                                    <label>Имя клиента</label>
+                                                    <input required class="form-control" type="text" name="name">
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-12">
+                                                <div class="form-group">
+                                                    <label>Email</label>
+                                                    <input required class="form-control" type="text" name="email">
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6" style="display: none;">
+                                                <div class="form-group">
+                                                    <label>Адрес</label>
+                                                    <input class="form-control" type="text" name="address">
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-3" style="display: none;">
+                                                <div class="form-group">
+                                                    <label>Пароль</label>
+                                                    <input class="form-control" type="text" name="password">
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-3" style="display: none;">
+                                                <div class="form-group">
+                                                    <label>Телефон</label>
+                                                    <input class="form-control" type="text" name="phone">
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-12">
+                                                <div class="form-group">
+                                                    <label>Логотип</label>
+                                                    <div class="custom-file-">
+                                                        <input type="file" name="image" class="custom-file-input-" id="image">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer justify-content-between">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
+                                        <button type="submit" class="btn btn-primary">Добавить</button>
+                                        <input type="hidden" value="{{ Request::fullUrl() }}" name="lastUrl" />
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+
+                        <form class="modal fade" id="popup__editClient" action="{{ route('editClient') }}" method="POST" enctype="multipart/form-data">
+                            @csrf
+                            <div class="modal-dialog modal-lg">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h4 class="modal-title"><i class="fas fa-edit"></i>Редактирование клиента</h4>
                                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                             <span aria-hidden="true">&times;</span>
                                         </button>
@@ -159,36 +220,39 @@
                                                     <input required class="form-control" type="text" name="name">
                                                 </div>
                                             </div>
-                                            <div class="col-lg-6">
-                                                <div class="form-group">
-                                                    <label>Адрес</label>
-                                                    <input class="form-control" type="text" name="address">
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-6">
+                                            <div class="col-sm-6 col-lg-6">
                                                 <div class="form-group">
                                                     <label>Email</label>
-                                                    <input required class="form-control" type="text" name="email">
+                                                    <input required class="form-control" type="email" name="email">
                                                 </div>
                                             </div>
-                                            <div class="col-lg-3">
+                                            <div class="col-sm-6 col-lg-6">
                                                 <div class="form-group">
-                                                    <label>Пароль</label>
-                                                    <input required class="form-control" type="text" name="password">
+                                                    <label>Текущей логотип</label>
+                                                    <div class="pt-3">
+                                                        <img src="{{ asset('vendor/adminlte/dist/img/no-logo.jpg') }}" width="120" class="user-logo-preview" alt="Логотип">
+                                                    </div>
+                                                    <label>
+                                                        <input type="checkbox" value="1" name="delete_photo" /> Удалить этот логотип
+                                                    </label>
                                                 </div>
                                             </div>
-                                            <div class="col-lg-3">
+                                            <div class="col-sm-6 col-lg-6">
                                                 <div class="form-group">
-                                                    <label>Телефон</label>
-                                                    <input class="form-control" type="text" name="phone">
+                                                    <label>Загрузить новый логотип</label>
+                                                    <div class="custom-file-">
+                                                        <input type="file" name="image" class="custom-file-input-" id="image">
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="modal-footer justify-content-between">
                                         <button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
-                                        <button type="submit" class="btn btn-primary">Добавить</button>
+                                        <button type="submit" class="btn btn-default" name="delete_user" value="1" onclick="return confirm('Действительно удалить этого клиента?');"><i class="fa fa-trash"></i>Удалить клиента</button>
+                                        <button type="submit" class="btn btn-primary"><i class="far fa-save"></i> Сохранить</button>
                                         <input type="hidden" value="{{ Request::fullUrl() }}" name="lastUrl" />
+                                        <input type="hidden" value="" name="id" />
                                     </div>
                                 </div>
                             </div>

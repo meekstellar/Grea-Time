@@ -52,7 +52,7 @@ class WorkersController extends Controller
 
         }
 
-        if(auth()->user()->role == 'worker'){
+        if(auth()->user()->role != 'manager'){
             return redirect()->route('worker');
         }
 
@@ -81,8 +81,8 @@ class WorkersController extends Controller
         $date_or_period_with_secounds[] = new Carbon((!empty($date_or_period[1]) ? $date_or_period[1] : $date_or_period[0])); // Final date
         $date_or_period_with_secounds[1]->addHour(23)->addMinutes(59)->addSeconds(59);
 
-        $users['workers'] = User::where('role', 'worker')->get()->sortBy('name');
-        $users['clients'] = User::where('role', 'client')->get()->sortBy('name');
+        $users['workers'] = User::where('role', 'worker')->where('active', 1)->get()->sortBy('name');
+        $users['clients'] = User::where('role', 'client')->where('active', 1)->get()->sortBy('name');
 
         WorkerClient::where('hours',0)->delete();
 
@@ -111,6 +111,11 @@ class WorkersController extends Controller
      */
     public function worker(Request $request)
     {
+        if(!Auth::user()->active){
+            Auth::logout();
+            return redirect('/')
+                ->with('message', 'Доступ закрыт');
+        }
         $date_or_period_with_secounds[0] = new Carbon(date('d-m-Y', time()));
         $date_or_period_with_secounds[1] = new Carbon(date('d-m-Y', time())); // Final date
         $date_or_period_with_secounds[1]->addHour(23)->addMinutes(59)->addSeconds(59);
@@ -118,7 +123,7 @@ class WorkersController extends Controller
         $WorkerClientArray = WorkerClient::whereBetween("created_at", [ $date_or_period_with_secounds[0], $date_or_period_with_secounds[1] ])
             ->where("worker_id", auth()->user()->id)->get()->keyBy('client_id')->toArray();
 
-        $users['clients'] = User::where('role', 'client')->get()->sortBy('name');
+        $users['clients'] = User::where('role', 'client')->where('active', 1)->get()->sortBy('name');
 
         return view('worker')->with([
 			'WorkerClientArray'=>$WorkerClientArray,
@@ -203,24 +208,24 @@ class WorkersController extends Controller
     public function addNewWorker(Request $request){
         $request->validate([
             'name' => 'required',
+            'email' => 'required',
         ]);
 
         $lastUrlForReditect = $request->lastUrl;
 
-        $new_user = new User;
-        $new_user->name = $request->name;
-        $new_user->email = $request->email;
-        $new_user->position = $request->position;
-        $new_user->phone = $request->phone;
-        $new_user->role = 'worker';
+        $user = new User;
+        $user->name = $request->name;
+        $user->email = $request->email;
+        $user->position = $request->position;
+        $user->phone = $request->phone;
+        $user->salary = $request->salary;
+        $user->role = 'worker';
         if($request->hasFile('image')) {
-            $new_user->image = $request->file('image')->store('users','public');
-        } else {
-            // $new_user->image = 'vendor/adminlte/dist/img/no-usericon.svg';
+            $user->image = $request->file('image')->store('users','public');
         }
 
-        $new_user->password = Hash::make($request->password);
-        $new_user->save();
+        $user->password = Hash::make($request->password);
+        $user->save();
 
         return redirect($lastUrlForReditect)->with('status', 'Добавлен новый сотрудник: <b>'.$request->name.'</b>');
 
@@ -231,29 +236,45 @@ class WorkersController extends Controller
      *
      */
     public function editWorkerFromClient(Request $request){
-        /*$request->validate([
+
+        $request->validate([
             'name' => 'required',
+            'email' => 'required',
         ]);
 
         $lastUrlForReditect = $request->lastUrl;
 
-        $new_user = new User;
-        $new_user->name = $request->name;
-        $new_user->email = $request->email;
-        $new_user->position = $request->position;
-        $new_user->phone = $request->phone;
-        $new_user->role = 'worker';
-        if($request->hasFile('image')) {
-            $new_user->image = $request->file('image')->store('users','public');
-        } else {
-            // $new_user->image = 'vendor/adminlte/dist/img/no-usericon.svg';
+        $user = User::find($request->id);
+        $user->name = $request->name;
+        $user->email = $request->email;
+        $user->position = $request->position;
+        $user->phone = $request->phone;
+        $user->salary = $request->salary;
+
+        if(!empty($request->delete_photo)){
+            $user->image = '';
         }
 
-        $new_user->password = Hash::make($request->password);
-        $new_user->save();
+        if($request->hasFile('image')) {
+            $user->image = $request->file('image')->store('users','public');
+        }
 
-        return redirect($lastUrlForReditect)->with('status', 'Добавлен новый сотрудник: <b>'.$request->name.'</b>');
-*/
+        if(!empty($request->password)){
+            $user->password = Hash::make($request->password);
+        }
+
+        $user->save();
+
+
+        // delete user
+        if(!empty($request->delete_user)){
+            $user->active = 0;
+            $user->save();
+            return redirect($lastUrlForReditect)->with('status', 'Сотрудник <b>'.$user->name.'</b> были удален.');
+        } else {
+            return redirect($lastUrlForReditect)->with('status', 'Данные сотрудника <b>'.$request->name.'</b> были обновлены.');
+        }
+
     }
 
 }
