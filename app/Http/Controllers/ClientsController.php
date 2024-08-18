@@ -86,7 +86,7 @@ class ClientsController extends Controller
         WorkerClient::where('hours',0)->delete();
 
         $WorkerClient = WorkerClient::whereBetween("created_at", [ $date_or_period_with_secounds[0], $date_or_period_with_secounds[1] ]);
-        $AllWorkerClient = $WorkerClient->get()->unique('client_id');
+        //$AllWorkerClient = $WorkerClient->get()->unique('client_id');
         if(!empty($clients_id) && !empty($WorkerClient)){
             $WorkerClient = $WorkerClient->whereIn("client_id", $clients_id);
         }
@@ -96,7 +96,7 @@ class ClientsController extends Controller
 			'clients_id'=>$clients_id,
 			'date_or_period'=>$date_or_period,
 			'WorkerClient'=>$WorkerClient,
-			'AllWorkerClient'=>$AllWorkerClient,
+			//'AllWorkerClient'=>$AllWorkerClient,
 			'selectCountDays'=>$selectCountDays,
 			'users'=>$users,
 		]);

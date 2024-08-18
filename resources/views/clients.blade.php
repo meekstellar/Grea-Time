@@ -81,67 +81,69 @@
 
                         @if(!empty($WorkerClient))
                             @foreach($WorkerClient->unique('client_id') as $wc)
-                                <div class="col-12">
-                                    <form id="u{{ $wc->client_id }}" data-client_id="{{ $wc->client_id }}" data-id="{{ $wc->client_id }}" class="card bg-white d-flex flex-fill">
-                                        <div class="card-body pt-3">
-                                            <div class="row align-items-center">
-                                                <div class="col-8">
-                                                    <h2 class="lead"><a href="#" class="b600 editClientClick data_name" data-toggle="modal" data-target="#popup__editClient">{{ $wc->client()->name }}</a></h2>
-                                                    @if(!empty($wc->client()->phone) || !empty($wc->client()->email))
-                                                    <ul class="ml-4 mb-0 fa-ul text-muted">
-                                                        <li class="small"><span class="fa-li"><i class="fas fa-envelope"></i></span> <a href="mailto:{{ $wc->client()->email }}" class="data_email">{{ $wc->client()->email }}</a></li>
-                                                        @if(!empty($wc->client()->phone) && 2==3)<li class="small"><span class="fa-li"><i class="fas fa-phone"></i></span> <a href="tel:{{ $wc->client()->phone }}">{{ $wc->client()->phone }}</a></li>@endif
-                                                        @if(!empty($wc->client()->address) && 2==3)<li class="small"><span class="fa-li"><i class="fas fa-map-marker-alt"></i></span> {{ $wc->client()->address }}</li>@endif
-                                                    </ul>
-                                                    @endif
-                                                </div>
-                                                <div class="col-4 text-right">
-                                                    <img alt="Фото клиента" class="client-avatar img-circle img-fluid" src="{{ (!empty($wc->client()->image) && File::exists('storage/'.$wc->client()->image) ? asset('storage/'.$wc->client()->image) : asset('vendor/adminlte/dist/img/no-logo.jpg')) }}">
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="card-body p-0">
-                                            <table class="table table-sm client-table">
-                                                <tbody>
-                                                    @php
-                                                        $processed = [];
-                                                    @endphp
-                                                    @foreach($WorkerClient->where('client_id',$wc->client_id) as $wc_workers)
-                                                        @if(!in_array($wc_workers->worker_id,$processed))
-                                                        <tr>
-                                                            <td style="width: 10px">{{ $loop->iteration }}.</td>
-                                                            <td class="user_active_{{$wc_workers->worker()->active}}">{{ $wc_workers->worker()->name }} <span class="worker_positon">({{ $wc_workers->worker()->position }})</span></td>
-                                                            <td style="width: 80px; text-align: right;">{{ $WorkerClient->where('client_id',$wc->client_id)->where('worker_id',$wc_workers->worker_id)->sum('hours') }}</td>
-                                                            @if(in_array($selectCountDays, [28,29,30,31]))
-                                                            <td style="width: 80px; text-align: right;">{{ $WorkerClient->where('client_id',$wc->client_id)->where('worker_id',$wc_workers->worker_id)->sum('hours')*1000 }}</td>
-                                                            @endif
-                                                        </tr>
-                                                        @php
-                                                            $processed[] = $wc_workers->worker_id;
-                                                        @endphp
+                                @if($wc->client()->active)
+                                    <div class="col-12">
+                                        <form id="u{{ $wc->client_id }}" data-client_id="{{ $wc->client_id }}" data-id="{{ $wc->client_id }}" class="card bg-white d-flex flex-fill">
+                                            <div class="card-body pt-3">
+                                                <div class="row align-items-center">
+                                                    <div class="col-8">
+                                                        <h2 class="lead"><a href="#" class="b600 editClientClick data_name" data-toggle="modal" data-target="#popup__editClient">{{ $wc->client()->name }}</a></h2>
+                                                        @if(!empty($wc->client()->phone) || !empty($wc->client()->email))
+                                                        <ul class="ml-4 mb-0 fa-ul text-muted">
+                                                            <li class="small"><span class="fa-li"><i class="fas fa-envelope"></i></span> <a href="mailto:{{ $wc->client()->email }}" class="data_email">{{ $wc->client()->email }}</a></li>
+                                                            @if(!empty($wc->client()->phone) && 2==3)<li class="small"><span class="fa-li"><i class="fas fa-phone"></i></span> <a href="tel:{{ $wc->client()->phone }}">{{ $wc->client()->phone }}</a></li>@endif
+                                                            @if(!empty($wc->client()->address) && 2==3)<li class="small"><span class="fa-li"><i class="fas fa-map-marker-alt"></i></span> {{ $wc->client()->address }}</li>@endif
+                                                        </ul>
                                                         @endif
-                                                    @endforeach
-                                                </tbody>
-                                              </table>
-                                            </table>
-                                        </div>
-                                        <div class="card-footer">
-                                            <div class="row">
-                                                <div class="col-12">
-                                                    @if(in_array($selectCountDays, [28,29,30,31]))
-                                                        @include('components/clients/card-footer-month')
-                                                    @else
-                                                        @include('components/clients/card-footer-week')
-                                                    @endif
+                                                    </div>
+                                                    <div class="col-4 text-right">
+                                                        <img alt="Фото клиента" class="client-avatar img-circle img-fluid" src="{{ (!empty($wc->client()->image) && File::exists('storage/'.$wc->client()->image) ? asset('storage/'.$wc->client()->image) : asset('vendor/adminlte/dist/img/no-logo.jpg')) }}">
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    </form>
-                                </div>
+                                            <div class="card-body p-0">
+                                                <table class="table table-sm client-table">
+                                                    <tbody>
+                                                        @php
+                                                            $processed = [];
+                                                        @endphp
+                                                        @foreach($WorkerClient->where('client_id',$wc->client_id) as $wc_workers)
+                                                            @if(!in_array($wc_workers->worker_id,$processed))
+                                                            <tr>
+                                                                <td style="width: 10px">{{ $loop->iteration }}.</td>
+                                                                <td class="user_active_{{$wc_workers->worker()->active}}">{{ $wc_workers->worker()->name }} <span class="worker_positon">({{ $wc_workers->worker()->position }})</span></td>
+                                                                <td style="width: 80px; text-align: right;">{{ $WorkerClient->where('client_id',$wc->client_id)->where('worker_id',$wc_workers->worker_id)->sum('hours') }}</td>
+                                                                @if(in_array($selectCountDays, [28,29,30,31]))
+                                                                <td style="width: 80px; text-align: right;">{{ $WorkerClient->where('client_id',$wc->client_id)->where('worker_id',$wc_workers->worker_id)->sum('hours')*1000 }}&nbsp;₽</td>
+                                                                @endif
+                                                            </tr>
+                                                            @php
+                                                                $processed[] = $wc_workers->worker_id;
+                                                            @endphp
+                                                            @endif
+                                                        @endforeach
+                                                    </tbody>
+                                                </table>
+                                                </table>
+                                            </div>
+                                            <div class="card-footer">
+                                                <div class="row">
+                                                    <div class="col-12">
+                                                        @if(in_array($selectCountDays, [28,29,30,31]))
+                                                            @include('components/clients/card-footer-month')
+                                                        @else
+                                                            @include('components/clients/card-footer-week')
+                                                        @endif
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                @endif
                             @endforeach
                         @endif
 
-                        <form class="modal fade" id="addNewClient" action="{{ route('addNewClient') }}" method="POST">
+                        <form class="modal fade" id="addNewClient" action="{{ route('addNewClient') }}" method="POST" enctype="multipart/form-data">
                             @csrf
                             <div class="modal-dialog modal-sm">
                                 <div class="modal-content">
