@@ -108,10 +108,15 @@
                 ranges   : {
                 'Today'       : [moment(), moment()],
                 'Yesterday'   : [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-                'Last Week'   : [moment().subtract(1, 'week').startOf('week'), moment().subtract(1, 'week').endOf('week')],
                 'This Week'   : [moment().startOf('week'), moment().endOf('week')],
-                'Last Month'  : [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')],
+                'Last Week'   : [moment().subtract(1, 'week').startOf('week'), moment().subtract(1, 'week').endOf('week')],
                 'This Month'  : [moment().startOf('month'), moment().endOf('month')],
+                '1 month ago'  : [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')],
+                '2 months ago'  : [moment().subtract(2, 'month').startOf('month'), moment().subtract(2, 'month').endOf('month')],
+                '3 months ago'  : [moment().subtract(3, 'month').startOf('month'), moment().subtract(3, 'month').endOf('month')],
+                '4 months ago'  : [moment().subtract(4, 'month').startOf('month'), moment().subtract(4, 'month').endOf('month')],
+                '5 months ago'  : [moment().subtract(5, 'month').startOf('month'), moment().subtract(5, 'month').endOf('month')],
+                '6 months ago'  : [moment().subtract(6, 'month').startOf('month'), moment().subtract(6, 'month').endOf('month')],
 
                 //'Last 15 days of the last month'  : [moment().subtract(1, 'month').startOf('month').add('days', 15), moment().subtract(1, 'month').endOf('month')],
                 //'Fitsr 15 days of this month'  : [moment().startOf('month'), moment().startOf('month').add('days', 14)],
@@ -140,7 +145,7 @@
             // Change work_hours_of_day
             $(document).on('change', '[name=work_hours_of_day]', function (e) {
                 var _this = $(this);
-                var worker_id = $(this).closest('form').data('worker_id');
+                var worker_id = $(this).closest('form').data('id');
                 var wc_id = $(this).data('wc_id');
                 var newHours = $(this).val()*1;
                 var oldHours = $('#work_hours_of_day_'+wc_id).val()*1;

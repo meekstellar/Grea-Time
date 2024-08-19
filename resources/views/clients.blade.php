@@ -79,8 +79,8 @@
 
                     <div class="row">
 
-                        @if(!empty($WorkerClient))
-                            @foreach($WorkerClient->unique('client_id') as $wc)
+                        @if(!empty($WorkerClientHours))
+                            @foreach($WorkerClientHours->unique('client_id') as $wc)
                                 @if($wc->client()->active)
                                     <div class="col-12">
                                         <form id="u{{ $wc->client_id }}" data-client_id="{{ $wc->client_id }}" data-id="{{ $wc->client_id }}" class="card bg-white d-flex flex-fill">
@@ -107,14 +107,14 @@
                                                         @php
                                                             $processed = [];
                                                         @endphp
-                                                        @foreach($WorkerClient->where('client_id',$wc->client_id) as $wc_workers)
+                                                        @foreach($WorkerClientHours->where('client_id',$wc->client_id) as $wc_workers)
                                                             @if(!in_array($wc_workers->worker_id,$processed))
                                                             <tr>
                                                                 <td style="width: 10px">{{ $loop->iteration }}.</td>
                                                                 <td class="user_active_{{$wc_workers->worker()->active}}">{{ $wc_workers->worker()->name }} <span class="worker_positon">({{ $wc_workers->worker()->position }})</span></td>
-                                                                <td style="width: 80px; text-align: right;">{{ $WorkerClient->where('client_id',$wc->client_id)->where('worker_id',$wc_workers->worker_id)->sum('hours') }}</td>
+                                                                <td valign="middle" style="white-space: nowrap; width: 80px; text-align: left; @if(in_array($selectCountDays, [28,29,30,31]))font-size: .9rem;@endif"><i class="far fa-clock"></i>{{ $WorkerClientHours->where('client_id',$wc->client_id)->where('worker_id',$wc_workers->worker_id)->sum('hours') }}&nbsp;ч.</td>
                                                                 @if(in_array($selectCountDays, [28,29,30,31]))
-                                                                <td style="width: 80px; text-align: right;">{{ $WorkerClient->where('client_id',$wc->client_id)->where('worker_id',$wc_workers->worker_id)->sum('hours')*1000 }}&nbsp;₽</td>
+                                                                <td style="width: 80px; text-align: right;">{{ $WorkerClientHours->where('client_id',$wc->client_id)->where('worker_id',$wc_workers->worker_id)->sum('hours')*1000 }} {{ $currency }}</td>
                                                                 @endif
                                                             </tr>
                                                             @php
@@ -145,7 +145,7 @@
 
                         <form class="modal fade" id="addNewClient" action="{{ route('addNewClient') }}" method="POST" enctype="multipart/form-data">
                             @csrf
-                            <div class="modal-dialog modal-sm">
+                            <div class="modal-dialog modal-lg">
                                 <div class="modal-content">
                                     <div class="modal-header">
                                         <h4 class="modal-title"><i class="fas fa-user-plus"></i> Добавление нового клиента</h4>
@@ -155,13 +155,13 @@
                                     </div>
                                     <div class="modal-body">
                                         <div class="row">
-                                            <div class="col-lg-12">
+                                            <div class="col-lg-6">
                                                 <div class="form-group">
                                                     <label>Имя клиента</label>
                                                     <input required class="form-control" type="text" name="name">
                                                 </div>
                                             </div>
-                                            <div class="col-lg-12">
+                                            <div class="col-lg-6">
                                                 <div class="form-group">
                                                     <label>Email</label>
                                                     <input required class="form-control" type="text" name="email">

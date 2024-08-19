@@ -8,9 +8,9 @@ use Illuminate\Support\Str;
 use App\Models\User;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\WorkerClient>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\WorkerClientHours>
  */
-class WorkerClientFactory extends Factory
+class WorkerClientHoursFactory extends Factory
 {
     /**
      * The current password being used by the factory.
@@ -80,8 +80,6 @@ class WorkerClientFactory extends Factory
      */
     public function unverified(): static
     {
-        /*return $this->state(fn (array $attributes) => [
-            'email_verified_at' => null,
-        ]);*/
+        //
     }
 }

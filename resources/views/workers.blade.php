@@ -93,11 +93,11 @@
 
                     <div class="row">
 
-                        @if(!empty($WorkerClient))
-                            @foreach($WorkerClient->unique('worker_id') as $wc)
+                        @if(!empty($WorkerClientHours))
+                            @foreach($WorkerClientHours->unique('worker_id') as $wc)
                                 @if($wc->worker()->active)
-                                <div class="col-xl-12 d-flex">
-                                    <form id="u{{ $wc->worker_id }}" data-id="{{ $wc->worker_id }}" data-salary="{{ $wc->worker()->salary }}" data-position="{{ $wc->worker()->position }}" class="card {{ (($selectCountDays == 7 && $WorkerClient->where('worker_id',$wc->worker_id)->sum('hours') < 36 || in_array($selectCountDays, [28,29,30,31]) && $WorkerClient->where('worker_id',$wc->worker_id)->sum('hours') < 150) ? 'few-days' : (($selectCountDays == 7 && $WorkerClient->where('worker_id',$wc->worker_id)->sum('hours') > 44 || in_array($selectCountDays, [28,29,30,31]) && $WorkerClient->where('worker_id',$wc->worker_id)->sum('hours') > 180) ? 'many-days' : 'bg-white')) }} d-flex flex-fill">
+                                <div class="col-xl-6 d-flex">
+                                    <form id="u{{ $wc->worker_id }}" data-id="{{ $wc->worker_id }}" data-salary="{{ $wc->worker()->salary }}" data-position="{{ $wc->worker()->position }}" class="card {{ (($selectCountDays == 7 && $WorkerClientHours->where('worker_id',$wc->worker_id)->sum('hours') < 36 || in_array($selectCountDays, [28,29,30,31]) && $WorkerClientHours->where('worker_id',$wc->worker_id)->sum('hours') < 150) ? 'few-days' : (($selectCountDays == 7 && $WorkerClientHours->where('worker_id',$wc->worker_id)->sum('hours') > 44 || in_array($selectCountDays, [28,29,30,31]) && $WorkerClientHours->where('worker_id',$wc->worker_id)->sum('hours') > 180) ? 'many-days' : 'bg-white')) }} d-flex flex-fill">
                                         <div class="card-body pt-3" style="flex: none;">
                                             <div class="row">
                                                 <div class="col-9">
@@ -137,7 +137,7 @@
                                                 </div>
                                                 <div class="col-sm-6">
                                                     <div class="text-right">
-                                                        <span class="data-total"><i class="far fa-clock"></i> <span id="wc_{{ $wc->worker()->id }}">{{ $WorkerClient->where('worker_id',$wc->worker_id)->sum('hours') }}</span></span>
+                                                        <span class="data-total"><i class="far fa-clock"></i> <span id="wc_{{ $wc->worker()->id }}">{{ $WorkerClientHours->where('worker_id',$wc->worker_id)->sum('hours') }}</span></span>
                                                     </div>
                                                 </div>
                                             </div>

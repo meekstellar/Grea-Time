@@ -15,6 +15,11 @@ return new class extends Migration
             $table->id();
             $table->integer('worker_id')->nullable(true)->default(0);
             $table->integer('client_id')->nullable(true)->default(0);
+        });
+        Schema::create('workers_clients_hours', function (Blueprint $table) {
+            $table->id();
+            $table->integer('worker_id')->nullable(true)->default(0);
+            $table->integer('client_id')->nullable(true)->default(0);
             $table->float('hours', 8, 2);
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent();
@@ -27,5 +32,6 @@ return new class extends Migration
     public function down(): void
     {
         Schema::dropIfExists('workers_clients');
+        Schema::dropIfExists('workers_clients_hours');
     }
 };

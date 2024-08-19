@@ -23,7 +23,7 @@
                 </div>
             @endif
 
-            @if(date('H')>=17 && date('H')<=23)
+            @if(1==1 || date('H')>=17 && date('H')<=23)
 
                 <div class="callout callout-success">
                     <h5>Заполните данные</h5>
@@ -51,7 +51,7 @@
                                     <td>
                                         <select class="form-control" name="clients[{{ $client->id }}]">
                                             @for($h=0; $h<=16; $h=$h+0.5)
-                                            <option value="{{ $h }}"@if(!empty($WorkerClientArray[$client->id]['hours']) && $h == $WorkerClientArray[$client->id]['hours']){{ 'selected' }}@endif>{{ $h }}</option>
+                                            <option value="{{ $h }}"@if(!empty($WorkerClientHoursArray[$client->id]['hours']) && $h == $WorkerClientHoursArray[$client->id]['hours']){{ 'selected' }}@endif>{{ $h }}</option>
                                             @endfor
                                         </select>
                                     </td>

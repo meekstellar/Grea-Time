@@ -1,6 +1,6 @@
 <table class="table table-sm client-table">
     <tbody>
-        @foreach($WorkerClient->where('worker_id',$wc->worker_id) as $wc_clients)
+        @foreach($WorkerClientHours->where('worker_id',$wc->worker_id) as $wc_clients)
         <tr>
             <td style="width: 10px">{{ $loop->iteration }}.</td>
             <td>

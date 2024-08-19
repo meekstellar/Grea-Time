@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Event;
 use JeroenNoten\LaravelAdminLte\Events\BuildingMenu;
 
-use App\Models\WorkerClient;
+use App\Models\WorkerClientHours;
 use App\Models\ClientsFees;
 use App\Models\User;
 
@@ -83,22 +83,23 @@ class ClientsController extends Controller
 
         $users['clients'] = User::where('role', 'client')->where('active', 1)->get()->sortBy('name');
 
-        WorkerClient::where('hours',0)->delete();
+        WorkerClientHours::where('hours',0)->delete();
 
-        $WorkerClient = WorkerClient::whereBetween("created_at", [ $date_or_period_with_secounds[0], $date_or_period_with_secounds[1] ]);
-        //$AllWorkerClient = $WorkerClient->get()->unique('client_id');
-        if(!empty($clients_id) && !empty($WorkerClient)){
-            $WorkerClient = $WorkerClient->whereIn("client_id", $clients_id);
+        $WorkerClientHours = WorkerClientHours::whereBetween("created_at", [ $date_or_period_with_secounds[0], $date_or_period_with_secounds[1] ]);
+        //$AllWorkerClientHours = $WorkerClientHours->get()->unique('client_id');
+        if(!empty($clients_id) && !empty($WorkerClientHours)){
+            $WorkerClientHours = $WorkerClientHours->whereIn("client_id", $clients_id);
         }
-        $WorkerClient = $WorkerClient->get();
+        $WorkerClientHours = $WorkerClientHours->get();
 
         return view('clients')->with([
 			'clients_id'=>$clients_id,
 			'date_or_period'=>$date_or_period,
-			'WorkerClient'=>$WorkerClient,
-			//'AllWorkerClient'=>$AllWorkerClient,
+			'WorkerClientHours'=>$WorkerClientHours,
+			//'AllWorkerClientHours'=>$AllWorkerClientHours,
 			'selectCountDays'=>$selectCountDays,
 			'users'=>$users,
+			'currency'=>'₽',
 		]);
     }
 

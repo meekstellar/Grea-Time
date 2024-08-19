@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Event;
 use JeroenNoten\LaravelAdminLte\Events\BuildingMenu;
 
-use App\Models\WorkerClient;
+use App\Models\WorkerClientHours;
 use App\Models\User;
 
 use Carbon\Carbon;
@@ -84,20 +84,20 @@ class WorkersController extends Controller
         $users['workers'] = User::where('role', 'worker')->where('active', 1)->get()->sortBy('name');
         $users['clients'] = User::where('role', 'client')->where('active', 1)->get()->sortBy('name');
 
-        WorkerClient::where('hours',0)->delete();
+        WorkerClientHours::where('hours',0)->delete();
 
-        $WorkerClient = WorkerClient::whereBetween("created_at", [ $date_or_period_with_secounds[0], $date_or_period_with_secounds[1] ]);
-        //$AllWorkerClient = $WorkerClient->get()->unique('worker_id');
-        if(!empty($workers_id) && !empty($WorkerClient)){
-            $WorkerClient = $WorkerClient->whereIn("worker_id", $workers_id);
+        $WorkerClientHours = WorkerClientHours::whereBetween("created_at", [ $date_or_period_with_secounds[0], $date_or_period_with_secounds[1] ]);
+        //$AllWorkerClientHours = $WorkerClientHours->get()->unique('worker_id');
+        if(!empty($workers_id) && !empty($WorkerClientHours)){
+            $WorkerClientHours = $WorkerClientHours->whereIn("worker_id", $workers_id);
         }
-        $WorkerClient = $WorkerClient->get();
+        $WorkerClientHours = $WorkerClientHours->get();
 
         return view('workers')->with([
 			'workers_id'=>$workers_id,
 			'date_or_period'=>$date_or_period,
-			'WorkerClient'=>$WorkerClient,
-			//'AllWorkerClient'=>$AllWorkerClient,
+			'WorkerClientHours'=>$WorkerClientHours,
+			//'AllWorkerClientHours'=>$AllWorkerClientHours,
 			'selectCountDays'=>$selectCountDays,
 			'users'=>$users,
 		]);
@@ -120,13 +120,13 @@ class WorkersController extends Controller
         $date_or_period_with_secounds[1] = new Carbon(date('d-m-Y', time())); // Final date
         $date_or_period_with_secounds[1]->addHour(23)->addMinutes(59)->addSeconds(59);
 
-        $WorkerClientArray = WorkerClient::whereBetween("created_at", [ $date_or_period_with_secounds[0], $date_or_period_with_secounds[1] ])
+        $WorkerClientHoursArray = WorkerClientHours::whereBetween("created_at", [ $date_or_period_with_secounds[0], $date_or_period_with_secounds[1] ])
             ->where("worker_id", auth()->user()->id)->get()->keyBy('client_id')->toArray();
 
         $users['clients'] = User::where('role', 'client')->where('active', 1)->get()->sortBy('name');
 
         return view('worker')->with([
-			'WorkerClientArray'=>$WorkerClientArray,
+			'WorkerClientHoursArray'=>$WorkerClientHoursArray,
 			'users'=>$users,
 		]);
     }
@@ -150,17 +150,17 @@ class WorkersController extends Controller
                 'hours' => $hours,
             ];
 
-            $WorkerClient = WorkerClient::whereBetween("created_at", [ $date_or_period_with_secounds[0], $date_or_period_with_secounds[1] ])
+            $WorkerClientHours = WorkerClientHours::whereBetween("created_at", [ $date_or_period_with_secounds[0], $date_or_period_with_secounds[1] ])
                 ->where('worker_id',auth()->user()->id)
                 ->where("client_id", $client_id)
                 ->first();
 
-            if(!empty($WorkerClient->id)){
-                $WorkerClient->update($data);
+            if(!empty($WorkerClientHours->id)){
+                $WorkerClientHours->update($data);
             } else {
-                $WorkerClient = new WorkerClient();
-                $WorkerClient->fill($data);
-                $WorkerClient->save();
+                $WorkerClientHours = new WorkerClientHours();
+                $WorkerClientHours->fill($data);
+                $WorkerClientHours->save();
             }
         }
 
@@ -173,7 +173,7 @@ class WorkersController extends Controller
      *
      */
     public function changeClientsHours(Request $request){
-        $wc = WorkerClient::find($request->wc_id);
+        $wc = WorkerClientHours::find($request->wc_id);
         $wc->hours = $request->newHours;
         $wc->save();
         return response()->json(['status' => true, 'messages' => 'Установлены часы работы для <br><b>'.$wc->client()->name.'</b>']);
@@ -189,7 +189,7 @@ class WorkersController extends Controller
         $created_at = new Carbon($request->created_at);
         $created_at->addHour(18);
 
-        $wc = new WorkerClient;
+        $wc = new WorkerClientHours;
         $wc->worker_id = $request->worker_id;
         $wc->client_id = $request->client_id;
         $wc->hours = $request->hours;

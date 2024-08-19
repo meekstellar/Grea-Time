@@ -17,7 +17,7 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         \App\Models\User::factory(40)->create();
-        \App\Models\WorkerClient::factory(3000)->create();
+        \App\Models\WorkerClientHours::factory(3000)->create();
 
         // select random client
 
@@ -89,11 +89,25 @@ class DatabaseSeeder extends Seeder
 
             } else {
                 if($k>=count($images)){
-                    \App\Models\WorkerClient::where('client_id',$user->id)->delete();
+                    \App\Models\WorkerClientHours::where('client_id',$user->id)->delete();
                     $user->delete();
                 }
             }
             $k++;
+        }
+
+        $workers_id = \App\Models\User::where('role','worker')->pluck('id')->toArray();
+
+        $clients_id = \App\Models\User::where('role','client')->pluck('id')->toArray();
+
+        // Connect wokrers with clients (all with all)
+        foreach ($workers_id as $worker_id => $worker_value) {
+            foreach ($clients_id as $client_id => $client_value) {
+                $wc = new \App\Models\WorkerClient;
+                $wc->worker_id = $worker_value;
+                $wc->client_id = $client_value;
+                $wc->save();
+            }
         }
 
     }
