@@ -49,7 +49,7 @@
 
 @section('footer')
     <div class="float-right">
-        Version: {{ config('app.version', 'beta 0.1') }}
+        Version: {{ config('app.version', 'petro.skotar.dev@gmail.com') }}
     </div>
 
     <strong>
@@ -233,6 +233,12 @@
 
             $(document).on('click', '.editWorkerFromClientClick', function (e) {
                 var _thisForm = $(this).closest('form');
+                var clients_id = _thisForm.data('clientsid').toString().split(',');
+                $('.cwe').attr('checked',false);
+                for(var i = 0; i < clients_id.length; i++){
+                    $('#cwe_'+clients_id[i]).attr('checked',true);
+                    console.log('#cwe_'+clients_id[i]);
+                }
                 $('#popup__editWorkerFromClient [name="name"]').val(_thisForm.find('.data_name').text());
                 $('#popup__editWorkerFromClient [name="email"]').val(_thisForm.find('.data_email').text());
                 $('#popup__editWorkerFromClient .user-photo-preview').attr('src',_thisForm.find('.worker-avatar').attr('src'));

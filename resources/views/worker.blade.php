@@ -30,7 +30,7 @@
                     <p>Вы можете устанавливать часы работы каждый день между 17:00 и 23:59</p>
                 </div>
 
-                @if(!empty($users['clients']))
+                @if(!empty($users['clients']) && count($users['clients']) > 0)
                     <form class="card card-primary card-outline sticky-top" action="{{ route('saveWorker') }}" id="saveWorker" method="POST">
                         @csrf
 
@@ -68,6 +68,10 @@
                     </div>
 
                     </form>
+                @else
+                <div class="callout callout-warning">
+                    <h5>Вам еще не назначены клиенты. Ожидайте</h5>
+                </div>
                 @endif
             @else
                 <div class="callout callout-warning">

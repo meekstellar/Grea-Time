@@ -35,4 +35,14 @@ class WorkerClientHours extends Model
         return 'App\Models\User'::where('id', $this->client_id)->get();
     }
 
+	public function get_connect_clients_id()
+    {
+        return 'App\Models\WorkerClient'::where('worker_id', $this->worker_id)->get()->pluck('client_id')->toArray();
+    }
+
+	public function check_connect_client_id()
+    {
+        return 'App\Models\WorkerClient'::where('worker_id', $this->worker_id)->where('client_id', $this->client_id)->first();
+    }
+
 }

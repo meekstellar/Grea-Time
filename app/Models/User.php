@@ -56,4 +56,9 @@ class User extends Authenticatable
             ->first();
     }
 
+	public function get_connect_clients_id()
+    {
+        return 'App\Models\WorkerClient'::where('worker_id', $this->id)->get()->pluck('client_id')->toArray();
+    }
+
 }

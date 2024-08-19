@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Event;
 use JeroenNoten\LaravelAdminLte\Events\BuildingMenu;
 
+use App\Models\WorkerClient ;
 use App\Models\WorkerClientHours;
 use App\Models\User;
 
@@ -123,7 +124,9 @@ class WorkersController extends Controller
         $WorkerClientHoursArray = WorkerClientHours::whereBetween("created_at", [ $date_or_period_with_secounds[0], $date_or_period_with_secounds[1] ])
             ->where("worker_id", auth()->user()->id)->get()->keyBy('client_id')->toArray();
 
-        $users['clients'] = User::where('role', 'client')->where('active', 1)->get()->sortBy('name');
+        $user_ids = Auth::user()->get_connect_clients_id();
+
+        $users['clients'] = User::WhereIn('id',$user_ids)->where('role', 'client')->where('active', 1)->get()->sortBy('name');
 
         return view('worker')->with([
 			'WorkerClientHoursArray'=>$WorkerClientHoursArray,
@@ -227,6 +230,15 @@ class WorkersController extends Controller
         $user->password = Hash::make($request->password);
         $user->save();
 
+        if(!empty($request->client_worker_connect)){
+            foreach($request->client_worker_connect as $client_worker_connect_id => $value){
+                $cwc = new WorkerClient;
+                $cwc->worker_id = $user->id;
+                $cwc->client_id = $client_worker_connect_id;
+                $cwc->save();
+            }
+        }
+
         return redirect($lastUrlForReditect)->with('status', 'Добавлен новый сотрудник: <b>'.$request->name.'</b>');
 
     }
@@ -264,6 +276,16 @@ class WorkersController extends Controller
         }
 
         $user->save();
+
+        WorkerClient::where('worker_id', $user->id)->delete();
+        if(!empty($request->client_worker_connect)){
+            foreach($request->client_worker_connect as $client_worker_connect_id => $value){
+                $cwc = new WorkerClient;
+                $cwc->worker_id = $user->id;
+                $cwc->client_id = $client_worker_connect_id;
+                $cwc->save();
+            }
+        }
 
         // delete user
         if(!empty($request->delete_user)){
