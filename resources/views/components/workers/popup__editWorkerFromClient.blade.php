@@ -75,7 +75,7 @@
                             @foreach($users['clients'] as $clients)
                             <div class="form-check">
                                 <input class="form-check-input cwe" id="cwe_{{ $clients->id }}" type="checkbox" name="client_worker_connect[{{ $clients->id }}]" valie="1">
-                                <label class="form-check-label cwe" for="cwe_{{ $clients->id }}">{{ $clients->name }} - {{ $clients->id }}</label>
+                                <label class="form-check-label cwe" for="cwe_{{ $clients->id }}">{{ $clients->name }}</label>
                             </div>
                             @endforeach
                         </div>
