@@ -56,7 +56,7 @@
     @endforeach
 @endif
 
-@if($selectCountDays == 1 && !empty($users['workers']) && count($users['workers']) > 0)
+@if((count($users['workers']) != count($worker_ids__wrote_time)) && $selectCountDays == 1 && !empty($users['workers']) && count($users['workers']) > 0)
 <div class="col-12">
     <div class="card">
         <div class="card-header">
