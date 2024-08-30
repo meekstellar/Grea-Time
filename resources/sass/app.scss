@@ -89,7 +89,7 @@
     max-width: 120px !important;
     max-height: 120px !important;
 }
-.worker-avatar,{
+.worker-avatar{
     filter: grayscale(1);
     mix-blend-mode: multiply;
     height: 78px !important;
@@ -105,6 +105,15 @@
         max-width: 90px !important;
         max-height: 90px !important;
     }
+}
+.avatar-small{
+    filter: grayscale(1);
+    mix-blend-mode: multiply;
+    height: 32px !important;
+    width: 32px !important;
+    max-width: 32px !important;
+    max-height: 32px !important;
+    object-fit: cover;
 }
 .client-avatar{
     //filter: grayscale(1);

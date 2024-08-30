@@ -107,7 +107,7 @@
             {
                 ranges   : {
                 'Today'       : [moment(), moment()],
-                'Yesterday'   : [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                //'Yesterday'   : [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
                 'This Week'   : [moment().startOf('week'), moment().endOf('week')],
                 'Last Week'   : [moment().subtract(1, 'week').startOf('week'), moment().subtract(1, 'week').endOf('week')],
                 'This Month'  : [moment().startOf('month'), moment().endOf('month')],
@@ -234,9 +234,9 @@
             $(document).on('click', '.editWorkerFromClientClick', function (e) {
                 var _thisForm = $(this).closest('form');
                 var clients_id = _thisForm.data('clientsid').toString().split(',');
-                $('.cwe').attr('checked',false);
+                $('.cwe').attr('checked', false);
                 for(var i = 0; i < clients_id.length; i++){
-                    $('#cwe_'+clients_id[i]).attr('checked',true);
+                    $('#cwe_'+clients_id[i]).attr('checked', true);
                     console.log('#cwe_'+clients_id[i]);
                 }
                 $('#popup__editWorkerFromClient [name="name"]').val(_thisForm.find('.data_name').text());

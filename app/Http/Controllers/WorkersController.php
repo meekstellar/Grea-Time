@@ -82,8 +82,8 @@ class WorkersController extends Controller
         $date_or_period_with_secounds[] = new Carbon((!empty($date_or_period[1]) ? $date_or_period[1] : $date_or_period[0])); // Final date
         $date_or_period_with_secounds[1]->addHour(23)->addMinutes(59)->addSeconds(59);
 
-        $users['workers'] = User::where('role', 'worker')->where('active', 1)->get()->sortBy('name');
-        $users['clients'] = User::where('role', 'client')->where('active', 1)->get()->sortBy('name');
+        $users['workers'] = User::where('role', 'worker')->where('active', 1)->get()->sortBy('name')->keyBy('id');
+        $users['clients'] = User::where('role', 'client')->where('active', 1)->get()->sortBy('name')->keyBy('id');
 
         WorkerClientHours::where('hours',0)->delete();
 
@@ -101,6 +101,7 @@ class WorkersController extends Controller
 			//'AllWorkerClientHours'=>$AllWorkerClientHours,
 			'selectCountDays'=>$selectCountDays,
 			'users'=>$users,
+			'worker_ids__wrote_time'=>[],
 		]);
 
     }

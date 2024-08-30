@@ -21,6 +21,7 @@ return new class extends Migration
             $table->integer('worker_id')->nullable(true)->default(0);
             $table->integer('client_id')->nullable(true)->default(0);
             $table->float('hours', 8, 2);
+            $table->integer('salary');
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent();
         });

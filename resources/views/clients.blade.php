@@ -87,10 +87,10 @@
                                             <div class="card-body pt-3">
                                                 <div class="row align-items-center">
                                                     <div class="col-8">
-                                                        <h2 class="lead"><a href="#" class="b600 editClientClick data_name" data-toggle="modal" data-target="#popup__editClient">{{ $wc->client()->name }}</a></h2>
+                                                        <h2 class="lead mb-0"><a href="#" class="b600 editClientClick data_name" data-toggle="modal" data-target="#popup__editClient">{{ $wc->client()->name }}</a></h2>
                                                         @if(!empty($wc->client()->phone) || !empty($wc->client()->email))
                                                         <ul class="ml-4 mb-0 fa-ul text-muted">
-                                                            <li class="small"><span class="fa-li"><i class="fas fa-envelope"></i></span> <a href="mailto:{{ $wc->client()->email }}" class="data_email">{{ $wc->client()->email }}</a></li>
+                                                            <li class="small" style="display: none;"><span class="fa-li"><i class="fas fa-envelope"></i></span> <a href="mailto:{{ $wc->client()->email }}" class="data_email">{{ $wc->client()->email }}</a></li>
                                                             @if(!empty($wc->client()->phone) && 2==3)<li class="small"><span class="fa-li"><i class="fas fa-phone"></i></span> <a href="tel:{{ $wc->client()->phone }}">{{ $wc->client()->phone }}</a></li>@endif
                                                             @if(!empty($wc->client()->address) && 2==3)<li class="small"><span class="fa-li"><i class="fas fa-map-marker-alt"></i></span> {{ $wc->client()->address }}</li>@endif
                                                         </ul>
@@ -250,9 +250,9 @@
                                         </div>
                                     </div>
                                     <div class="modal-footer justify-content-between">
-                                        <button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
-                                        <button type="submit" class="btn btn-default" name="delete_user" value="1" onclick="return confirm('Действительно удалить этого клиента?');"><i class="fa fa-trash"></i>Удалить клиента</button>
-                                        <button type="submit" class="btn btn-primary"><i class="far fa-save"></i> Сохранить</button>
+                                        <button type="button" class="btn btn-default" style="order: 1;" data-dismiss="modal">Отмена</button>
+                                        <button type="submit" class="btn btn-primary" style="order: 3;"><i class="far fa-save"></i> Сохранить</button>
+                                        <button type="submit" class="btn btn-default" style="order: 2;" name="delete_user" value="1" onclick="return confirm('Действительно удалить этого клиента?');"><i class="fa fa-trash"></i>Удалить клиента</button>
                                         <input type="hidden" value="{{ Request::fullUrl() }}" name="lastUrl" />
                                         <input type="hidden" value="" name="id" />
                                     </div>

@@ -67,7 +67,7 @@
                     </div>--}}
                 </div>
             </div>
-            <div class="modal-body">
+            <div class="modal-footer justify-content-start  ">
                 <div class="row">
                     <div class="col-12">
                         <div class="form-group">
@@ -83,9 +83,9 @@
                 </div>
             </div>
             <div class="modal-footer justify-content-between">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
-                <button type="submit" class="btn btn-default" name="delete_user" value="1" onclick="return confirm('Действительно удалить этого сотрудника?');"><i class="fa fa-trash"></i>Удалить сотрудника</button>
-                <button type="submit" class="btn btn-primary"><i class="far fa-save"></i> Сохранить</button>
+                <button type="button" class="btn btn-default" style="order: 1;" data-dismiss="modal">Отмена</button>
+                <button type="submit" class="btn btn-primary" style="order: 3;"><i class="far fa-save"></i> Сохранить</button>
+                <button type="submit" class="btn btn-default" style="order: 2;" name="delete_user" value="1" onclick="return confirm('Действительно удалить этого сотрудника?');"><i class="fa fa-trash"></i>Удалить сотрудника</button>
                 <input type="hidden" value="{{ Request::fullUrl() }}" name="lastUrl" />
                 <input type="hidden" value="" name="id" />
             </div>

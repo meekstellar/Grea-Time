@@ -56,7 +56,7 @@
 
                         @include('components/workers/popup__addClientHours')
 
-                        @include('components/workers/addNewWorker')
+                        @include('components/workers/popup__addNewWorker')
 
                         @include('components/workers/popup__editWorkerFromClient')
 

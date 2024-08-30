@@ -35,11 +35,11 @@
                                     <label>Дата:</label>
                                     <div class="input-group date" id="reservationdate" data-target-input="nearest">
                                         <input type="text" name="created_at" class="form-control datetimepicker-input" data-target="#reservationdate" />
-                                            <div class="input-group-append" data-target="#reservationdate" data-toggle="datetimepicker">
-                                                <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                                            </div>
+                                        <div class="input-group-append" data-target="#reservationdate" data-toggle="datetimepicker">
+                                            <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                                         </div>
                                     </div>
+                                </div>
                             </div>
                             <div class="col-6 col-lg-12">
                                 <div class="form-group">

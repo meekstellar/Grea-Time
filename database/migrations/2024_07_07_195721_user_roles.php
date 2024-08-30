@@ -14,8 +14,8 @@ return new class extends Migration
 
         DB::table('users')->insert(
             array(
-                'name' => 'Егоров Дима',
-                'email' => 'egordima@gmail.com',
+                'name' => 'Анна Коваленко',
+                'email' => 'anna.kovalenko@greative.pro',
                 'email_verified_at' => now(),
                 'created_at' => now(),
                 'updated_at' => now(),
