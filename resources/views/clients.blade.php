@@ -112,10 +112,7 @@
                                                             @if(!in_array($wc_workers->worker_id,$processed))
                                                             <tr>
                                                                 <td style="width: 10px">{{ $loop->iteration }}.</td>
-                                                                <td class="user_active_{{$wc_workers->worker()->active}}">{{ $wc_workers->worker()->name }} <span class="worker_positon">({{ $wc_workers->worker()->position }})</span></td>
-                                                                @if(in_array($selectCountDays, [28,29,30,31]))
-                                                                <td>{{ $wc_workers->worker()->get_current_salary(\Date::parse($wc_workers->created_at)->format('Y'), \Date::parse($wc_workers->created_at)->format('n')) }} </td>
-                                                                @endif
+                                                                <td class="user_active_{{$wc_workers->worker()->active}}">{{ $wc_workers->worker()->name }} <span class="worker_positon">({{ $wc_workers->worker()->position }}, @if(in_array($selectCountDays, [28,29,30,31])){{ $wc_workers->worker()->get_current_salary(\Date::parse($wc_workers->created_at)->format('Y'), \Date::parse($wc_workers->created_at)->format('n')) }}@endif ₽ / мес)</span></td>
                                                                 <td valign="middle" style="white-space: nowrap; width: 80px; text-align: left; @if(in_array($selectCountDays, [28,29,30,31]))font-size: .9rem;@endif">
                                                                     @php
                                                                         $clients_hours = $WorkerClientHours->where('client_id',$wc->client_id)->where('worker_id',$wc_workers->worker_id)->sum('hours');
