@@ -10,6 +10,7 @@ use JeroenNoten\LaravelAdminLte\Events\BuildingMenu;
 
 use App\Models\WorkerClient ;
 use App\Models\WorkerClientHours;
+use App\Models\WorkersSalary;
 use App\Models\User;
 
 use Carbon\Carbon;
@@ -94,6 +95,11 @@ class WorkersController extends Controller
         }
         $WorkerClientHours = $WorkerClientHours->get();
 
+        $yearsSalary = [2024];
+        for($year=$yearsSalary[0];$year<date("Y",time());$year++){
+            $yearsSalary[] = $year+1;
+        }
+
         return view('workers')->with([
 			'workers_id'=>$workers_id,
 			'date_or_period'=>$date_or_period,
@@ -101,6 +107,8 @@ class WorkersController extends Controller
 			//'AllWorkerClientHours'=>$AllWorkerClientHours,
 			'selectCountDays'=>$selectCountDays,
 			'users'=>$users,
+			'yearsSalary'=>$yearsSalary,
+			'monthSalary'=>date("n",time()),
 			'worker_ids__wrote_time'=>[],
 		]);
 
@@ -136,7 +144,7 @@ class WorkersController extends Controller
     }
 
     /**
-     * Save Worker data
+     * Save Worker’s data
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
@@ -210,6 +218,7 @@ class WorkersController extends Controller
      *
      */
     public function addNewWorker(Request $request){
+
         $request->validate([
             'name' => 'required',
             'email' => 'required',
@@ -222,7 +231,6 @@ class WorkersController extends Controller
         $user->email = $request->email;
         $user->position = $request->position;
         $user->phone = $request->phone;
-        $user->salary = $request->salary;
         $user->role = 'worker';
         if($request->hasFile('image')) {
             $user->image = $request->file('image')->store('users','public');
@@ -230,6 +238,16 @@ class WorkersController extends Controller
 
         $user->password = Hash::make($request->password);
         $user->save();
+
+        WorkersSalary::where('worker_id', $user->id)->delete();
+        if(!empty($request->salary)){
+            $ws = new WorkersSalary;
+            $ws->worker_id = $user->id;
+            $ws->year = $request->year;
+            $ws->month = $request->month;
+            $ws->salary = $request->salary;
+            $ws->save();
+        }
 
         if(!empty($request->client_worker_connect)){
             foreach($request->client_worker_connect as $client_worker_connect_id => $value){
@@ -262,7 +280,6 @@ class WorkersController extends Controller
         $user->email = $request->email;
         $user->position = $request->position;
         $user->phone = $request->phone;
-        $user->salary = $request->salary;
 
         if(!empty($request->delete_photo)){
             $user->image = '';
@@ -277,6 +294,19 @@ class WorkersController extends Controller
         }
 
         $user->save();
+
+        WorkersSalary::where('worker_id', $user->id)
+            ->where('year',$request->year)
+            ->where('month',$request->month)
+            ->delete();
+        if(!empty($request->salary)){
+            $ws = new WorkersSalary;
+            $ws->worker_id = $user->id;
+            $ws->year = $request->year;
+            $ws->month = $request->month;
+            $ws->salary = $request->salary;
+            $ws->save();
+        }
 
         WorkerClient::where('worker_id', $user->id)->delete();
         if(!empty($request->client_worker_connect)){

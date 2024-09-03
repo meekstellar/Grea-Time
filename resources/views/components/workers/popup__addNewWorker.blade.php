@@ -28,13 +28,42 @@
                             <input required class="form-control" type="email" name="email">
                         </div>
                     </div>
-                    <div class="col-sm-6 col-lg-3">
+                    <div class="col-sm-6 col-lg-6">
                         <div class="form-group">
                             <label>Пароль</label>
                             <input required class="form-control" type="text" name="password">
                         </div>
                     </div>
-                    <div class="col-sm-6 col-lg-3">
+                    <div class="col-6 col-sm-4 col-lg-4">
+                        <div class="form-group">
+                            <label>Год</label>
+                            <select required class="form-control" style="width: 100%;" name="year" placeholder="Год">
+                                @foreach($yearsSalary as $year)
+                                <option value="{{ $year }}">{{ $year }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-6 col-sm-4 col-lg-4">
+                        <div class="form-group">
+                            <label>Месяц</label>
+                            <select required class="form-control" style="width: 100%;" name="month" placeholder="Месяц">
+                                <option value="1">Январь</option>
+                                <option value="2">Февраль</option>
+                                <option value="3">Март</option>
+                                <option value="4">апрель</option>
+                                <option value="5">Май</option>
+                                <option value="6">Июнь</option>
+                                <option value="7">Июль</option>
+                                <option value="8">Август</option>
+                                <option value="9">Сентябрь</option>
+                                <option value="10">Октябрь</option>
+                                <option value="11">Ноябрь</option>
+                                <option value="12">Декабрь</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-sm-4 col-lg-4">
                         <div class="form-group">
                             <label>Заработная плата</label>
                             <input required class="form-control" type="text" name="salary">
@@ -64,7 +93,7 @@
                             @foreach($users['clients'] as $clients)
                             <div class="form-check">
                                 <input class="form-check-input" id="cw_{{ $clients->id }}" type="checkbox" name="client_worker_connect[{{ $clients->id }}]" valie="1">
-                                <label class="form-check-label" for="cw_{{ $clients->id }}">{{ $clients->name }} - {{ $clients->id }}</label>
+                                <label class="form-check-label" for="cw_{{ $clients->id }}">{{ $clients->name }}</label>
                             </div>
                             @endforeach
                         </div>

@@ -61,4 +61,37 @@ class User extends Authenticatable
         return 'App\Models\WorkerClient'::where('worker_id', $this->id)->get()->pluck('client_id')->toArray();
     }
 
+	public function get_current_salary($year = 0, $month = 0)
+    {
+        if(empty($year)){
+            $year = date("Y",time());
+        }
+        if(empty($month)){
+            $month = date("n",time());
+        }
+        $WorkersSalary = 'App\Models\WorkersSalary'::where('worker_id',$this->id)
+            ->where('year',$year)
+            ->where('month',$month)
+            ->first();
+
+        return (!empty($WorkersSalary) && !empty($WorkersSalary->salary) ? $WorkersSalary->salary : 0);
+    }
+
+	public function get_pay_per_one_hour($year = 0, $month = 0)
+    {
+        if(empty($year)){
+            $year = date("Y",time());
+        }
+        if(empty($month)){
+            $month = date("n",time());
+        }
+        $WorkersSalary = 'App\Models\WorkersSalary'::where('worker_id',$this->id)
+            ->where('year',$year)
+            ->where('month',$month)
+            ->first();
+
+        $pay_per_one_hour = (!empty($WorkersSalary) && !empty($WorkersSalary->salary) ? $WorkersSalary->salary : 0) / 160;
+        return round($pay_per_one_hour,2);
+    }
+
 }

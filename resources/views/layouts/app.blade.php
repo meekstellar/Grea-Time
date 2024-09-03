@@ -190,6 +190,7 @@
 
             $(document).on('click', '.setFee-btn', function (e) {
                 $('#setFee').find('[name="client_id"]').val($(this).data('client_id'));
+                $('#setFee').find('[name="fee"]').val($(this).next('.setedFee').text());
             });
 
             $(document).on('submit', '#setFee', function (e) {

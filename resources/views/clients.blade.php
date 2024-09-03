@@ -106,15 +106,25 @@
                                                     <tbody>
                                                         @php
                                                             $processed = [];
+                                                            $all_clients_hours = 0;
                                                         @endphp
                                                         @foreach($WorkerClientHours->where('client_id',$wc->client_id) as $wc_workers)
                                                             @if(!in_array($wc_workers->worker_id,$processed))
                                                             <tr>
                                                                 <td style="width: 10px">{{ $loop->iteration }}.</td>
                                                                 <td class="user_active_{{$wc_workers->worker()->active}}">{{ $wc_workers->worker()->name }} <span class="worker_positon">({{ $wc_workers->worker()->position }})</span></td>
-                                                                <td valign="middle" style="white-space: nowrap; width: 80px; text-align: left; @if(in_array($selectCountDays, [28,29,30,31]))font-size: .9rem;@endif"><i class="far fa-clock"></i>{{ $WorkerClientHours->where('client_id',$wc->client_id)->where('worker_id',$wc_workers->worker_id)->sum('hours') }}&nbsp;ч.</td>
                                                                 @if(in_array($selectCountDays, [28,29,30,31]))
-                                                                <td style="width: 80px; text-align: right;">{{ $WorkerClientHours->where('client_id',$wc->client_id)->where('worker_id',$wc_workers->worker_id)->sum('hours')*1000 }} {{ $currency }}</td>
+                                                                <td>{{ $wc_workers->worker()->get_current_salary(\Date::parse($wc_workers->created_at)->format('Y'), \Date::parse($wc_workers->created_at)->format('n')) }} </td>
+                                                                @endif
+                                                                <td valign="middle" style="white-space: nowrap; width: 80px; text-align: left; @if(in_array($selectCountDays, [28,29,30,31]))font-size: .9rem;@endif">
+                                                                    @php
+                                                                        $clients_hours = $WorkerClientHours->where('client_id',$wc->client_id)->where('worker_id',$wc_workers->worker_id)->sum('hours');
+                                                                        $all_clients_hours += $clients_hours*$wc_workers->worker()->get_pay_per_one_hour(\Date::parse($wc_workers->created_at)->format('Y'), \Date::parse($wc_workers->created_at)->format('n'));
+                                                                    @endphp
+                                                                    <i class="far fa-clock"></i>{{ $clients_hours }}&nbsp;ч.
+                                                                </td>
+                                                                @if(in_array($selectCountDays, [28,29,30,31]))
+                                                                <td style="width: 80px; text-align: right; white-space: nowrap;">{{ $WorkerClientHours->where('client_id',$wc->client_id)->where('worker_id',$wc_workers->worker_id)->sum('hours')*$wc_workers->worker()->get_pay_per_one_hour(\Date::parse($wc_workers->created_at)->format('Y'), \Date::parse($wc_workers->created_at)->format('n')) }} {{ $currency }}</td>
                                                                 @endif
                                                             </tr>
                                                             @php
@@ -130,9 +140,40 @@
                                                 <div class="row">
                                                     <div class="col-12">
                                                         @if(in_array($selectCountDays, [28,29,30,31]))
-                                                            @include('components/clients/card-footer-month')
+                                                            @php
+                                                                $OPEX = (!empty($wc->client()->fee(\Date::parse($date_or_period[0])->format('Y') ,\Date::parse($date_or_period[0])->format('m')*1)) ? $wc->client()->fee(\Date::parse($date_or_period[0])->format('Y') ,\Date::parse($date_or_period[0])->format('m')*1)->fee*0.35 : 0);
+                                                                $fee = (!empty($wc->client()->fee(\Date::parse($date_or_period[0])->format('Y') ,\Date::parse($date_or_period[0])->format('m')*1)) ? $wc->client()->fee(\Date::parse($date_or_period[0])->format('Y') ,\Date::parse($date_or_period[0])->format('m')*1)->fee : 0);
+                                                                $profit = $fee - $OPEX - $all_clients_hours;
+                                                                $marginality = (!empty($wc->client()->fee(\Date::parse($date_or_period[0])->format('Y') ,\Date::parse($date_or_period[0])->format('m')*1)) ? round($profit*100/$fee,2) : 0);
+                                                            @endphp
+                                                            <table class="table table-sm client-table mb-0">
+                                                                <tbody>
+                                                                    <tr>
+                                                                        <td colspan="2" style="border-top: 0">ИТОГО Себестоимость</td>
+                                                                        <td style="border-top: 0; text-align: right; white-space: nowrap;"><span class="setedCostPrice">{{ $all_clients_hours }}</span> {{ $currency }}</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td colspan="2">OPEX (35%)</td>
+                                                                        <td style="text-align: right; white-space: nowrap; white-space: nowrap;"><span class="setedOPEX">{{ round($OPEX,0) }}</span> {{ $currency }}</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td colspan="2">ГОНОРАР</td>
+                                                                        <td style="text-align: right;"><a href="#" class="setFee-btn" data-toggle="modal" data-target="#setFee" data-client_id="{{ $wc->client_id }}"><i class="far fa-edit"></i></a> <span class="setedFee">{{ $fee }}</span> {{ $currency }}</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td colspan="2">ПРИБЫЛЬ</td>
+                                                                        <td style="text-align: right; font-weight: bold; white-space: nowrap;"><span class="seted_profit">{{ round($profit,0) }}</span> {{ $currency }}</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td colspan="2">МАРЖИНАЛЬНОСТЬ</td>
+                                                                        <td style="text-align: right; font-weight: bold; white-space: nowrap;" class="marginality">{{ $marginality }}%</td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
                                                         @else
-                                                            @include('components/clients/card-footer-week')
+                                                            <div class="text-right">
+                                                                <span class="data-total"><i class="far fa-clock"></i> <span id="wc_{{ $wc->client()->id }}">{{ $WorkerClientHours->where('client_id',$wc->client_id)->sum('hours') }}</span>&nbsp;ч.</span>
+                                                            </div>
                                                         @endif
                                                     </div>
                                                 </div>
@@ -274,7 +315,7 @@
                                         <div class="row">
                                             <div class="col-12">
                                                 <div class="form-group">
-                                                    <label>Гонорар</label>
+                                                    <label>Гонорар за месяц</label>
                                                     <input required class="form-control text-center" type="text" name="fee">
                                                 </div>
                                             </div>
