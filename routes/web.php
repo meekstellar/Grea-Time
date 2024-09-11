@@ -2,6 +2,11 @@
 
 use Illuminate\Support\Facades\Route;
 
+use App\Http\Controllers\WorkersController;
+use App\Http\Controllers\ClientsController;
+use App\Http\Controllers\ManagersController;
+use App\Http\Controllers\CodeController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -22,15 +27,23 @@ Auth::routes();
 
 Route::get('/home',                     [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
-Route::get('/worker',                   [App\Http\Controllers\WorkersController::class, 'worker'])->name('worker');
-Route::post('/worker',                  [App\Http\Controllers\WorkersController::class, 'saveWorker'])->name('saveWorker');
-Route::get('/workers',                  [App\Http\Controllers\WorkersController::class, 'index'])->name('workers');
-Route::post('/addNewWorker',            [App\Http\Controllers\WorkersController::class, 'addNewWorker'])->name('addNewWorker');
-Route::post('/editWorkerFromClient',    [App\Http\Controllers\WorkersController::class, 'editWorkerFromClient'])->name('editWorkerFromClient');
-Route::post('/addClientHours',          [App\Http\Controllers\WorkersController::class, 'addClientHours'])->name('addClientHours');
-Route::post('/changeClientsHours',      [App\Http\Controllers\WorkersController::class, 'changeClientsHours'])->name('changeClientsHours');
+Route::get('/worker',                   [WorkersController::class, 'worker'])->name('worker');
+Route::post('/worker',                  [WorkersController::class, 'saveWorker'])->name('saveWorker');
+Route::get('/workers',                  [WorkersController::class, 'index'])->name('workers');
+Route::post('/addNewWorker',            [WorkersController::class, 'addNewWorker'])->name('addNewWorker');
+Route::post('/editWorkerFromClient',    [WorkersController::class, 'editWorkerFromClient'])->name('editWorkerFromClient');
+Route::post('/addClientHours',          [WorkersController::class, 'addClientHours'])->name('addClientHours');
+Route::post('/changeClientsHours',      [WorkersController::class, 'changeClientsHours'])->name('changeClientsHours');
 
-Route::get('/clients',                  [App\Http\Controllers\ClientsController::class, 'index'])->name('clients');
-Route::post('/addNewClient',            [App\Http\Controllers\ClientsController::class, 'addNewClient'])->name('addNewClient');
-Route::post('/editClient',              [App\Http\Controllers\ClientsController::class, 'editClient'])->name('editClient');
-Route::post('/setFee',                  [App\Http\Controllers\ClientsController::class, 'setFee'])->name('setFee');
+Route::get('/clients',                  [ClientsController::class, 'index'])->name('clients');
+Route::post('/addNewClient',            [ClientsController::class, 'addNewClient'])->name('addNewClient');
+Route::post('/editClient',              [ClientsController::class, 'editClient'])->name('editClient');
+Route::post('/setFee',                  [ClientsController::class, 'setFee'])->name('setFee');
+
+Route::get('/managers',                 [ManagersController::class, 'index'])->name('managers');
+Route::post('/addNewManager',           [ManagersController::class, 'addNewManager'])->name('addNewManager');
+Route::post('/editManager',             [ManagersController::class, 'editManager'])->name('editManager');
+Route::post('/removeManager',           [ManagersController::class, 'removeManager'])->name('removeManager');
+
+Route::get('/enter-code',               [CodeController::class, 'showCodeForm'])->name('enter.code');
+Route::post('/enter-code',              [CodeController::class, 'storeCode'])->name('code.store');

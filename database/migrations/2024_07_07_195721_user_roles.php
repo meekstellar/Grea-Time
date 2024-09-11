@@ -22,6 +22,7 @@ return new class extends Migration
                 'password' => '$2y$12$JPkg10HFQIWfPRjgAkoWFus9nulZrHcywGI0aetbR/wHQgIeou3Fy', // admin@123
                 'remember_token' => Str::random(10),
                 'role' => 'manager',
+                'manager_important' => '1',
                 'image' => 'vendor/adminlte/dist/img/user1-128x128.jpg',
                 'position' => 'Manager',
             )

@@ -24,6 +24,7 @@ class ClientsController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
+        $this->middleware('check.code');
 
     }
 
@@ -43,12 +44,23 @@ class ClientsController extends Controller
                     'text' => 'Сотрудники',
                     'url' => 'workers',
                     'icon' => 'nav-icon fas fa-user-tie',
+                    'classes' => 'top-nav-custom',
                 ],
                 [
                     'text' => 'Клиенты',
                     'url' => 'clients',
                     'icon' => 'nav-icon fas fa-user-secret',
+                    'classes' => 'top-nav-custom',
                 ]);
+
+                if(auth()->user()->manager_important == 1){
+                    $event->menu->add([
+                        'text' => 'Администраторы',
+                        'url' => 'managers',
+                        'icon' => 'nav-icon fas fa-user-shield',
+                        'classes' => 'top-nav-custom',
+                    ]);
+                }
             });
 
         }
@@ -121,7 +133,7 @@ class ClientsController extends Controller
             $user->image = $request->file('image')->store('users','public');
         }
 
-        if(!empty($request->password)){
+        if(empty($request->password)){
             $request->password = 'password';
         }
         $user->password = Hash::make($request->password);

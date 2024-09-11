@@ -49,7 +49,7 @@
 
 @section('footer')
     <div class="float-right">
-        Version: {{ config('app.version', 'petro.skotar.dev@gmail.com') }}
+        Created by <a href="https://psweb.dev" target="_blank">{{ config('app.version', 'psweb.dev') }}</a>
     </div>
 
     <strong>
@@ -232,6 +232,7 @@
 
             });
 
+            // Edit Workers
             $(document).on('click', '.editWorkerFromClientClick', function (e) {
                 var _thisForm = $(this).closest('form');
                 var clients_id = _thisForm.data('clientsid').toString().split(',');
@@ -249,6 +250,7 @@
                 $('#popup__editWorkerFromClient [name="salary"]').val(_thisForm.data('salary'));
             });
 
+            // Edit Clients
             $(document).on('click', '.editClientClick', function (e) {
                 var _thisForm = $(this).closest('form');
                 $('#popup__editClient [name="name"]').val(_thisForm.find('.data_name').text());
@@ -257,9 +259,17 @@
                 $('#popup__editClient [name="id"]').val(_thisForm.data('id'));
             });
 
-            //editWorkerFromClient
-
         @endif
+
+        // Edit managers
+        $(document).on('click', '.editManagerClick', function (e) {
+            var _this_user_data = $(this).closest('.user_data');
+            $('#popup__editManager [name="name"]').val(_this_user_data.find('.data_name').text());
+            $('#popup__editManager [name="email"]').val(_this_user_data.find('.data_email').text());
+            $('#popup__editManager [name="phone"]').val(_this_user_data.find('.data_phone').text());
+            $('#popup__editManager .user-photo-preview').attr('src',_this_user_data.find('.avatar-small').attr('src'));
+            $('#popup__editManager [name="id"]').val(_this_user_data.data('id'));
+        });
     });
 
 </script>

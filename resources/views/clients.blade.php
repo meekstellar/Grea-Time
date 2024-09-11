@@ -12,8 +12,8 @@
             </div>
             <div class="col-sm-5 text-right">
                 <a href="#" class="btn btn-success btn-sm mr-2" data-toggle="modal" data-target="#addNewClient"><i class="fas fa-user-tie" aria-hidden="true"></i> &nbsp;Новый клиент</a>
-                <a href="#" class="btn btn-info btn-sm"><i class="fas fa-file-pdf"></i> &nbsp;PDF</a>
-                <a href="#" class="btn btn-info btn-sm"><i class="fas fa-file-alt"></i> &nbsp;XLS</a>
+                <a href="#" class="btn @if(!empty($WorkerClientHours) && count($WorkerClientHours) > 0)btn-info export_to_pdf @else btn-default @endif btn-sm"><i class="fas fa-file-pdf"></i> &nbsp;PDF</a>
+                <a href="#" class="btn @if(!empty($WorkerClientHours) && count($WorkerClientHours) > 0)btn-info export_to_pdf @else btn-default @endif btn-sm"><i class="fas fa-file-alt"></i> &nbsp;XLS</a>
             </div>
         </div>
         </div><!-- /.container-fluid -->
@@ -79,7 +79,7 @@
 
                     <div class="row">
 
-                        @if(!empty($WorkerClientHours))
+                        @if(!empty($WorkerClientHours) && count($WorkerClientHours) > 0)
                             @foreach($WorkerClientHours->unique('client_id') as $wc)
                                 @if($wc->client()->active)
                                     <div class="col-12">
@@ -179,6 +179,12 @@
                                     </div>
                                 @endif
                             @endforeach
+                        @else
+                        <div class="card-body">
+                            <div class="text-center">
+                                <h3>Нет данных</h3>
+                            </div>
+                        </div>
                         @endif
 
                         <form class="modal fade" id="addNewClient" action="{{ route('addNewClient') }}" method="POST" enctype="multipart/form-data">
@@ -202,7 +208,7 @@
                                             <div class="col-lg-6">
                                                 <div class="form-group">
                                                     <label>Email</label>
-                                                    <input required class="form-control" type="text" name="email">
+                                                    <input required class="form-control" type="email" name="email">
                                                 </div>
                                             </div>
                                             <div class="col-lg-6" style="display: none;">

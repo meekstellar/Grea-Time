@@ -115,7 +115,8 @@
     max-height: 32px !important;
     object-fit: cover;
 }
-.client-avatar{
+.client-avatar,
+.manager-avatar{
     //filter: grayscale(1);
     border-radius: 0;
     mix-blend-mode: multiply;
@@ -149,7 +150,8 @@
     background-color: rgb(244 246 249 / 75%);
 }
 
-.worker_positon{
+.worker_positon,
+.ano{
     color: #c5c5c5;
     font-style: italic;
     font-size: .9rem;

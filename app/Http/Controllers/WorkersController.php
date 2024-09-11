@@ -25,7 +25,7 @@ class WorkersController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
-
+        $this->middleware('check.code');
     }
 
     /**
@@ -44,12 +44,23 @@ class WorkersController extends Controller
                     'text' => 'Сотрудники',
                     'url' => 'workers',
                     'icon' => 'nav-icon fas fa-user-tie',
+                    'classes' => 'top-nav-custom',
                 ],
                 [
                     'text' => 'Клиенты',
                     'url' => 'clients',
                     'icon' => 'nav-icon fas fa-user-secret',
+                    'classes' => 'top-nav-custom',
                 ]);
+
+                if(auth()->user()->manager_important == 1){
+                    $event->menu->add([
+                        'text' => 'Администраторы',
+                        'url' => 'managers',
+                        'icon' => 'nav-icon fas fa-user-shield',
+                        'classes' => 'top-nav-custom',
+                    ]);
+                }
             });
 
         }
@@ -121,6 +132,10 @@ class WorkersController extends Controller
      */
     public function worker(Request $request)
     {
+        if(auth()->user()->role != 'worker'){
+            return redirect()->route('workers');
+        }
+
         if(!Auth::user()->active){
             Auth::logout();
             return redirect('/')

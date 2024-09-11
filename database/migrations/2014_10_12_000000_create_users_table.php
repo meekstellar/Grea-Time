@@ -22,6 +22,7 @@ return new class extends Migration
             $table->string('address',255)->nullable(true)->default('');
             $table->string('phone', 50)->nullable(true)->default('');
             $table->string('role',15)->nullable(true)->default('');
+            $table->integer('manager_important')->default(0);
             $table->string('image',255)->nullable(true)->default('');
             $table->integer('active')->default(1);
             $table->timestamps();
