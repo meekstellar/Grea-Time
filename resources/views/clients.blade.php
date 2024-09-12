@@ -12,8 +12,8 @@
             </div>
             <div class="col-sm-5 text-right">
                 <a href="#" class="btn btn-success btn-sm mr-2" data-toggle="modal" data-target="#addNewClient"><i class="fas fa-user-tie" aria-hidden="true"></i> &nbsp;Новый клиент</a>
-                <a href="#" class="btn @if(!empty($WorkerClientHours) && count($WorkerClientHours) > 0)btn-info export_to_pdf @else btn-default @endif btn-sm"><i class="fas fa-file-pdf"></i> &nbsp;PDF</a>
-                <a href="#" class="btn @if(!empty($WorkerClientHours) && count($WorkerClientHours) > 0)btn-info export_to_pdf @else btn-default @endif btn-sm"><i class="fas fa-file-alt"></i> &nbsp;XLS</a>
+                <a href="{{ route('clients') }}?date_or_period={{ $date_or_period[0] }}@if(!empty($date_or_period[1]))--{{ $date_or_period[1] }}@endif&e=pdf" class="btn @if(!empty($WorkerClientHours) && count($WorkerClientHours) > 0)btn-info export_to_pdf @else btn-default @endif btn-sm"><i class="fas fa-file-pdf"></i> &nbsp;PDF</a>
+                <a href="{{ route('clients') }}?date_or_period={{ $date_or_period[0] }}@if(!empty($date_or_period[1]))--{{ $date_or_period[1] }}@endif&e=xls" class="btn @if(!empty($WorkerClientHours) && count($WorkerClientHours) > 0)btn-info export_to_pdf @else btn-default @endif btn-sm"><i class="fas fa-file-alt"></i> &nbsp;XLS</a>
             </div>
         </div>
         </div><!-- /.container-fluid -->

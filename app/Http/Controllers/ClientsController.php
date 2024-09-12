@@ -8,6 +8,9 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Event;
 use JeroenNoten\LaravelAdminLte\Events\BuildingMenu;
 
+use App\Exports\xlsExport;
+use Maatwebsite\Excel\Facades\Excel;
+
 use App\Models\WorkerClientHours;
 use App\Models\ClientsFees;
 use App\Models\User;
@@ -25,7 +28,6 @@ class ClientsController extends Controller
     {
         $this->middleware('auth');
         $this->middleware('check.code');
-
     }
 
     /**
@@ -104,15 +106,21 @@ class ClientsController extends Controller
         }
         $WorkerClientHours = $WorkerClientHours->get();
 
-        return view('clients')->with([
-			'clients_id'=>$clients_id,
-			'date_or_period'=>$date_or_period,
-			'WorkerClientHours'=>$WorkerClientHours,
-			//'AllWorkerClientHours'=>$AllWorkerClientHours,
-			'selectCountDays'=>$selectCountDays,
-			'users'=>$users,
-			'currency'=>'₽',
-		]);
+        if(!empty($request->e)){
+            return Excel::download(new xlsExport, date('export_Y-m-d-H-i-s').'.xlsx');
+        } else {
+
+            return view('clients')->with([
+                'clients_id'=>$clients_id,
+                'date_or_period'=>$date_or_period,
+                'WorkerClientHours'=>$WorkerClientHours,
+                //'AllWorkerClientHours'=>$AllWorkerClientHours,
+                'selectCountDays'=>$selectCountDays,
+                'users'=>$users,
+                'currency'=>'₽',
+            ]);
+
+        }
     }
 
     /**
