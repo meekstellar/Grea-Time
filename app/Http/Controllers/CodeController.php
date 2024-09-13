@@ -16,7 +16,7 @@ class CodeController extends Controller
 
         // Відображуємо телефон користувача
         $userPhone = auth()->user()->phone;
-        $userPhone = '380978970386';
+        $userPhone = '+79067916085';
         $userPhone_hide = '';
         for($i=0;$i<strlen($userPhone)-3;$i++){
             $userPhone_hide .= '*';
