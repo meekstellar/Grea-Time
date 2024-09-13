@@ -35,7 +35,7 @@ class CodeController extends Controller
                         .$array[rand(0,count($array)-1)];
             //$sms_code = '12345';
 
-            $body = file_get_contents("https://sms.ru/sms/send?api_id=3505F8C6-5202-07F1-18D4-E19EF58B41A8&to=".$userPhone."&msg=".urlencode("Ваш проверочный код: ".$sms_code)."&json=1"); # Если приходят крякозябры, то уберите iconv и оставьте только urlencode("Привет!")
+            $body = file_get_contents("https://sms.ru/sms/send?api_id=3505F8C6-5202-07F1-18D4-E19EF58B41A8&to=".$userPhone."&ip=".$_SERVER['REMOTE_ADDR']."&msg=".urlencode("Ваш проверочный код: ".$sms_code)."&json=1"); # Если приходят крякозябры, то уберите iconv и оставьте только urlencode("Привет!")
             $json = json_decode($body);
             //dd($sms_code, $json);
             # dd($json);
