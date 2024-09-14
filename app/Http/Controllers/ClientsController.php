@@ -8,7 +8,10 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Event;
 use JeroenNoten\LaravelAdminLte\Events\BuildingMenu;
 
+use App\Services\ClientsService;
+
 use App\Exports\xlsExport;
+use App\Exports\pdfExport;
 use Maatwebsite\Excel\Facades\Excel;
 
 use App\Models\WorkerClientHours;
@@ -35,7 +38,7 @@ class ClientsController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function index(Request $request)
+    public function index(Request $request, ClientsService $service)
     {
 
         if(auth()->user()->role != 'worker'){
@@ -71,56 +74,18 @@ class ClientsController extends Controller
             return redirect()->route('worker');
         }
 
-        $clients_id = [];
-        if(!empty($request->w)){
-            $clients_id = $request->w;
-        }
 
-        $date_or_period[] = date("d-m-Y", time());
-        $selectCountDays = 1;
-        if(!empty($request->date_or_period)){
-            $date_or_period = explode("--", $request->date_or_period);
-        }
-
-        if(!empty($date_or_period[1])){
-
-            $date1 = date_create($date_or_period[0]);
-            $date2 = date_create($date_or_period[1]);
-
-            $diff = date_diff($date1, $date2);
-            $selectCountDays = $diff->format('%a')+1;
-        }
-
-        $date_or_period_with_secounds[] = new Carbon($date_or_period[0]);
-        $date_or_period_with_secounds[] = new Carbon((!empty($date_or_period[1]) ? $date_or_period[1] : $date_or_period[0])); // Final date
-        $date_or_period_with_secounds[1]->addHour(23)->addMinutes(59)->addSeconds(59);
-
-        $users['clients'] = User::where('role', 'client')->where('active', 1)->get()->sortBy('name');
-
-        WorkerClientHours::where('hours',0)->delete();
-
-        $WorkerClientHours = WorkerClientHours::whereBetween("created_at", [ $date_or_period_with_secounds[0], $date_or_period_with_secounds[1] ]);
-        //$AllWorkerClientHours = $WorkerClientHours->get()->unique('client_id');
-        if(!empty($clients_id) && !empty($WorkerClientHours)){
-            $WorkerClientHours = $WorkerClientHours->whereIn("client_id", $clients_id);
-        }
-        $WorkerClientHours = $WorkerClientHours->get();
-
-        if(!empty($request->e)){
-            return Excel::download(new xlsExport, date('export_Y-m-d-H-i-s').'.xlsx');
+        if(!empty($request->export)){
+            if($request->export == 'xls'){
+                return Excel::download(new xlsExport($request->date_or_period, $request->w, $service), date('export_Y-m-d-H-i-s').'.xlsx');
+            }
+            if($request->export == 'pdf'){
+                return Excel::download(new pdfExport($request->date_or_period, $request->w, $service), date('export_Y-m-d-H-i-s').'.pdf');
+            }
         } else {
-
-            return view('clients')->with([
-                'clients_id'=>$clients_id,
-                'date_or_period'=>$date_or_period,
-                'WorkerClientHours'=>$WorkerClientHours,
-                //'AllWorkerClientHours'=>$AllWorkerClientHours,
-                'selectCountDays'=>$selectCountDays,
-                'users'=>$users,
-                'currency'=>'₽',
-            ]);
-
+            return $service->WorkerClientHours($request->date_or_period, $request->w, 'clients');
         }
+
     }
 
     /**

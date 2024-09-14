@@ -12,8 +12,10 @@
             </div>
             <div class="col-sm-5 text-right">
                 <a href="#" class="btn btn-success btn-sm mr-2" data-toggle="modal" data-target="#addNewClient"><i class="fas fa-user-tie" aria-hidden="true"></i> &nbsp;Новый клиент</a>
-                <a href="{{ route('clients') }}?date_or_period={{ $date_or_period[0] }}@if(!empty($date_or_period[1]))--{{ $date_or_period[1] }}@endif&e=pdf" class="btn @if(!empty($WorkerClientHours) && count($WorkerClientHours) > 0)btn-info export_to_pdf @else btn-default @endif btn-sm"><i class="fas fa-file-pdf"></i> &nbsp;PDF</a>
-                <a href="{{ route('clients') }}?date_or_period={{ $date_or_period[0] }}@if(!empty($date_or_period[1]))--{{ $date_or_period[1] }}@endif&e=xls" class="btn @if(!empty($WorkerClientHours) && count($WorkerClientHours) > 0)btn-info export_to_pdf @else btn-default @endif btn-sm"><i class="fas fa-file-alt"></i> &nbsp;XLS</a>
+                @if(!empty($WorkerClientHours) && count($WorkerClientHours) > 0)
+                    <a href="{{ route('clients') }}?date_or_period={{ $date_or_period[0] }}@if(!empty($date_or_period[1]))--{{ $date_or_period[1] }}@endif{{ $url_w }}&export=pdf" class="btn btn-info export_to_pdf btn-sm"><i class="fas fa-file-pdf"></i> &nbsp;PDF</a>
+                    <a href="{{ route('clients') }}?date_or_period={{ $date_or_period[0] }}@if(!empty($date_or_period[1]))--{{ $date_or_period[1] }}@endif{{ $url_w }}&export=xls" class="btn btn-info export_to_pdf btn-sm"><i class="fas fa-file-alt"></i> &nbsp;XLS</a>
+                @endif
             </div>
         </div>
         </div><!-- /.container-fluid -->
@@ -59,8 +61,8 @@
                                         <label><i class="nav-icon fas fa-user-secret" aria-hidden="true"></i> Клиенты:</label>
                                         <select name="w[]" class="select2" multiple="multiple" data-placeholder="Отображать всех клиентов" style="width: 100%;">
                                             @if(!empty($users['clients']))
-                                                @foreach($users['clients'] as $worker)
-                                                    <option value="{{ $worker->id }}" @if(!empty(request()->w) && in_array($worker->id,request()->w)){{ 'selected' }}@endif>{{ $worker->name }}</option>
+                                                @foreach($users['clients'] as $client)
+                                                    <option value="{{ $client->id }}" @if(!empty(request()->w) && in_array($client->id,request()->w)){{ 'selected' }}@endif>{{ $client->name }}</option>
                                                 @endforeach
                                             @endif
                                         </select>
