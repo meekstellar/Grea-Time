@@ -164,7 +164,7 @@
                                                                         <td style="text-align: right; font-weight: bold; white-space: nowrap;"><span class="seted_profit">{{ round($profit,0) }}</span> {{ $currency }}</td>
                                                                     </tr>
                                                                     <tr>
-                                                                        <td colspan="2"><a href="#" class="show_clients_marginality" data-toggle="modal" data-target="#popup__clients_marginality" data-client_id="{{ $wc->client_id }}">МАРЖИНАЛЬНОСТЬ</a></td>
+                                                                        <td colspan="2"><a href="#" class="show_clients_marginality" data-toggle="modal" data-target="#popup__clients_marginality" data-client_id="{{ $wc->client_id }}" data-client_name="{{ $wc->client()->name }}">МАРЖИНАЛЬНОСТЬ</a></td>
                                                                         <td style="text-align: right; font-weight: bold; white-space: nowrap;" class="marginality">{{ $marginality }}%</td>
                                                                     </tr>
                                                                 </tbody>
@@ -202,7 +202,7 @@
                             <div class="modal-dialog modal-lg">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h4 class="modal-title"><i class="fas fa-percentage"></i> Маржинальность клиента <b>Клиент</b></h4>
+                                        <h4 class="modal-title"><i class="fas fa-percentage"></i><b>Клиент</b> - маржинальность</h4>
                                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                             <span aria-hidden="true">&times;</span>
                                         </button>

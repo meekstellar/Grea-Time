@@ -179,6 +179,7 @@
             $(document).on('click', '.show_clients_marginality', function (e) {
                 var _this = $(this);
                 var client_id = _this.data('client_id');
+                $('#popup__clients_marginality h4 b').text(_this.data('client_name'));
                 var data = {
                     'client_id' : client_id,
                 };
