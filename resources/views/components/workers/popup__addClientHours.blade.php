@@ -1,4 +1,4 @@
-<form class="modal fade" id="addClientHours" action="{{ route('addClientHours') }}" method="POST">
+<form class="modal fade" tabindex="-1" id="addClientHours" action="{{ route('addClientHours') }}" method="POST">
     @csrf
     <div class="modal-dialog modal-lg">
         <div class="modal-content">

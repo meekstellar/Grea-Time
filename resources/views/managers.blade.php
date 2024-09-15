@@ -71,7 +71,7 @@
                             </div>
                         </div>
 
-                        <form class="modal fade" id="addNewManager" action="{{ route('addNewManager') }}" method="POST" enctype="multipart/form-data">
+                        <form class="modal fade" tabindex="-1" id="addNewManager" action="{{ route('addNewManager') }}" method="POST" enctype="multipart/form-data">
                             @csrf
                             <div class="modal-dialog modal-lg">
                                 <div class="modal-content">
@@ -132,7 +132,7 @@
                             </div>
                         </form>
 
-                        <form class="modal fade" id="popup__editManager" action="{{ route('editManager') }}" method="POST" enctype="multipart/form-data">
+                        <form class="modal fade" tabindex="-1" id="popup__editManager" action="{{ route('editManager') }}" method="POST" enctype="multipart/form-data">
                             @csrf
                             <div class="modal-dialog modal-lg">
                                 <div class="modal-content">

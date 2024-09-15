@@ -176,6 +176,61 @@
 
             });
 
+            $(document).on('click', '.show_clients_marginality', function (e) {
+                var _this = $(this);
+                var client_id = _this.data('client_id');
+                var data = {
+                    'client_id' : client_id,
+                };
+                $.ajax({
+                    url: "{{ route('show_clients_marginality') }}",
+                    type: "POST",
+                    data: data,
+                    success: function (data) {
+                        if (data) {
+
+                            var table = $('#clients_marginality_table');
+                            table.empty();
+
+                            var colors = ['bg-danger','bg-warning',' bg-primary','bg-success'];
+
+                            var row = $('<tr>');
+                                    row.append('<th>Год</td>');
+                                    row.append('<th>Месяц</th>');
+                                    row.append('<th>Progress</th>');
+                                    row.append('<th style="width: 40px"></th>');
+                                    table.append(row);
+                            var k = 0;
+                            $.each(JSON.parse(data), function (index, value) {
+
+                                let date = new Date();
+                                date.setMonth(value.month - 1); // Встановлюємо потрібний місяць
+
+                                let options = { month: 'long' };
+
+                                var row = $('<tr>');
+                                    row.append('<td>' + value.year + '</td>');
+                                    row.append('<td style="text-transform: capitalize;">' + date.toLocaleDateString('ru-RU', options) + '</td>');
+                                    row.append('<td class="align-middle"><div class="progress progress-xs"><div class="progress-bar '+colors[k]+'" style="width: ' + value.marginality + '%"></div></div></td>');
+                                    row.append('<td><span class="badge '+colors[k]+'">' + value.marginality + '%</span></td>');
+                                    table.append(row);
+                                    k++;
+                                    if(k >= colors.length){
+                                        k = 0;
+                                    }
+                                });
+
+                        } else {
+                            console.log('error1');
+                        }
+                    },
+                    error: function (data) {
+                        console.log('error2');
+                    }
+                });
+
+            });
+
             $(document).on('click', '.addClientHoursButton', function (e) {
                 var _this = $(this);
                 var created_at = '{{$date_or_period[0]}}';
@@ -198,14 +253,16 @@
                 var _this = $(this);
                 var client_id = $(this).find('[name="client_id"]').val();
                 var fee = $(this).find('[name="fee"]').val();
-                var profit = 0;
+                var profit = parseFloat(fee-fee*0.35-$('#u'+client_id).find('.setedCostPrice').text()*1).toFixed(0);
+                var marginality = parseFloat(profit*100/fee).toFixed(2);
                 var data = {
                     'client_id' : client_id,
                     'fee' : fee*1,
                     'year' : {{ Date::parse($date_or_period[0])->format('Y')*1 }},
                     'month' : {{ Date::parse($date_or_period[0])->format('m')*1 }},
+                    'marginality' : marginality*1,
                 };
-                console.log(data);
+                //console.log(data);
                 $.ajax({
                     url: "{{ route('setFee') }}",
                     type: "POST",
@@ -217,9 +274,8 @@
                             toastr.success(data.messages);
                             $('#u'+client_id).find('.setedFee').text(fee);
                             $('#u'+client_id).find('.setedOPEX').text(parseFloat(fee*0.35).toFixed(0));
-                            profit = parseFloat(fee-fee*0.35-$('#u'+client_id).find('.setedCostPrice').text()*1).toFixed(0);
                             $('#u'+client_id).find('.seted_profit').text(profit);
-                            $('#u'+client_id).find('.marginality').text(parseFloat(profit*100/fee).toFixed(2)+'%');
+                            $('#u'+client_id).find('.marginality').text(marginality+'%');
 
                         } else {
                             console.log('error1');
@@ -239,7 +295,7 @@
                 $('.cwe').attr('checked', false);
                 for(var i = 0; i < clients_id.length; i++){
                     $('#cwe_'+clients_id[i]).attr('checked', true);
-                    console.log('#cwe_'+clients_id[i]);
+                    //console.log('#cwe_'+clients_id[i]);
                 }
                 $('#popup__editWorkerFromClient [name="name"]').val(_thisForm.find('.data_name').text());
                 $('#popup__editWorkerFromClient [name="email"]').val(_thisForm.find('.data_email').text());

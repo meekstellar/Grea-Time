@@ -39,6 +39,7 @@ Route::get('/clients',                  [ClientsController::class, 'index'])->na
 Route::post('/addNewClient',            [ClientsController::class, 'addNewClient'])->name('addNewClient');
 Route::post('/editClient',              [ClientsController::class, 'editClient'])->name('editClient');
 Route::post('/setFee',                  [ClientsController::class, 'setFee'])->name('setFee');
+Route::post('/show_clients_marginality',[ClientsController::class, 'show_clients_marginality'])->name('show_clients_marginality');
 
 Route::get('/managers',                 [ManagersController::class, 'index'])->name('managers');
 Route::post('/addNewManager',           [ManagersController::class, 'addNewManager'])->name('addNewManager');

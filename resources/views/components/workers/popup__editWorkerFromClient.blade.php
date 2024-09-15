@@ -1,4 +1,4 @@
-<form class="modal fade" id="popup__editWorkerFromClient" action="{{ route('editWorkerFromClient') }}" method="POST" enctype="multipart/form-data">
+<form class="modal fade" tabindex="-1" id="popup__editWorkerFromClient" action="{{ route('editWorkerFromClient') }}" method="POST" enctype="multipart/form-data">
     @csrf
     <div class="modal-dialog modal-lg">
         <div class="modal-content">

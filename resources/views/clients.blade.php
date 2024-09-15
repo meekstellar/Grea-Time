@@ -164,11 +164,20 @@
                                                                         <td style="text-align: right; font-weight: bold; white-space: nowrap;"><span class="seted_profit">{{ round($profit,0) }}</span> {{ $currency }}</td>
                                                                     </tr>
                                                                     <tr>
-                                                                        <td colspan="2">МАРЖИНАЛЬНОСТЬ</td>
+                                                                        <td colspan="2"><a href="#" class="show_clients_marginality" data-toggle="modal" data-target="#popup__clients_marginality" data-client_id="{{ $wc->client_id }}">МАРЖИНАЛЬНОСТЬ</a></td>
                                                                         <td style="text-align: right; font-weight: bold; white-space: nowrap;" class="marginality">{{ $marginality }}%</td>
                                                                     </tr>
                                                                 </tbody>
                                                             </table>
+
+                                                            @if(\Date::parse($date_or_period[0])->format('d')*1 == 1)
+                                                                @php
+                                                                    $ClientsMarginality = App\Models\ClientsMarginality::updateOrCreate(
+                                                                        ['client_id' => $wc->client_id, 'year' => \Date::parse($date_or_period[0])->format('Y'), 'month' => \Date::parse($date_or_period[0])->format('m')],
+                                                                        ['marginality' => $marginality]
+                                                                    );
+                                                                @endphp
+                                                            @endif
                                                         @else
                                                             <div class="text-right">
                                                                 <span class="data-total"><i class="far fa-clock"></i> <span id="wc_{{ $wc->client()->id }}">{{ $WorkerClientHours->where('client_id',$wc->client_id)->sum('hours') }}</span>&nbsp;ч.</span>
@@ -189,7 +198,36 @@
                         </div>
                         @endif
 
-                        <form class="modal fade" id="addNewClient" action="{{ route('addNewClient') }}" method="POST" enctype="multipart/form-data">
+                        <div class="modal fade" tabindex="-1" id="popup__clients_marginality">
+                            <div class="modal-dialog modal-lg">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h4 class="modal-title"><i class="fas fa-percentage"></i> Маржинальность клиента <b>Клиент</b></h4>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <table class="table table-sm" id="clients_marginality_table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Год</th>
+                                                    <th>Месяц</th>
+                                                    <th>Progress</th>
+                                                    <th style="width: 40px"></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody></tbody>
+                                        </table>
+                                    </div>
+                                    <div class="modal-footer justify-content-between">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <form class="modal fade" tabindex="-1" id="addNewClient" action="{{ route('addNewClient') }}" method="POST" enctype="multipart/form-data">
                             @csrf
                             <div class="modal-dialog modal-lg">
                                 <div class="modal-content">
@@ -250,7 +288,7 @@
                             </div>
                         </form>
 
-                        <form class="modal fade" id="popup__editClient" action="{{ route('editClient') }}" method="POST" enctype="multipart/form-data">
+                        <form class="modal fade" tabindex="-1" id="popup__editClient" action="{{ route('editClient') }}" method="POST" enctype="multipart/form-data">
                             @csrf
                             <div class="modal-dialog modal-lg">
                                 <div class="modal-content">
@@ -306,7 +344,7 @@
                             </div>
                         </form>
 
-                        <form class="modal fade" id="setFee" action="{{ route('setFee') }}" method="POST">
+                        <form class="modal fade" tabindex="-1" id="setFee" action="{{ route('setFee') }}" method="POST">
                             @csrf
                             <div class="modal-dialog modal-sm">
                                 <div class="modal-content">

@@ -17,6 +17,7 @@ use Maatwebsite\Excel\Facades\Excel;
 use App\Models\WorkerClientHours;
 use App\Models\ClientsFees;
 use App\Models\User;
+use App\Models\ClientsMarginality;
 
 use Carbon\Carbon;
 
@@ -180,8 +181,31 @@ class ClientsController extends Controller
             $ClientsFees->save();
         }
 
+        # Встановлюємо маржинальність для цього місяця
+        if(!empty($request->year) && !empty($request->month) && !empty($request->marginality)){
+            $ClientsMarginality = ClientsMarginality::updateOrCreate(
+                ['client_id' => $request->client_id, 'year' => $request->year, 'month' => $request->month],
+                ['marginality' => $request->marginality]
+            );
+        }
+
         $user = User::where('id',$request->client_id)->first();
         return response()->json(['status' => true, 'messages' => 'Гонорар установлен для клиента '.$user->name.$ClientsFees->id.'']);
+    }
+
+    /**
+     * show clients marginality
+     *
+     */
+    public function show_clients_marginality(Request $request){
+        if(auth()->user()->role == 'manager'){
+            $ClientsMarginality = User::find($request->client_id)
+                ->get_marginality()
+                ->toJson();
+            return $ClientsMarginality;
+        } else {
+            return response()->json(['status' => false, 'messages' => 'У вас немає доступа'] , 403);
+        }
     }
 
 }

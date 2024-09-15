@@ -251,3 +251,11 @@
         width: 100%;
     }
 }
+
+.show_clients_marginality{
+    color: #272727;
+    border-bottom: 1px dashed #272727;
+    &:hover{
+        border-color: #007bff;
+    }
+}

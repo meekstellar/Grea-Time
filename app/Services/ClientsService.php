@@ -40,6 +40,7 @@ class ClientsService
         $WorkerClientHours = $WorkerClientHours->get();
 
         $users['clients'] = User::where('role', 'client')->where('active', 1)->get()->sortBy('name');
+
         $url_w = '';
         if(!empty($w) && !empty($users['clients'])){
             foreach($users['clients'] as $client){

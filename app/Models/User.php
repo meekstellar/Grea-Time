@@ -61,6 +61,14 @@ class User extends Authenticatable
         return 'App\Models\WorkerClient'::where('worker_id', $this->id)->get()->pluck('client_id')->toArray();
     }
 
+	public function get_marginality()
+    {
+        return 'App\Models\ClientsMarginality'::where('client_id', $this->id)
+            ->orderBy('year', 'DESC')
+            ->orderBy('month', 'DESC')
+            ->get();
+    }
+
 	public function get_current_salary($year = 0, $month = 0)
     {
         if(empty($year)){
