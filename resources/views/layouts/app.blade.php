@@ -211,8 +211,8 @@
 
                                 var row = $('<tr>');
                                     row.append('<td>' + value.year + '</td>');
-                                    row.append('<td style="text-transform: capitalize;">' + date.toLocaleDateString('ru-RU', options) + '</td>');
-                                    row.append('<td class="align-middle"><div class="progress progress-xs"><div class="progress-bar '+colors[k]+'" style="width: ' + value.marginality + '%"></div></div></td>');
+                                    row.append('<td style="min-width: 100px; text-transform: capitalize;">' + date.toLocaleDateString('ru-RU', options) + '</td>');
+                                    row.append('<td style="width: 100%;"class="align-middle"><div class="progress progress-xs"><div class="progress-bar '+colors[k]+'" style="width: ' + value.marginality + '%"></div></div></td>');
                                     row.append('<td><span class="badge '+colors[k]+'">' + value.marginality + '%</span></td>');
                                     table.append(row);
                                     k++;
