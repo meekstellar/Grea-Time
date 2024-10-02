@@ -11,7 +11,7 @@
                 </h1>
             </div>
             <div class="col-sm-5 text-right">
-                <a href="#" class="btn btn-success btn-sm mr-2" data-toggle="modal" data-target="#addNewManager"><i class="fas fa-user-tie" aria-hidden="true"></i> &nbsp;Новый администратора</a>
+                <a href="#" class="btn btn-success btn-sm mr-2" data-toggle="modal" data-target="#addNewManager"><i class="fas fa-user-tie" aria-hidden="true"></i> &nbsp;Новый администратор</a>
             </div>
         </div>
         </div><!-- /.container-fluid -->
@@ -34,7 +34,7 @@
                         <div class="col-12">
                             <div class="card">
                                 <div class="card-header">
-                                    <h3 class="card-title">Список администраторв</h3>
+                                    <h3 class="card-title">Список администраторов</h3>
                                 </div>
                                 @if(!empty($managers) && count($managers) > 0)
                                 <div class="card-body p-0">
