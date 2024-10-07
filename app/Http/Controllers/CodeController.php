@@ -17,7 +17,7 @@ class CodeController extends Controller
         // Відображуємо телефон користувача
         $userPhone = auth()->user()->phone;
 
-        if(!empty($userPhone)){
+        if(!empty($userPhone) && app()->isProduction()){
             $userPhone_hide = '';
             for($i=0;$i<strlen($userPhone)-3;$i++){
                 $userPhone_hide .= '*';

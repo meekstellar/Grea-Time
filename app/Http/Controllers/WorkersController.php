@@ -224,7 +224,7 @@ class WorkersController extends Controller
         $wc->updated_at = $created_at;
         $wc->save();
 
-        return redirect($lastUrlForReditect)->with('status', 'Установлены часы работы для <br><b>'.$wc->client()->name.'</b>');
+        return redirect($lastUrlForReditect.'#u'.$request->worker_id)->with('status', 'Установлены часы работы для <br><b>'.$wc->client()->name.'</b>');
 
     }
 

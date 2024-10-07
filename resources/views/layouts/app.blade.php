@@ -165,6 +165,9 @@
                             });
                             toastr.success(data.messages)
                             $('#wc_'+worker_id).html(totalHours);
+                            if(newHours == 0){
+                                _this.closest('tr').slideUp();
+                            }
                         } else {
                             console.log('error');
                         }
@@ -327,6 +330,11 @@
             $('#popup__editManager .user-photo-preview').attr('src',_this_user_data.find('.avatar-small').attr('src'));
             $('#popup__editManager [name="id"]').val(_this_user_data.data('id'));
         });
+
+        setTimeout(function() {
+            location.reload();
+        }, 1000*300);
+
     });
 
 </script>

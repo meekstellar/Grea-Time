@@ -18,3 +18,13 @@
 </style>
 @vite(['resources/sass/app.scss'])
 @endpush
+
+@push('js')
+<script>
+
+    setTimeout(function() {
+        location.reload();
+    }, 1000*300);
+
+</script>
+@endpush
