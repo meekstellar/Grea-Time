@@ -7,7 +7,7 @@
         <div class="row mb-2">
             <div class="col-sm-7 pb-3 pb-sm-0">
                 <h1>
-                    Часы работы - <b>{{ date('d M Y', time()) }}</b> <small><small>{{ date("H")+3 }}:{{ date("i") }}</small></small>
+                    Часы работы - <b>{{ date('d M Y', time()) }}</b> <small><small>{{ date("H") }}:{{ date("i") }}</small></small>
                 </h1>
             </div>
         </div>
@@ -23,7 +23,7 @@
                 </div>
             @endif
 
-            @if(date('H')>=17-3 && date('H')<=23-3)
+            @if(date('H')>=17 && date('H')<=23)
 
                 <div class="callout callout-success">
                     <h5>Заполните данные</h5>
