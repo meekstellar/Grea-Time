@@ -65,7 +65,6 @@
                                 <button type="submit" class="btn btn-primary">Сохранить</button>
                             </div>
                         </div>
-                    </div>
 
                     </form>
                 @else
@@ -80,6 +79,62 @@
                     <br>Обратитесь к менеджеру, если вы не успели это сделать в указанное время.</p>
                 </div>
             @endif
+            </div>
+
+            <h2 class="pb-3">История за последние три дня</h2>
+            @if(count($WorkerClientHoursArray_Last) > 0)
+            @php
+                $created_at = 0;
+            @endphp
+            @foreach($WorkerClientHoursArray_Last as $wcha)
+            @if($created_at != date('d M Y', strtotime($wcha['created_at'])))
+            @php
+                $created_at = date('d M Y', strtotime($wcha['created_at']));
+            @endphp
+            <div class="row">
+                <div class="col-12">
+                <div class="card">
+                <div class="card-header">
+                <h3 class="card-title">{{ date('d M Y', strtotime($wcha['created_at'])); }}</h3>
+                </div>
+
+                <div class="card-body p-0">
+                <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th style="width: 10px">#</th>
+                        <th>Клиенты</th>
+                        <th style="width: 220px">Часы</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($WorkerClientHoursArray_Last as $WCH)
+                    @if(!empty($WCH['hours']) && date('d M Y', strtotime($WCH['created_at'])) == $created_at)
+                    <tr>
+                        <td>{{ $loop->iteration }}.</td>
+                        <td>{{ $WCH->client()->name }}</td>
+                        <td>
+                            {{ $WCH['hours'] }}
+                        </td>
+                    </tr>
+                    @endif
+                    @endforeach
+                </tbody>
+                </table>
+                </div>
+
+                </div>
+
+                </div>
+            </div>
+            @endif
+            @endforeach
+            @else
+            <p>Нет данных</p>
+            <br>
+            <br>
+            @endif
+
         </div>
     </section>
 

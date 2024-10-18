@@ -144,9 +144,14 @@ class WorkersController extends Controller
         $date_or_period_with_secounds[0] = new Carbon(date('d-m-Y', time()));
         $date_or_period_with_secounds[1] = new Carbon(date('d-m-Y', time())); // Final date
         $date_or_period_with_secounds[1]->addHour(23)->addMinutes(59)->addSeconds(59);
-
         $WorkerClientHoursArray = WorkerClientHours::whereBetween("created_at", [ $date_or_period_with_secounds[0], $date_or_period_with_secounds[1] ])
             ->where("worker_id", auth()->user()->id)->get()->keyBy('client_id')->toArray();
+
+        $date_or_period_with_secounds_last[0] = new Carbon(date('d-m-Y', time()-(86400*3)));
+        $date_or_period_with_secounds_last[1] = new Carbon(date('d-m-Y', time())); // Final date
+        $date_or_period_with_secounds_last[1]->addHour(23)->addMinutes(59)->addSeconds(59);
+        $WorkerClientHoursArray_Last = WorkerClientHours::whereBetween("created_at", [ $date_or_period_with_secounds_last[0], $date_or_period_with_secounds_last[1] ])
+            ->where("worker_id", auth()->user()->id)->get()->sortBy('created_at');
 
         $user_ids = Auth::user()->get_connect_clients_id();
 
@@ -154,6 +159,7 @@ class WorkersController extends Controller
 
         return view('worker')->with([
 			'WorkerClientHoursArray'=>$WorkerClientHoursArray,
+            'WorkerClientHoursArray_Last'=>$WorkerClientHoursArray_Last,
 			'users'=>$users,
 		]);
     }
