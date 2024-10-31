@@ -78,10 +78,10 @@ class ClientsController extends Controller
 
         if(!empty($request->export)){
             if($request->export == 'xls'){
-                return Excel::download(new xlsExport($request->date_or_period, $request->w, $service), date('export_Y-m-d-H-i-s').'.xlsx');
+                return Excel::download(new xlsExport($request->date_or_period, $request->w, $service), 'export_'.date('Y-m-d-H-i-s').'.xlsx');
             }
             if($request->export == 'pdf'){
-                return Excel::download(new pdfExport($request->date_or_period, $request->w, $service), date('export_Y-m-d-H-i-s').'.pdf');
+                return Excel::download(new pdfExport($request->date_or_period, $request->w, $service), 'export_'.date('Y-m-d-H-i-s').'.pdf');
             }
         } else {
             return $service->WorkerClientHours($request->date_or_period, $request->w, 'clients');

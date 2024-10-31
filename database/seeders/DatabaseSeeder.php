@@ -100,6 +100,8 @@ class DatabaseSeeder extends Seeder
 
         $clients_id = \App\Models\User::where('role','client')->pluck('id')->toArray();
 
+        $salaries = [150000, 80000, 120000, 100000];
+
         // Connect wokrers with clients (all with all)
         foreach ($workers_id as $worker_id => $worker_value) {
             foreach ($clients_id as $client_id => $client_value) {
@@ -108,6 +110,12 @@ class DatabaseSeeder extends Seeder
                 $wc->client_id = $client_value;
                 $wc->save();
             }
+            $ws = new \App\Models\WorkersSalary;
+            $ws->worker_id = $worker_value;
+            $ws->year = date("Y", time());
+            $ws->month = date("m", time());
+            $ws->salary = $salaries[rand(0,count($salaries)-1)];
+            $ws->save();
         }
 
     }
