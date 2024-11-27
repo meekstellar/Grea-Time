@@ -208,4 +208,24 @@ class ClientsController extends Controller
         }
     }
 
+    /**
+     * get Clients
+     *
+     */
+    public function getClients(Request $request)
+    {
+        $clientIds = $request->input('client_ids'); // Отримуємо IDs з запиту
+
+        // Перевірка, чи є IDs, і пошук клієнтів
+        if (is_array($clientIds)) {
+            $clients = User::whereIn('id', $clientIds)
+                ->select('id','name')
+                ->orderBy('name', 'asc')
+                ->get();
+            return response()->json(['success' => true, 'clients' => $clients]);
+        }
+
+        return response()->json(['success' => false, 'message' => 'Invalid IDs']);
+    }
+
 }

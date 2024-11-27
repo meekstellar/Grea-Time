@@ -5,7 +5,7 @@
             $worker_ids__wrote_time[] = $wc->worker_id;
         @endphp
         <div class="col-xl-12 d-flex">
-            <form id="u{{ $wc->worker_id }}" data-id="{{ $wc->worker_id }}" data-position="{{ $wc->worker()->position }}" data-salary="{{ $wc->worker()->get_current_salary(date("Y",time()), date("n",time())) }}" data-clientsid="@if(!empty($wc->get_connect_clients_id())){{ implode(',',$wc->get_connect_clients_id()) }}@endif" class="card {{ (($selectCountDays == 7 && $WorkerClientHours->where('worker_id',$wc->worker_id)->sum('hours') < 36 || in_array($selectCountDays, [28,29,30,31]) && $WorkerClientHours->where('worker_id',$wc->worker_id)->sum('hours') < 150) ? 'few-days' : (($selectCountDays == 7 && $WorkerClientHours->where('worker_id',$wc->worker_id)->sum('hours') > 44 || in_array($selectCountDays, [28,29,30,31]) && $WorkerClientHours->where('worker_id',$wc->worker_id)->sum('hours') > 180) ? 'many-days' : 'bg-white')) }} d-flex flex-fill">
+            <form id="u{{ $wc->worker_id }}" data-id="{{ $wc->worker_id }}" data-position="{{ $wc->worker()->position }}" data-salary="{{ $wc->worker()->get_current_salary(date("Y",time()), date("n",time())) }}" data-clientsids="@if(!empty($wc->get_connect_clients_id())){{ implode(',',$wc->get_connect_clients_id()) }}@endif" class="card {{ (($selectCountDays == 7 && $WorkerClientHours->where('worker_id',$wc->worker_id)->sum('hours') < 36 || in_array($selectCountDays, [28,29,30,31]) && $WorkerClientHours->where('worker_id',$wc->worker_id)->sum('hours') < 150) ? 'few-days' : (($selectCountDays == 7 && $WorkerClientHours->where('worker_id',$wc->worker_id)->sum('hours') > 44 || in_array($selectCountDays, [28,29,30,31]) && $WorkerClientHours->where('worker_id',$wc->worker_id)->sum('hours') > 180) ? 'many-days' : 'bg-white')) }} d-flex flex-fill">
                 <div class="card-body pt-3" style="flex: none;">
                     <div class="row">
                         <div class="col-9">
@@ -60,31 +60,31 @@
 <div class="col-12">
     <div class="card">
         <div class="card-header">
-            <h3 class="card-title">Пользователи, которые в этот день еще не указали часы работы</h3>
+            <h3 class="card-title">Пользователи, которые в этот день не указали часы работы</h3>
         </div>
         <div class="card-body p-0">
             <table class="table table-sm">
                 <tbody>
-                        @foreach($users['workers'] as $worker)
-                            @if(!in_array($worker->id, $worker_ids__wrote_time))
-                            <tr>
-                                <td class="pl-3" style="width: 40px; vertical-align: middle;"><img alt="{{ $worker->name }}" class="avatar-small img-circle img-fluid" src="{{ (!empty($worker->image) && File::exists('storage/'.$worker->image) ? asset('storage/'.$worker->image) : asset('vendor/adminlte/dist/img/no-usericon.svg')) }}"></td>
-                                <td style="vertical-align: middle;">
-                                    {{ $worker->name }}
-                                    @if(!empty($worker->position))
-                                    <span class="worker_positon" title="{{ $worker->position }}" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-                                        ({{ $worker->position }})
-                                    </span>
-                                    @endif
-                                </td>
-                                <td style="width: 180px; text-align: right;" class="pr-3" style="vertical-align: middle;">
-                                    <button type="button" class="btn btn-default btn-xs addClientHoursButton" data-toggle="modal" data-target="#addClientHours" data-worker_id="{{ $worker->id }}">
-                                        <i class="far fa-clock"></i> Добавить часы работы
-                                    </button>
-                                </td>
-                            </tr>
-                            @endif
-                        @endforeach
+                    @foreach($users['workers'] as $worker)
+                        @if(!in_array($worker->id, $worker_ids__wrote_time))
+                        <tr>
+                            <td class="pl-3" style="width: 40px; vertical-align: middle;"><img alt="{{ $worker->name }}" class="avatar-small img-circle img-fluid" src="{{ (!empty($worker->image) && File::exists('storage/'.$worker->image) ? asset('storage/'.$worker->image) : asset('vendor/adminlte/dist/img/no-usericon.svg')) }}"></td>
+                            <td style="vertical-align: middle;">
+                                {{ $worker->name }}
+                                @if(!empty($worker->position))
+                                <span class="worker_positon" title="{{ $worker->position }}" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                                    ({{ $worker->position }})
+                                </span>
+                                @endif
+                            </td>
+                            <td style="width: 180px; text-align: right;" class="pr-3" style="vertical-align: middle;">
+                                <button type="button" class="btn btn-default btn-xs addClientHoursButton" data-toggle="modal" data-target="#addClientHours" data-worker_id="{{ $worker->id }}">
+                                    <i class="far fa-clock"></i> Добавить часы работы
+                                </button>
+                            </td>
+                        </tr>
+                        @endif
+                    @endforeach
                 </tbody>
             </table>
         </div>

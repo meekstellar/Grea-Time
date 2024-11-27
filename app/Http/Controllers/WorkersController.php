@@ -260,14 +260,17 @@ class WorkersController extends Controller
         $user->password = Hash::make($request->password);
         $user->save();
 
-        WorkersSalary::where('worker_id', $user->id)->delete();
-        if(!empty($request->salary)){
-            $ws = new WorkersSalary;
-            $ws->worker_id = $user->id;
-            $ws->year = $request->year;
-            $ws->month = $request->month;
-            $ws->salary = $request->salary;
-            $ws->save();
+        if ($request->has('salary')) {
+            WorkersSalary::updateOrInsert(
+                [
+                    'worker_id' => $user->id,
+                    'year' => $request->year,
+                    'month' => $request->month,
+                ],
+                [
+                    'salary' => $request->salary,
+                ]
+            );
         }
 
         if(!empty($request->client_worker_connect)){
@@ -316,26 +319,34 @@ class WorkersController extends Controller
 
         $user->save();
 
-        WorkersSalary::where('worker_id', $user->id)
-            ->where('year',$request->year)
-            ->where('month',$request->month)
-            ->delete();
-        if(!empty($request->salary)){
-            $ws = new WorkersSalary;
-            $ws->worker_id = $user->id;
-            $ws->year = $request->year;
-            $ws->month = $request->month;
-            $ws->salary = $request->salary;
-            $ws->save();
+        if ($request->has('salary')) {
+            WorkersSalary::updateOrInsert(
+                [
+                    'worker_id' => $user->id,
+                    'year' => $request->year,
+                    'month' => $request->month,
+                ],
+                [
+                    'salary' => $request->salary,
+                ]
+            );
         }
 
+        // Спочатку видаляємо всі існуючі зв'язки для працівника
         WorkerClient::where('worker_id', $user->id)->delete();
-        if(!empty($request->client_worker_connect)){
-            foreach($request->client_worker_connect as $client_worker_connect_id => $value){
-                $cwc = new WorkerClient;
-                $cwc->worker_id = $user->id;
-                $cwc->client_id = $client_worker_connect_id;
-                $cwc->save();
+
+        // Якщо є відмічені клієнти
+        if (!empty($request->client_worker_connect)) {
+            foreach ($request->client_worker_connect as $client_worker_connect_id => $value) {
+                WorkerClient::updateOrInsert(
+                    [
+                        'worker_id' => $user->id,
+                        'client_id' => $client_worker_connect_id,
+                    ],
+                    [
+                        // Якщо потрібно додавати інші дані, можна це зробити тут
+                    ]
+                );
             }
         }
 

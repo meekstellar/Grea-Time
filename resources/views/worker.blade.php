@@ -108,15 +108,21 @@
                     </tr>
                 </thead>
                 <tbody>
+                    @php
+                        $k=1;
+                    @endphp
                     @foreach($WorkerClientHoursArray_Last as $WCH)
                     @if(!empty($WCH['hours']) && date('d M Y', strtotime($WCH['created_at'])) == $created_at)
                     <tr>
-                        <td>{{ $loop->iteration }}.</td>
+                        <td>{{ $k }}.</td>
                         <td>{{ $WCH->client()->name }}</td>
                         <td>
                             {{ $WCH['hours'] }}
                         </td>
                     </tr>
+                    @php
+                        $k++;
+                    @endphp
                     @endif
                     @endforeach
                 </tbody>

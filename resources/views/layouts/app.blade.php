@@ -238,6 +238,39 @@
             $(document).on('click', '.addClientHoursButton', function (e) {
                 var _this = $(this);
                 var created_at = '{{$date_or_period[0]}}';
+
+                var _thisForm = $(this).closest('form');
+                var clients_ids = (_thisForm.data('clientsids') || '').toString().split(',');
+                if (clients_ids.length === 1 && clients_ids[0] === '') {
+                    clients_ids = [];
+                }
+                $.ajax({
+                    url: '/get-clients',
+                    type: 'POST',
+                    data: {
+                        client_ids: clients_ids,
+                        _token: $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: function (response) {
+                        if (response.success) {
+                            // Clear select
+                            $('#addClientHours [name="client_id"]').empty();
+
+                            // Add options for select
+                            $.each(response.clients, function (index, client) {
+                                $('#addClientHours [name="client_id"]').append(
+                                    $('<option></option>').val(client.id).text(client.name)
+                                );
+                            });
+                        } else {
+                            console.log('Ошибка:', response.message);
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.log('Ошибка запроса:', error);
+                    }
+                });
+
                 if($(this).data('worker_id')){
                     var worker_id = $(this).data('worker_id');
                     $('#addClientHours [name="worker_id"]').val(worker_id).trigger('change');
@@ -294,12 +327,16 @@
 
             // Edit Workers
             $(document).on('click', '.editWorkerFromClientClick', function (e) {
+
                 var _thisForm = $(this).closest('form');
-                var clients_id = _thisForm.data('clientsid').toString().split(',');
+                var clients_ids = (_thisForm.data('clientsids') || '').toString().split(',');
+                if (clients_ids.length === 1 && clients_ids[0] === '') {
+                    clients_ids = [];
+                }
                 $('.cwe').attr('checked', false);
-                for(var i = 0; i < clients_id.length; i++){
-                    $('#cwe_'+clients_id[i]).attr('checked', true);
-                    //console.log('#cwe_'+clients_id[i]);
+                for(var i = 0; i < clients_ids.length; i++){
+                    $('#cwe_'+clients_ids[i]).attr('checked', true);
+                    //console.log('#cwe_'+clients_ids[i]);
                 }
                 $('#popup__editWorkerFromClient [name="name"]').val(_thisForm.find('.data_name').text());
                 $('#popup__editWorkerFromClient [name="email"]').val(_thisForm.find('.data_email').text());

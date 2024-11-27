@@ -48,3 +48,5 @@ Route::post('/removeManager',           [ManagersController::class, 'removeManag
 
 Route::get('/enter-code',               [CodeController::class, 'showCodeForm'])->name('enter.code');
 Route::post('/enter-code',              [CodeController::class, 'storeCode'])->name('code.store');
+
+Route::post('/get-clients', [ClientsController::class, 'getClients'])->name('get.clients');
