@@ -28,12 +28,12 @@
                 </div>
             @endif
 
-            @if(date('H')>=17 && date('H')<=23)
+            @if(date('H')>=1 && date('H')<=23)
 
                 <div class="row">
                   <div class="col-md-9 col-sm-12 col-12">
                     <div class="info-box">
-                      <span class="info-box-icon bg-warning"><i class="fas fa-info"></i></span>
+                      <span class="info-box-icon bg-warning"><i class="fas fa-pen-nib"></i></span>
                       <div class="info-box-content">
                           <span class="info-box-number">Заполните данные</span>
                         <span class="info-box-text-">Вы можете устанавливать часы работы каждый день только между 17:00 и 23:59</span>
