@@ -119,7 +119,8 @@ class WorkersController extends Controller
 			'selectCountDays'=>$selectCountDays,
 			'users'=>$users,
 			'yearsSalary'=>$yearsSalary,
-			'monthSalary'=>date("n",time()),
+			'default_year'=>date("Y",time()),
+			'default_month'=>date("n",time()),
 			'worker_ids__wrote_time'=>[],
 		]);
 
@@ -147,7 +148,7 @@ class WorkersController extends Controller
         $WorkerClientHoursArray = WorkerClientHours::whereBetween("created_at", [ $date_or_period_with_secounds[0], $date_or_period_with_secounds[1] ])
             ->where("worker_id", auth()->user()->id)->get()->keyBy('client_id')->toArray();
 
-        $date_or_period_with_secounds_last[0] = new Carbon(date('d-m-Y', time()-(86400*2)));
+        $date_or_period_with_secounds_last[0] = new Carbon(date('d-m-Y', time()-(86400*30)));
         $date_or_period_with_secounds_last[1] = new Carbon(date('d-m-Y', time())); // Final date
         $date_or_period_with_secounds_last[1]->addHour(23)->addMinutes(59)->addSeconds(59);
         $WorkerClientHoursArray_Last = WorkerClientHours::whereBetween("created_at", [ $date_or_period_with_secounds_last[0], $date_or_period_with_secounds_last[1] ])
@@ -172,33 +173,42 @@ class WorkersController extends Controller
     public function saveWorker(Request $request)
     {
 
-        $date_or_period_with_secounds[0] = new Carbon(date('d-m-Y', time()));
-        $date_or_period_with_secounds[1] = new Carbon(date('d-m-Y', time())); // Final date
-        $date_or_period_with_secounds[1]->addHour(23)->addMinutes(59)->addSeconds(59);
+        if(date('H',time())>=17 && date('H',time())<=23){
+            $date_or_period_with_secounds[0] = new Carbon(date('d-m-Y', time()));
+            $date_or_period_with_secounds[1] = new Carbon(date('d-m-Y', time())); // Final date
+            $date_or_period_with_secounds[1]->addHour(23)->addMinutes(59)->addSeconds(59);
 
-        foreach($request->clients as $client_id=>$hours){
-            $data = [
-                'worker_id' => auth()->user()->id,
-                'client_id' => $client_id,
-                'hours' => $hours,
-            ];
+            foreach($request->clients as $client_id=>$hours){
+                $data = [
+                    'worker_id' => auth()->user()->id,
+                    'client_id' => $client_id,
+                    'hours' => $hours,
+                ];
+
+                $WorkerClientHours = WorkerClientHours::whereBetween("created_at", [ $date_or_period_with_secounds[0], $date_or_period_with_secounds[1] ])
+                    ->where('worker_id',auth()->user()->id)
+                    ->where("client_id", $client_id)
+                    ->first();
+
+                if(!empty($WorkerClientHours->id)){
+                    $WorkerClientHours->update($data);
+                } else {
+                    $WorkerClientHours = new WorkerClientHours();
+                    $WorkerClientHours->fill($data);
+                    $WorkerClientHours->save();
+                }
+            }
 
             $WorkerClientHours = WorkerClientHours::whereBetween("created_at", [ $date_or_period_with_secounds[0], $date_or_period_with_secounds[1] ])
                 ->where('worker_id',auth()->user()->id)
-                ->where("client_id", $client_id)
-                ->first();
+                ->where("hours", 0)
+                ->delete();
 
-            if(!empty($WorkerClientHours->id)){
-                $WorkerClientHours->update($data);
-            } else {
-                $WorkerClientHours = new WorkerClientHours();
-                $WorkerClientHours->fill($data);
-                $WorkerClientHours->save();
-            }
+            return redirect('worker')->with('status', 'Часы работы были успешно сохранены.');
+        } else {
+            return redirect('worker')->with('error', 'Невозможно сохранить часы работы,
+            поскольку текущее время не соответствует рабочему периоду.');
         }
-
-        return redirect('worker')->with('status', 'Часы работы были успешно сохранены.');
-
     }
 
     /**
@@ -359,6 +369,29 @@ class WorkersController extends Controller
             return redirect($lastUrlForReditect)->with('status', 'Данные сотрудника <b>'.$request->name.'</b> были обновлены.');
         }
 
+    }
+
+
+    /**
+     * get Salary
+     *
+     */
+    public function getSalary(Request $request)
+    {
+        $worker_id = $request->input('worker_id');
+        $year = $request->input('year');
+        $month = $request->input('month');
+
+        if (!empty($worker_id)) {
+            $wch = WorkersSalary::where('worker_id', $worker_id)
+                ->where('year', $year)
+                ->where('month', $month)
+                ->select('salary')
+                ->first();
+            return response()->json(['success' => true, 'salary' => (!empty($wch) ? $wch->salary : 0)]);
+        }
+
+        return response()->json(['success' => false, 'message' => 'Invalid ID', 'salary' => 0]);
     }
 
 }

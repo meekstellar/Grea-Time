@@ -37,9 +37,9 @@
                     <div class="col-6 col-sm-4 col-lg-4">
                         <div class="form-group">
                             <label>Год</label>
-                            <select required class="form-control" style="width: 100%;" name="year" placeholder="Год">
+                            <select required class="form-control" style="width: 100%;" name="year" placeholder="Год" data-default_year="{{$default_year}}">
                                 @foreach($yearsSalary as $year)
-                                <option value="{{ $year }}">{{ $year }}</option>
+                                <option value="{{ $year }}" @if($default_year == $year) selected @endif>{{ $year }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -47,26 +47,26 @@
                     <div class="col-6 col-sm-4 col-lg-4">
                         <div class="form-group">
                             <label>Месяц</label>
-                            <select required class="form-control" style="width: 100%;" name="month" placeholder="Месяц">
-                                <option value="1" @if($monthSalary == 1) selected @endif>Январь</option>
-                                <option value="2" @if($monthSalary == 2) selected @endif>Февраль</option>
-                                <option value="3" @if($monthSalary == 3) selected @endif>Март</option>
-                                <option value="4" @if($monthSalary == 4) selected @endif>апрель</option>
-                                <option value="5" @if($monthSalary == 5) selected @endif>Май</option>
-                                <option value="6" @if($monthSalary == 6) selected @endif>Июнь</option>
-                                <option value="7" @if($monthSalary == 7) selected @endif>Июль</option>
-                                <option value="8" @if($monthSalary == 8) selected @endif>Август</option>
-                                <option value="9" @if($monthSalary == 9) selected @endif>Сентябрь</option>
-                                <option value="10" @if($monthSalary == 10) selected @endif>Октябрь</option>
-                                <option value="11" @if($monthSalary == 11) selected @endif>Ноябрь</option>
-                                <option value="12" @if($monthSalary == 12) selected @endif>Декабрь</option>
+                            <select required class="form-control" style="width: 100%;" name="month" placeholder="Месяц" data-default_month="{{$default_month}}">
+                                <option value="1" @if($default_month == 1) selected @endif>Январь</option>
+                                <option value="2" @if($default_month == 2) selected @endif>Февраль</option>
+                                <option value="3" @if($default_month == 3) selected @endif>Март</option>
+                                <option value="4" @if($default_month == 4) selected @endif>апрель</option>
+                                <option value="5" @if($default_month == 5) selected @endif>Май</option>
+                                <option value="6" @if($default_month == 6) selected @endif>Июнь</option>
+                                <option value="7" @if($default_month == 7) selected @endif>Июль</option>
+                                <option value="8" @if($default_month == 8) selected @endif>Август</option>
+                                <option value="9" @if($default_month == 9) selected @endif>Сентябрь</option>
+                                <option value="10" @if($default_month == 10) selected @endif>Октябрь</option>
+                                <option value="11" @if($default_month == 11) selected @endif>Ноябрь</option>
+                                <option value="12" @if($default_month == 12) selected @endif>Декабрь</option>
                             </select>
                         </div>
                     </div>
                     <div class="col-12 col-sm-4 col-lg-4">
                         <div class="form-group">
                             <label>Заработная плата</label>
-                            <input required class="form-control" type="text" name="salary">
+                            <input required class="form-control" type="text" name="salary" value="0">
                         </div>
                     </div>
                     <div class="col-sm-6 col-lg-6">

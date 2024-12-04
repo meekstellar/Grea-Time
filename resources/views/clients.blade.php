@@ -121,7 +121,7 @@
                                                                         $clients_hours = $WorkerClientHours->where('client_id',$wc->client_id)->where('worker_id',$wc_workers->worker_id)->sum('hours');
                                                                         $all_clients_hours += $clients_hours*$wc_workers->worker()->get_pay_per_one_hour(\Date::parse($wc_workers->created_at)->format('Y'), \Date::parse($wc_workers->created_at)->format('n'));
                                                                     @endphp
-                                                                    <i class="far fa-clock"></i>{{ $clients_hours }}&nbsp;ч.
+                                                                    <i class="far fa-clock"></i>&nbsp;{{ $clients_hours }}&nbsp;ч.
                                                                 </td>
                                                                 @if(in_array($selectCountDays, [28,29,30,31]))
                                                                 <td style="width: 80px; text-align: right; white-space: nowrap;">{{ $WorkerClientHours->where('client_id',$wc->client_id)->where('worker_id',$wc_workers->worker_id)->sum('hours')*$wc_workers->worker()->get_pay_per_one_hour(\Date::parse($wc_workers->created_at)->format('Y'), \Date::parse($wc_workers->created_at)->format('n')) }} {{ $currency }}</td>

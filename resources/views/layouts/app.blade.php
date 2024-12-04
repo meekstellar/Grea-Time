@@ -280,6 +280,37 @@
                 $('#addClientHours [name="created_at"]').val(created_at);
             });
 
+            // Автоматичне підтягування зарплати за потрібний місяць
+            $(document).on('change', '#popup__editWorkerFromClient select[name="year"], #popup__editWorkerFromClient select[name="month"]', function (e) {
+                var worker_id = $(this).closest('form').find('input[name="id"]').val();
+                var newYear = $('#popup__editWorkerFromClient select[name="year"]').val();
+                var newMonth = $('#popup__editWorkerFromClient select[name="month"]').val();
+                $.ajax({
+                    url: '/get-salary',
+                    type: 'POST',
+                    data: {
+                        worker_id: worker_id,
+                        year: newYear,
+                        month: newMonth,
+                        _token: $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: function (response) {
+                        if (response.success) {
+                            // Clear select
+                            $('#popup__editWorkerFromClient input[name="salary"]').val(response.salary);
+
+                            console.log(worker_id,newYear,newMonth,response.salary);
+
+                        } else {
+                            console.log('Ошибка:', response.message);
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.log('Ошибка запроса:', error);
+                    }
+                });
+            });
+
             $(document).on('click', '.setFee-btn', function (e) {
                 $('#setFee').find('[name="client_id"]').val($(this).data('client_id'));
                 $('#setFee').find('[name="fee"]').val($(this).next('.setedFee').text());
@@ -338,6 +369,7 @@
                     $('#cwe_'+clients_ids[i]).attr('checked', true);
                     //console.log('#cwe_'+clients_ids[i]);
                 }
+
                 $('#popup__editWorkerFromClient [name="name"]').val(_thisForm.find('.data_name').text());
                 $('#popup__editWorkerFromClient [name="email"]').val(_thisForm.find('.data_email').text());
                 $('#popup__editWorkerFromClient .user-photo-preview').attr('src',_thisForm.find('.worker-avatar').attr('src'));
@@ -345,6 +377,11 @@
                 $('#popup__editWorkerFromClient [name="id"]').val(_thisForm.data('id'));
                 $('#popup__editWorkerFromClient [name="password"]').val('');
                 $('#popup__editWorkerFromClient [name="salary"]').val(_thisForm.data('salary'));
+
+                setTimeout(function() {
+                    $('#popup__editWorkerFromClient select[name="year"]').val($('#popup__editWorkerFromClient select[name="year"]').data('default_year')).attr('selected', 'selected').change();
+                    $('#popup__editWorkerFromClient select[name="month"]').val($('#popup__editWorkerFromClient select[name="month"]').data('default_month')).attr('selected', 'selected').change();
+                }, 10);
             });
 
             // Edit Clients
