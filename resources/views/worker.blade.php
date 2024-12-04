@@ -28,7 +28,7 @@
                 </div>
             @endif
 
-            @if(date('H')>=1 && date('H')<=23)
+            @if(date('H')>=17 && date('H')<=23)
 
                 <div class="row">
                   <div class="col-md-9 col-sm-12 col-12">
