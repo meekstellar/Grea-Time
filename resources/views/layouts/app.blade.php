@@ -201,7 +201,7 @@
                             var row = $('<tr>');
                                     row.append('<th>Год</td>');
                                     row.append('<th>Месяц</th>');
-                                    row.append('<th>Progress</th>');
+                                    row.append('<th>Маржинальность</th>');
                                     row.append('<th style="width: 40px"></th>');
                                     table.append(row);
                             var k = 0;

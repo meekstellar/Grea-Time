@@ -21,6 +21,6 @@ class pdfExport implements FromView
 
     public function view(): View
     {
-        return $this->service->WorkerClientHours($this->date_or_period, $this->w, 'exports.pdf', \Maatwebsite\Excel\Excel::MPDF);
+        return $this->service->WorkerClientHours($this->date_or_period, $this->w, 'exports.export', \Maatwebsite\Excel\Excel::MPDF);
     }
 }

@@ -55,8 +55,6 @@
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="col-12">
                                     <div class="form-group">
                                         <label><i class="nav-icon fas fa-user-secret" aria-hidden="true"></i> Клиенты:</label>
                                         <select name="w[]" class="select2" multiple="multiple" data-placeholder="Отображать всех клиентов" style="width: 100%;">
@@ -115,7 +113,7 @@
                                                             @if(!in_array($wc_workers->worker_id,$processed))
                                                             <tr>
                                                                 <td style="width: 10px">{{ $k }}.</td>
-                                                                <td class="user_active_{{$wc_workers->worker()->active}}">{{ $wc_workers->worker()->name }} <span class="worker_positon">({{ $wc_workers->worker()->position }}, @if(in_array($selectCountDays, [28,29,30,31])){{ $wc_workers->worker()->get_current_salary(\Date::parse($wc_workers->created_at)->format('Y'), \Date::parse($wc_workers->created_at)->format('n')) }}@endif ₽ / мес)</span></td>
+                                                                <td class="user_active_{{$wc_workers->worker()->active}}">{{ $wc_workers->worker()->name }} <span class="worker_positon">({{ $wc_workers->worker()->position }}@if(in_array($selectCountDays, [28,29,30,31])), {{ $wc_workers->worker()->get_current_salary(\Date::parse($wc_workers->created_at)->format('Y'), \Date::parse($wc_workers->created_at)->format('n')) }} ₽ / мес @endif)</span></td>
                                                                 <td valign="middle" style="white-space: nowrap; width: 80px; text-align: left; @if(in_array($selectCountDays, [28,29,30,31]))font-size: .9rem;@endif">
                                                                     @php
                                                                         $clients_hours = $WorkerClientHours->where('client_id',$wc->client_id)->where('worker_id',$wc_workers->worker_id)->sum('hours');
@@ -215,7 +213,7 @@
                                                 <tr>
                                                     <th>Год</th>
                                                     <th>Месяц</th>
-                                                    <th>Progress</th>
+                                                    <th>Маржинальность</th>
                                                     <th style="width: 40px"></th>
                                                 </tr>
                                             </thead>

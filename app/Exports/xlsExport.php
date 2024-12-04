@@ -21,6 +21,6 @@ class xlsExport implements FromView
 
     public function view(): View
     {
-        return $this->service->WorkerClientHours($this->date_or_period, $this->w, 'exports.xls');
+        return $this->service->WorkerClientHours($this->date_or_period, $this->w, 'exports.export');
     }
 }
