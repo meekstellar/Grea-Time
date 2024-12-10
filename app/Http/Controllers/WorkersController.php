@@ -240,7 +240,37 @@ class WorkersController extends Controller
         $wc->updated_at = $created_at;
         $wc->save();
 
-        return redirect($lastUrlForReditect.'#u'.$request->worker_id)->with('status', 'Установлены часы работы для <br><b>'.$wc->client()->name.'</b>');
+        return redirect($lastUrlForReditect.'#u'.$request->worker_id)
+        ->with('status', 'Установлены часы работы для сотрудника <b>'.$wc->worker()->name.'</b> (клиент: <b>'.$wc->client()->name.'</b>).');
+
+    }
+
+    /**
+     * Add Rest Day
+     *
+     */
+    public function addRestDay(Request $request){
+
+        $lastUrlForReditect = $request->lastUrl;
+        $created_at = new Carbon($request->created_at);
+        $created_at->addHour(18);
+
+        $restDayClient = User::where('position', 'Rest Day')->first();
+
+        if ($restDayClient) {
+            $wc = new WorkerClientHours;
+            $wc->worker_id = $request->worker_id;
+            $wc->client_id = $restDayClient->id;
+            $wc->hours = 8;
+            $wc->created_at = $created_at;
+            $wc->updated_at = $created_at;
+            $wc->save();
+        } else {
+            $client_id = null;
+        }
+
+        return redirect()->route('workers',['date_or_period' => $request->date_or_period])
+            ->with('status', 'Установлен <b>'.$wc->client()->name.'</b> в день '.$request->date_or_period.' для сотрудника <b>'.$wc->worker()->name.'</b>.');
 
     }
 

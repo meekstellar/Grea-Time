@@ -8,6 +8,8 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
+use Carbon\Carbon;
+
 class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
@@ -54,6 +56,25 @@ class User extends Authenticatable
             ->where('year', $year)
             ->where('month', $month)
             ->first();
+    }
+
+    /**
+     * Fee
+     *
+     * @var array<int>
+     */
+	public function sent_mail_in_this_day($day)
+    {
+
+        $parsedDate = Carbon::createFromFormat('d-m-Y', $day)->startOfDay();
+        $sr = $this->hasOne('App\Models\SendingReminder', 'worker_id')
+            ->where('day', $parsedDate)
+            ->first();
+        if(!empty($sr)){
+            return 1;
+        } else {
+            return 0;
+        }
     }
 
 	public function get_connect_clients_id()

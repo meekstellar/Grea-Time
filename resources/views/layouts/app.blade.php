@@ -79,18 +79,29 @@
 
         $('.select2').select2({closeOnSelect:false});
 
+        $('#reservationdate').datetimepicker({
+            format: 'DD-MM-YYYY'
+        });
+
+        $('#reservation').daterangepicker();
+
         setTimeout(function() {
             $('.alert-success').slideUp();
-        }, 4000);
+        }, 6000);
 
+        // Edit managers
+        $(document).on('click', '.editManagerClick', function (e) {
+            var _this_user_data = $(this).closest('.user_data');
+            $('#popup__editManager [name="name"]').val(_this_user_data.find('.data_name').text());
+            $('#popup__editManager [name="email"]').val(_this_user_data.find('.data_email').text());
+            $('#popup__editManager [name="phone"]').val(_this_user_data.find('.data_phone').text());
+            $('#popup__editManager .user-photo-preview').attr('src',_this_user_data.find('.avatar-small').attr('src'));
+            $('#popup__editManager [name="id"]').val(_this_user_data.data('id'));
+        });
 
         @if(!empty($date_or_period))
-
-            $('#reservationdate').datetimepicker({
-                format: 'DD-MM-YYYY'
-            });
-
-            $('#reservation').daterangepicker();
+            let date_or_period = ["{!! $date_or_period[0] !!}", "{!! (!empty($date_or_period[1]) ? $date_or_period[1] : $date_or_period[0]) !!}"];
+            //console.log(date_or_period);
             //Date range as a button
             var start = moment({!! '"'.$date_or_period[0].'"' !!}, "DD-MM-YYYY");
             var end = moment({!! (!empty($date_or_period[1]) ? '"'.$date_or_period[1].'"' : '"'.$date_or_period[0].'"') !!}, "DD-MM-YYYY");
@@ -296,11 +307,7 @@
                     },
                     success: function (response) {
                         if (response.success) {
-                            // Clear select
                             $('#popup__editWorkerFromClient input[name="salary"]').val(response.salary);
-
-                            console.log(worker_id,newYear,newMonth,response.salary);
-
                         } else {
                             console.log('Ошибка:', response.message);
                         }
@@ -393,42 +400,69 @@
                 $('#popup__editClient [name="id"]').val(_thisForm.data('id'));
             });
 
+            // Send Reminfer
+            $(document).on('click', '.send_reminder', function (e) {
+                var _this = $(this);
+                var worker_id = $(this).data('worker_id');
+                var day = $(this).data('day');
+                var data = {
+                    'worker_id' : worker_id,
+                    'day' : day
+                };
+
+                _this.removeClass('.send_reminder');
+                _this.prop('title', 'Ожидайте');
+                _this.html('<i class="fas fa-ban"></i>');
+                _this.prop('disabled', true);
+                _this.css('cursor', 'wait');
+                _this.css('color', '');
+                $.ajax({
+                    url: "{{ route('send.reminder') }}",
+                    type: "POST",
+                    data: data,
+                    success: function (data) {
+                        if (data.status) {
+                            _this.removeClass('.send_reminder');
+                            _this.prop('title', 'Письмо отправлено');
+                            _this.html('<i class="fas fa-check"></i>');
+                            _this.css('cursor', 'default');
+                            _this.prop('disabled', true);
+                            _this.css('color', '');
+                        } else {
+                            _this.addClass('.send_reminder');
+                            _this.prop('title', 'Ошибка. Попробуйте еще раз.');
+                            _this.html('<i class="fas fa-envelope"></i>');
+                            _this.css('cursor', '');
+                            _this.css('color', '#c44343');
+                            _this.prop('disabled', false);
+                        }
+                    },
+                    error: function (data) {
+                        _this.addClass('.send_reminder');
+                        _this.prop('title', 'Ошибка. Попробуйте еще раз.');
+                        _this.html('<i class="fas fa-envelope"></i>');
+                        _this.css('cursor', '');
+                        _this.css('color', '#c44343');
+                        _this.prop('disabled', false);
+                    }
+                });
+
+            });
+
         @endif
-
-        // Edit managers
-        $(document).on('click', '.editManagerClick', function (e) {
-            var _this_user_data = $(this).closest('.user_data');
-            $('#popup__editManager [name="name"]').val(_this_user_data.find('.data_name').text());
-            $('#popup__editManager [name="email"]').val(_this_user_data.find('.data_email').text());
-            $('#popup__editManager [name="phone"]').val(_this_user_data.find('.data_phone').text());
-            $('#popup__editManager .user-photo-preview').attr('src',_this_user_data.find('.avatar-small').attr('src'));
-            $('#popup__editManager [name="id"]').val(_this_user_data.data('id'));
-        });
-
-        setTimeout(function() {
-            location.reload();
-        }, 1000*300);
 
     });
 
+    @if (request()->is('worker', 'workers'))
+    var refresh_time_out = 10; //хв
+    @endif
+
 </script>
+@vite(['resources/js/app.js'])
 @endpush
 
 {{-- Add common CSS customizations --}}
 
 @push('css')
-<style type="text/css">
-
-    {{-- You can add AdminLTE customizations here --}}
-    /*
-    .card-header {
-        border-bottom: none;
-    }
-    .card-title {
-        font-weight: 600;
-    }
-    */
-
-</style>
-@vite(['resources/sass/app.scss', 'resources/js/app.js'])
+@vite(['resources/sass/app.scss'])
 @endpush

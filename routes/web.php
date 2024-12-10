@@ -6,6 +6,7 @@ use App\Http\Controllers\WorkersController;
 use App\Http\Controllers\ClientsController;
 use App\Http\Controllers\ManagersController;
 use App\Http\Controllers\CodeController;
+use App\Http\Controllers\SendReminderController;
 
 /*
 |--------------------------------------------------------------------------
@@ -28,10 +29,11 @@ Auth::routes();
 Route::get('/home',                     [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 Route::get('/worker',                   [WorkersController::class, 'worker'])->name('worker');
-Route::post('/worker',                  [WorkersController::class, 'saveWorker'])->name('saveWorker');
 Route::get('/workers',                  [WorkersController::class, 'index'])->name('workers');
+Route::post('/worker',                  [WorkersController::class, 'saveWorker'])->name('saveWorker');
 Route::post('/addNewWorker',            [WorkersController::class, 'addNewWorker'])->name('addNewWorker');
 Route::post('/editWorkerFromClient',    [WorkersController::class, 'editWorkerFromClient'])->name('editWorkerFromClient');
+Route::get('/add-rest-day',             [WorkersController::class, 'addRestDay'])->name('addRestDay')->middleware('auth');;
 Route::post('/addClientHours',          [WorkersController::class, 'addClientHours'])->name('addClientHours');
 Route::post('/changeClientsHours',      [WorkersController::class, 'changeClientsHours'])->name('changeClientsHours');
 
@@ -50,5 +52,7 @@ Route::get('/enter-code',               [CodeController::class, 'showCodeForm'])
 Route::post('/enter-code',              [CodeController::class, 'storeCode'])->name('code.store');
 
 # For API
-Route::post('/get-clients', [ClientsController::class, 'getClients'])->name('get.clients')->middleware('auth');
-Route::post('/get-salary',  [WorkersController::class, 'getSalary'])->name('get.salary')->middleware('auth');
+Route::post('/get-clients',    [ClientsController::class, 'getClients'])->name('get.clients')->middleware('auth');
+Route::post('/get-salary',     [WorkersController::class, 'getSalary'])->name('get.salary')->middleware('auth');
+Route::post('/send-reminder',  [SendReminderController::class,      'sendReminder'])->name('send.reminder')->middleware('auth');
+

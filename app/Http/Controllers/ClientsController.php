@@ -223,9 +223,13 @@ class ClientsController extends Controller
                 ->orderBy('name', 'asc')
                 ->get();
             return response()->json(['success' => true, 'clients' => $clients]);
+        } else {
+            $clients = User::select('id','name')
+                ->orderBy('name', 'asc')
+                ->get();
+            return response()->json(['success' => true, 'clients' => $clients]);
         }
 
-        return response()->json(['success' => false, 'message' => 'Invalid IDs']);
     }
 
 }

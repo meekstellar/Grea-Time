@@ -77,10 +77,22 @@
                                 </span>
                                 @endif
                             </td>
-                            <td style="width: 180px; text-align: right;" class="pr-3" style="vertical-align: middle;">
+                            <td style="width: 222px; text-align: right;" class="pr-3" style="vertical-align: middle;">
                                 <button type="button" class="btn btn-default btn-xs addClientHoursButton" data-toggle="modal" data-target="#addClientHours" data-worker_id="{{ $worker->id }}">
                                     <i class="far fa-clock"></i> Добавить часы работы
                                 </button>
+                                <a href="{{ route('addRestDay') }}?date_or_period={{$date_or_period[0]}}&worker_id={{ $worker->id }}" type="button" class="btn btn-default btn-xs add_rest_days" title="Добавить отпуск" data-worker_id="{{ $worker->id }}">
+                                    <i class="fas fa-house-user"></i>
+                                </a>
+                                @if($worker->sent_mail_in_this_day($date_or_period[0]))
+                                    <button type="button" class="btn btn-default btn-xs" title="Письмо отправлено" disabled style="cursor: default;" >
+                                        <i class="fas fa-check"></i>
+                                    </button>
+                                @else
+                                    <button type="button" class="btn btn-default btn-xs send_reminder" title="Отправить письмо" data-worker_id="{{ $worker->id }}" data-day="{{ $date_or_period[0] }}">
+                                        <i class="fas fa-envelope"></i>
+                                    </button>
+                                @endif
                             </td>
                         </tr>
                         @endif

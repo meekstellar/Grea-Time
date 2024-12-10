@@ -336,7 +336,7 @@
                                     <div class="modal-footer justify-content-between">
                                         <button type="button" class="btn btn-default" style="order: 1;" data-dismiss="modal">Отмена</button>
                                         <button type="submit" class="btn btn-primary" style="order: 3;"><i class="far fa-save"></i> Сохранить</button>
-                                        <button type="submit" class="btn btn-default" style="order: 2;" name="delete_user" value="1" onclick="return confirm('Действительно удалить этого клиента?');"><i class="fa fa-trash"></i>Удалить клиента</button>
+                                        <button type="submit" class="btn btn-default" style="order: 2;" name="delete_user" value="1" onclick="return confirm('Действительно удалить этого клиента?');"><i class="fa fa-trash"></i> Удалить клиента</button>
                                         <input type="hidden" value="{{ Request::fullUrl() }}" name="lastUrl" />
                                         <input type="hidden" value="" name="id" />
                                     </div>
