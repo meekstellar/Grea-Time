@@ -99,7 +99,10 @@ class WorkersController extends Controller
 
         WorkerClientHours::where('hours',0)->delete();
 
-        $WorkerClientHours = WorkerClientHours::whereBetween("created_at", [ $date_or_period_with_secounds[0], $date_or_period_with_secounds[1] ]);
+        $WorkerClientHours = WorkerClientHours::whereBetween("workers_clients_hours.created_at", [ $date_or_period_with_secounds[0], $date_or_period_with_secounds[1] ])
+            ->join('users', 'workers_clients_hours.worker_id', '=', 'users.id') // JOIN з таблицею user
+            ->orderBy('users.name', 'asc') // Сортування за user.name
+            ->select('workers_clients_hours.*');
         //$AllWorkerClientHours = $WorkerClientHours->get()->unique('worker_id');
         if(!empty($workers_id) && !empty($WorkerClientHours)){
             $WorkerClientHours = $WorkerClientHours->whereIn("worker_id", $workers_id);

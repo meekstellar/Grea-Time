@@ -48,38 +48,47 @@
                     @php
                         $processed = [];
                         $all_clients_hours = 0;
+                        $k=1;
                     @endphp
                     @foreach($WorkerClientHours->where('client_id',$wc->client_id) as $wc_workers)
                         @if(!in_array($wc_workers->worker_id,$processed))
+                        @php
+                            $worker_salary = (!empty($WorkersSalaryArray[$wc_workers->worker_id][\Date::parse($wc_workers->created_at)->format('Y')][\Date::parse($wc_workers->created_at)->format('n')]) ? $WorkersSalaryArray[$wc_workers->worker_id][\Date::parse($wc_workers->created_at)->format('Y')][\Date::parse($wc_workers->created_at)->format('n')] : 0);
+                        @endphp
                         <tr>
-                            <td>{{ $loop->iteration }}.</td>
+                            <td>{{ $k }}.</td>
                             <td width="50" style="@if($wc_workers->worker()->active == 0) text-decoration: line-through; font-family: DejaVu Sans; @endif">{{ $wc_workers->worker()->name }} ({{ $wc_workers->worker()->position }})</td>
-                            @if(in_array($selectCountDays, [28,29,30,31]))<td style="font-family: DejaVu Sans;">{{ $wc_workers->worker()->get_current_salary(\Date::parse($wc_workers->created_at)->format('Y'), \Date::parse($wc_workers->created_at)->format('n')) }} ₽ / мес</td>@endif
+                            @if(in_array($selectCountDays, [28,29,30,31]))<td style="font-family: DejaVu Sans;">{{ $worker_salary }} ₽ / мес</td>@endif
                             <td style="text-align: right; font-family: DejaVu Sans;">
                                 @php
-                                    $clients_hours = $WorkerClientHours->where('client_id',$wc->client_id)->where('worker_id',$wc_workers->worker_id)->sum('hours');
-                                    $all_clients_hours += $clients_hours*$wc_workers->worker()->get_pay_per_one_hour(\Date::parse($wc_workers->created_at)->format('Y'), \Date::parse($wc_workers->created_at)->format('n'));
+                                    $clients_hours = $wchArray[$wc->client_id][$wc_workers->worker_id];
+                                    $pay_per_one_hour = 0;
+                                    if(!empty($worker_salary)){
+                                        $pay_per_one_hour = $worker_salary/160;
+                                    }
+                                    $all_clients_hours += $clients_hours*$pay_per_one_hour;
                                 @endphp
                                 {{ $clients_hours }}&nbsp;ч.
                             </td>
                             @if(in_array($selectCountDays, [28,29,30,31]))
-                            <td style="text-align: right; font-family: DejaVu Sans;">{{ $WorkerClientHours->where('client_id',$wc->client_id)->where('worker_id',$wc_workers->worker_id)->sum('hours')*$wc_workers->worker()->get_pay_per_one_hour(\Date::parse($wc_workers->created_at)->format('Y'), \Date::parse($wc_workers->created_at)->format('n')) }} {{ $currency }}</td>
+                                <td style="width: 80px; text-align: right; white-space: nowrap; font-family: DejaVu Sans;">{{ $clients_hours*$pay_per_one_hour }} {{ $currency }}</td>
                             @endif
                         </tr>
                         @php
                             $processed[] = $wc_workers->worker_id;
+                            $k++;
                         @endphp
                         @endif
                     @endforeach
                 </tbody>
                 <tfoot>
                     @if(in_array($selectCountDays, [28,29,30,31]))
-                        @php
-                            $OPEX = (!empty($wc->client()->fee(\Date::parse($date_or_period[0])->format('Y') ,\Date::parse($date_or_period[0])->format('m')*1)) ? $wc->client()->fee(\Date::parse($date_or_period[0])->format('Y') ,\Date::parse($date_or_period[0])->format('m')*1)->fee*0.35 : 0);
-                            $fee = (!empty($wc->client()->fee(\Date::parse($date_or_period[0])->format('Y') ,\Date::parse($date_or_period[0])->format('m')*1)) ? $wc->client()->fee(\Date::parse($date_or_period[0])->format('Y') ,\Date::parse($date_or_period[0])->format('m')*1)->fee : 0);
-                            $profit = $fee - $OPEX - $all_clients_hours;
-                            $marginality = (!empty($wc->client()->fee(\Date::parse($date_or_period[0])->format('Y') ,\Date::parse($date_or_period[0])->format('m')*1)) ? round($profit*100/$fee,2) : 0);
-                        @endphp
+                    @php
+                        $fee =  (!empty($wc->client()->fee(\Date::parse($date_or_period[0])->format('Y') ,\Date::parse($date_or_period[0])->format('m')*1)) ? $wc->client()->fee(\Date::parse($date_or_period[0])->format('Y') ,\Date::parse($date_or_period[0])->format('m')*1)->fee : 0);
+                        $OPEX = $fee*0.35;
+                        $profit = $fee - $OPEX - $all_clients_hours;
+                        $marginality = (!empty($fee) ? round($profit*100/$fee,2) : 0);
+                    @endphp
                                 <tr>
                                     <td></td>
                                     <td colspan="3" style="font-family: DejaVu Sans;">ИТОГО Себестоимость</td>

@@ -219,12 +219,14 @@ class ClientsController extends Controller
         // Перевірка, чи є IDs, і пошук клієнтів
         if (is_array($clientIds)) {
             $clients = User::whereIn('id', $clientIds)
+                ->where('role', 'client')
                 ->select('id','name')
                 ->orderBy('name', 'asc')
                 ->get();
             return response()->json(['success' => true, 'clients' => $clients]);
         } else {
-            $clients = User::select('id','name')
+            $clients = User::where('role', 'client')
+                ->select('id','name')
                 ->orderBy('name', 'asc')
                 ->get();
             return response()->json(['success' => true, 'clients' => $clients]);

@@ -111,18 +111,25 @@
                                                         @endphp
                                                         @foreach($WorkerClientHours->where('client_id',$wc->client_id) as $wc_workers)
                                                             @if(!in_array($wc_workers->worker_id,$processed))
+                                                            @php
+                                                                $worker_salary = (!empty($WorkersSalaryArray[$wc_workers->worker_id][\Date::parse($wc_workers->created_at)->format('Y')][\Date::parse($wc_workers->created_at)->format('n')]) ? $WorkersSalaryArray[$wc_workers->worker_id][\Date::parse($wc_workers->created_at)->format('Y')][\Date::parse($wc_workers->created_at)->format('n')] : 0);
+                                                            @endphp
                                                             <tr>
                                                                 <td style="width: 10px">{{ $k }}.</td>
-                                                                <td class="user_active_{{$wc_workers->worker()->active}}">{{ $wc_workers->worker()->name }} <span class="worker_positon">({{ $wc_workers->worker()->position }}@if(in_array($selectCountDays, [28,29,30,31])), {{ $wc_workers->worker()->get_current_salary(\Date::parse($wc_workers->created_at)->format('Y'), \Date::parse($wc_workers->created_at)->format('n')) }} ₽ / мес @endif)</span></td>
+                                                                <td class="user_active_{{$wc_workers->worker()->active}}">{{ $wc_workers->worker()->name }} <span class="worker_positon">({{ $wc_workers->worker()->position }}@if(in_array($selectCountDays, [28,29,30,31])), {{ $worker_salary }} ₽ / мес @endif)</span></td>
                                                                 <td valign="middle" style="white-space: nowrap; width: 80px; text-align: left; @if(in_array($selectCountDays, [28,29,30,31]))font-size: .9rem;@endif">
                                                                     @php
-                                                                        $clients_hours = $WorkerClientHours->where('client_id',$wc->client_id)->where('worker_id',$wc_workers->worker_id)->sum('hours');
-                                                                        $all_clients_hours += $clients_hours*$wc_workers->worker()->get_pay_per_one_hour(\Date::parse($wc_workers->created_at)->format('Y'), \Date::parse($wc_workers->created_at)->format('n'));
+                                                                        $clients_hours = $wchArray[$wc->client_id][$wc_workers->worker_id];
+                                                                        $pay_per_one_hour = 0;
+                                                                        if(!empty($worker_salary)){
+                                                                            $pay_per_one_hour = $worker_salary/160;
+                                                                        }
+                                                                        $all_clients_hours += $clients_hours*$pay_per_one_hour;
                                                                     @endphp
                                                                     <i class="far fa-clock"></i>&nbsp;{{ $clients_hours }}&nbsp;ч.
                                                                 </td>
                                                                 @if(in_array($selectCountDays, [28,29,30,31]))
-                                                                <td style="width: 80px; text-align: right; white-space: nowrap;">{{ $WorkerClientHours->where('client_id',$wc->client_id)->where('worker_id',$wc_workers->worker_id)->sum('hours')*$wc_workers->worker()->get_pay_per_one_hour(\Date::parse($wc_workers->created_at)->format('Y'), \Date::parse($wc_workers->created_at)->format('n')) }} {{ $currency }}</td>
+                                                                    <td style="width: 80px; text-align: right; white-space: nowrap;">{{ $clients_hours*$pay_per_one_hour }} {{ $currency }}</td>
                                                                 @endif
                                                             </tr>
                                                             @php
@@ -140,10 +147,10 @@
                                                     <div class="col-12">
                                                         @if(in_array($selectCountDays, [28,29,30,31]))
                                                             @php
-                                                                $OPEX = (!empty($wc->client()->fee(\Date::parse($date_or_period[0])->format('Y') ,\Date::parse($date_or_period[0])->format('m')*1)) ? $wc->client()->fee(\Date::parse($date_or_period[0])->format('Y') ,\Date::parse($date_or_period[0])->format('m')*1)->fee*0.35 : 0);
-                                                                $fee = (!empty($wc->client()->fee(\Date::parse($date_or_period[0])->format('Y') ,\Date::parse($date_or_period[0])->format('m')*1)) ? $wc->client()->fee(\Date::parse($date_or_period[0])->format('Y') ,\Date::parse($date_or_period[0])->format('m')*1)->fee : 0);
+                                                                $fee =  (!empty($wc->client()->fee(\Date::parse($date_or_period[0])->format('Y') ,\Date::parse($date_or_period[0])->format('m')*1)) ? $wc->client()->fee(\Date::parse($date_or_period[0])->format('Y') ,\Date::parse($date_or_period[0])->format('m')*1)->fee : 0);
+                                                                $OPEX = $fee*0.35;
                                                                 $profit = $fee - $OPEX - $all_clients_hours;
-                                                                $marginality = (!empty($wc->client()->fee(\Date::parse($date_or_period[0])->format('Y') ,\Date::parse($date_or_period[0])->format('m')*1)) ? round($profit*100/$fee,2) : 0);
+                                                                $marginality = (!empty($fee) ? round($profit*100/$fee,2) : 0);
                                                             @endphp
                                                             <table class="table table-sm client-table mb-0">
                                                                 <tbody>

@@ -410,7 +410,7 @@
                     'day' : day
                 };
 
-                _this.removeClass('.send_reminder');
+                _this.removeClass('send_reminder');
                 _this.prop('title', 'Ожидайте');
                 _this.html('<i class="fas fa-ban"></i>');
                 _this.prop('disabled', true);
@@ -422,15 +422,17 @@
                     data: data,
                     success: function (data) {
                         if (data.status) {
-                            _this.removeClass('.send_reminder');
+                            _this.removeClass('send_reminder');
                             _this.prop('title', 'Письмо отправлено');
+                            toastr.success('Письмо отправлено.')
                             _this.html('<i class="fas fa-check"></i>');
                             _this.css('cursor', 'default');
                             _this.prop('disabled', true);
                             _this.css('color', '');
                         } else {
-                            _this.addClass('.send_reminder');
+                            _this.addClass('send_reminder');
                             _this.prop('title', 'Ошибка. Попробуйте еще раз.');
+                            toastr.error('Ошибка. Попробуйте еще раз.')
                             _this.html('<i class="fas fa-envelope"></i>');
                             _this.css('cursor', '');
                             _this.css('color', '#c44343');
@@ -438,8 +440,9 @@
                         }
                     },
                     error: function (data) {
-                        _this.addClass('.send_reminder');
+                        _this.addClass('send_reminder');
                         _this.prop('title', 'Ошибка. Попробуйте еще раз.');
+                        toastr.error('Ошибка. Попробуйте еще раз.')
                         _this.html('<i class="fas fa-envelope"></i>');
                         _this.css('cursor', '');
                         _this.css('color', '#c44343');

@@ -81,8 +81,8 @@
                                 <button type="button" class="btn btn-default btn-xs addClientHoursButton" data-toggle="modal" data-target="#addClientHours" data-worker_id="{{ $worker->id }}">
                                     <i class="far fa-clock"></i> Добавить часы работы
                                 </button>
-                                <a href="{{ route('addRestDay') }}?date_or_period={{$date_or_period[0]}}&worker_id={{ $worker->id }}" type="button" class="btn btn-default btn-xs add_rest_days" title="Добавить отпуск" data-worker_id="{{ $worker->id }}">
-                                    <i class="fas fa-house-user"></i>
+                                <a href="{{ route('addRestDay') }}?date_or_period={{$date_or_period[0]}}&worker_id={{ $worker->id }}" type="button" class="btn btn-default btn-xs add_rest_days px-2" style="font-weight: bold;" title="Добавить отпуск" data-worker_id="{{ $worker->id }}">
+                                    O
                                 </a>
                                 @if($worker->sent_mail_in_this_day($date_or_period[0]))
                                     <button type="button" class="btn btn-default btn-xs" title="Письмо отправлено" disabled style="cursor: default;" >
