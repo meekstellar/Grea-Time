@@ -97,6 +97,11 @@
             $('#popup__editManager [name="phone"]').val(_this_user_data.find('.data_phone').text());
             $('#popup__editManager .user-photo-preview').attr('src',_this_user_data.find('.avatar-small').attr('src'));
             $('#popup__editManager [name="id"]').val(_this_user_data.data('id'));
+            if($(this).data('access_to_salary')){
+                $('#popup__editManager [name="access_to_salary"]').prop('checked', true);
+            } else {
+                $('#popup__editManager [name="access_to_salary"]').prop('checked', false);
+            }
         });
 
         @if(!empty($date_or_period))

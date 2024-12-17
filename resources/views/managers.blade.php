@@ -44,7 +44,7 @@
                                                 <tr class="user_data" data-id="{{ $manager->id }}">
                                                     <td class="pl-3" style="width: 40px; vertical-align: middle;"><img alt="{{ $manager->name }}" class="avatar-small img-circle img-fluid" src="{{ (!empty($manager->image) && File::exists('storage/'.$manager->image) ? asset('storage/'.$manager->image) : asset('vendor/adminlte/dist/img/no-usericon.svg')) }}"></td>
                                                     <td style="vertical-align: middle;">
-                                                        <a href="#" class="editManagerClick data_name" data-toggle="modal" data-target="#popup__editManager">{{ $manager->name }}</a>
+                                                        <a href="#" class="editManagerClick data_name" data-access_to_salary="{{ $manager->access_to_salary }}" data-toggle="modal" data-target="#popup__editManager">{{ $manager->name }}</a>
                                                         <span class="ano" title="{{ $manager->email }}" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
                                                             (<span class="data_email">{{ $manager->email }}</span>, <span class="data_phone">{{ $manager->phone }}</span>)
                                                         </span>
@@ -121,6 +121,13 @@
                                                     </div>
                                                 </div>
                                             </div>
+                                            <div class="col-sm-6 col-lg-6">
+                                                <div class="form-group">
+                                                    <label>
+                                                        <input type="checkbox" value="1" name="access_to_salary" /> Открыть доступ к зарплате
+                                                    </label>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="modal-footer justify-content-between">
@@ -193,6 +200,13 @@
                                                     <input class="form-control" type="phone" name="phone">
                                                 </div>
                                             </div>--}}
+                                            <div class="col-sm-6 col-lg-6">
+                                                <div class="form-group">
+                                                    <label>
+                                                        <input type="checkbox" value="1" name="access_to_salary" /> Открыть доступ к зарплате
+                                                    </label>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="modal-footer justify-content-between">

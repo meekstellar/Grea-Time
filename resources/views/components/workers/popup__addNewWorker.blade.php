@@ -34,41 +34,43 @@
                             <input required class="form-control" type="text" name="password">
                         </div>
                     </div>
-                    <div class="col-6 col-sm-4 col-lg-4">
-                        <div class="form-group">
-                            <label>Год</label>
-                            <select required class="form-control" style="width: 100%;" name="year" placeholder="Год">
-                                @foreach($yearsSalary as $year)
-                                <option value="{{ $year }}">{{ $year }}</option>
-                                @endforeach
-                            </select>
+                    @if(auth()->user()->access_to_salary || auth()->user()->manager_important)
+                        <div class="col-6 col-sm-4 col-lg-4">
+                            <div class="form-group">
+                                <label>Год</label>
+                                <select required class="form-control" style="width: 100%;" name="year" placeholder="Год">
+                                    @foreach($yearsSalary as $year)
+                                    <option value="{{ $year }}">{{ $year }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-6 col-sm-4 col-lg-4">
-                        <div class="form-group">
-                            <label>Месяц</label>
-                            <select required class="form-control" style="width: 100%;" name="month" placeholder="Месяц">
-                                <option value="1">Январь</option>
-                                <option value="2">Февраль</option>
-                                <option value="3">Март</option>
-                                <option value="4">апрель</option>
-                                <option value="5">Май</option>
-                                <option value="6">Июнь</option>
-                                <option value="7">Июль</option>
-                                <option value="8">Август</option>
-                                <option value="9">Сентябрь</option>
-                                <option value="10">Октябрь</option>
-                                <option value="11">Ноябрь</option>
-                                <option value="12">Декабрь</option>
-                            </select>
+                        <div class="col-6 col-sm-4 col-lg-4">
+                            <div class="form-group">
+                                <label>Месяц</label>
+                                <select required class="form-control" style="width: 100%;" name="month" placeholder="Месяц">
+                                    <option value="1">Январь</option>
+                                    <option value="2">Февраль</option>
+                                    <option value="3">Март</option>
+                                    <option value="4">апрель</option>
+                                    <option value="5">Май</option>
+                                    <option value="6">Июнь</option>
+                                    <option value="7">Июль</option>
+                                    <option value="8">Август</option>
+                                    <option value="9">Сентябрь</option>
+                                    <option value="10">Октябрь</option>
+                                    <option value="11">Ноябрь</option>
+                                    <option value="12">Декабрь</option>
+                                </select>
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-sm-4 col-lg-4">
-                        <div class="form-group">
-                            <label>Заработная плата</label>
-                            <input required class="form-control" type="text" name="salary">
+                        <div class="col-sm-4 col-lg-4">
+                            <div class="form-group">
+                                <label>Заработная плата</label>
+                                <input required class="form-control" type="text" name="salary">
+                            </div>
                         </div>
-                    </div>
+                    @endif
                     <div class="col-sm-6 col-lg-6">
                         <div class="form-group">
                             <label>Фото</label>

@@ -101,6 +101,7 @@ class ManagersController extends Controller
         $user->name = $request->name;
         $user->email = $request->email;
         $user->address = $request->address;
+        $user->access_to_salary = (!empty($request->access_to_salary) ? $request->access_to_salary : 0);
         $user->active = 1;
         $user->manager_important = 0;
         $user->phone = $request->phone;
@@ -154,6 +155,7 @@ class ManagersController extends Controller
         $user->name = $request->name;
         $user->email = $request->email;
         $user->phone = $request->phone;
+        $user->access_to_salary = (!empty($request->access_to_salary) ? $request->access_to_salary : 0);
 
         if(!empty($request->delete_photo)){
             $user->image = '';
