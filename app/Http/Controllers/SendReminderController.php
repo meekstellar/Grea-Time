@@ -31,7 +31,7 @@ class SendReminderController extends Controller
                 ];
 
                 Mail::to(auth()->user()->mail)
-                    ->cc(env('MAIL_USERNAME'))
+                    ->cc(env('MAIL_CC'))
                     ->send(new SendMail($data));
 
                 $SendingReminder = new SendingReminder;
