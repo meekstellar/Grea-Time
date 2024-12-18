@@ -24,14 +24,14 @@ class SendReminderController extends Controller
 
             $user = User::find($request->worker_id);
 
-                if(!empty($user->name)){
+            if(!empty($user->name)){
                 $data = [
                     'username' => $user->name,
                     'day' => $request->day,
                 ];
 
-                Mail::to(auth()->user()->mail)
-                    ->cc(env('MAIL_CC'))
+                Mail::to($user->email)
+                    ->cc(auth()->user()->email)
                     ->send(new SendMail($data));
 
                 $SendingReminder = new SendingReminder;

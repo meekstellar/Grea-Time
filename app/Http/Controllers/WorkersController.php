@@ -255,7 +255,7 @@ class WorkersController extends Controller
     public function addRestDay(Request $request){
 
         $lastUrlForReditect = $request->lastUrl;
-        $created_at = new Carbon($request->created_at);
+        $created_at = new Carbon($request->date_or_period);
         $created_at->addHour(18);
 
         $restDayClient = User::where('position', 'Rest Day')->first();
