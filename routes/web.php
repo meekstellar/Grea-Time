@@ -33,7 +33,7 @@ Route::get('/workers',                  [WorkersController::class, 'index'])->na
 Route::post('/worker',                  [WorkersController::class, 'saveWorker'])->name('saveWorker')->middleware('auth');
 Route::post('/addNewWorker',            [WorkersController::class, 'addNewWorker'])->name('addNewWorker')->middleware('auth');
 Route::post('/editWorkerFromClient',    [WorkersController::class, 'editWorkerFromClient'])->name('editWorkerFromClient')->middleware('auth');
-Route::get('/add-rest-day',             [WorkersController::class, 'addRestDay'])->name('addRestDay')->middleware('auth')->middleware('auth');
+Route::post('/add-rest-day',             [WorkersController::class, 'addRestDay'])->name('addRestDay')->middleware('auth')->middleware('auth');
 Route::post('/addClientHours',          [WorkersController::class, 'addClientHours'])->name('addClientHours')->middleware('auth');
 Route::post('/changeClientsHours',      [WorkersController::class, 'changeClientsHours'])->name('changeClientsHours')->middleware('auth');
 

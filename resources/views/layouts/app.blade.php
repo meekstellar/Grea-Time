@@ -457,6 +457,58 @@
 
             });
 
+            // Add Rest Day
+            $(document).on('click', '.add_rest_days', function (e) {
+                var _this = $(this);
+                var worker_id = $(this).data('worker_id');
+                var day = $(this).data('day');
+                var data = {
+                    'worker_id' : worker_id,
+                    'day' : day
+                };
+
+                _this.removeClass('add_rest_days');
+                _this.prop('title', 'Ожидайте');
+                _this.html('<i class="fas fa-ban"></i>');
+                _this.prop('disabled', true);
+                _this.css('cursor', 'wait');
+                _this.css('color', '');
+                $.ajax({
+                    url: "{{ route('addRestDay') }}",
+                    type: "POST",
+                    data: data,
+                    success: function (data) {
+                        if (data.status) {
+                            _this.removeClass('add_rest_days');
+                            _this.prop('title', 'Отпуск установлен');
+                            toastr.success(data.message)
+                            _this.html('<i class="fas fa-check"></i>');
+                            _this.css('cursor', 'default');
+                            _this.prop('disabled', true);
+                            _this.css('color', '');
+                        } else {
+                            _this.addClass('add_rest_days');
+                            _this.prop('title', 'Ошибка. Попробуйте еще раз.');
+                            toastr.error('Ошибка. Попробуйте еще раз.')
+                            _this.html('O');
+                            _this.css('cursor', '');
+                            _this.css('color', '#c44343');
+                            _this.prop('disabled', false);
+                        }
+                    },
+                    error: function (data) {
+                        _this.addClass('add_rest_days');
+                        _this.prop('title', 'Ошибка. Попробуйте еще раз.');
+                        toastr.error('Ошибка. Попробуйте еще раз.')
+                        _this.html('O');
+                        _this.css('cursor', '');
+                        _this.css('color', '#c44343');
+                        _this.prop('disabled', false);
+                    }
+                });
+
+            });
+
         @endif
 
     });

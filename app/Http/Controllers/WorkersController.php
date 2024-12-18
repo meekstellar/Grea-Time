@@ -255,7 +255,7 @@ class WorkersController extends Controller
     public function addRestDay(Request $request){
 
         $lastUrlForReditect = $request->lastUrl;
-        $created_at = new Carbon($request->date_or_period);
+        $created_at = new Carbon($request->day);
         $created_at->addHour(18);
 
         $restDayClient = User::where('position', 'Rest Day')->first();
@@ -272,8 +272,9 @@ class WorkersController extends Controller
             $client_id = null;
         }
 
-        return redirect()->route('workers',['date_or_period' => $request->date_or_period])
-            ->with('status', 'Установлен <b>'.$wc->client()->name.'</b> в день '.$request->date_or_period.' для сотрудника <b>'.$wc->worker()->name.'</b>.');
+        //return redirect()->route('workers',['date_or_period' => $request->date_or_period])
+        //    ->with('status', 'Установлен <b>'.$wc->client()->name.'</b> в день '.$request->date_or_period.' для сотрудника <b>'.$wc->worker()->name.'</b>.');
+        return response()->json(['status' => true, 'message' => 'Установлен <b>'.$wc->client()->name.'</b> в день '.$request->date_or_period.' для сотрудника <b>'.$wc->worker()->name.'</b>.<br><br><b>Обновите страницу.</b>']);
 
     }
 
