@@ -78,21 +78,23 @@
                                 @endif
                             </td>
                             <td style="width: 222px; text-align: right;" class="pr-3" style="vertical-align: middle;">
-                                <button type="button" class="btn btn-default btn-xs addClientHoursButton" data-toggle="modal" data-target="#addClientHours" data-worker_id="{{ $worker->id }}">
-                                    <i class="far fa-clock"></i> Добавить часы работы
-                                </button>
-                                <button type="button" class="btn btn-default btn-xs add_rest_days" style="font-weight: bold; padding-left: 6px; padding-right: 6px;" title="Добавить отпуск" data-worker_id="{{ $worker->id }}" data-day="{{$date_or_period[0]}}">
-                                    O
-                                </button>
-                                @if($worker->sent_mail_in_this_day($date_or_period[0]))
-                                    <button type="button" class="btn btn-default btn-xs" title="Письмо отправлено" disabled style="cursor: default;" >
-                                        <i class="fas fa-check"></i>
+                                <form data-clientsids="@if(!empty($worker->get_connect_clients_id())){{ implode(',',$worker->get_connect_clients_id()) }}@endif">
+                                    <button type="button" class="btn btn-default btn-xs addClientHoursButton" data-toggle="modal" data-target="#addClientHours" data-worker_id="{{ $worker->id }}">
+                                        <i class="far fa-clock"></i> Добавить часы работы
                                     </button>
-                                @else
-                                    <button type="button" class="btn btn-default btn-xs send_reminder" title="Отправить письмо" data-worker_id="{{ $worker->id }}" data-day="{{ $date_or_period[0] }}">
-                                        <i class="fas fa-envelope"></i>
+                                    <button type="button" class="btn btn-default btn-xs add_rest_days" style="font-weight: bold; padding-left: 6px; padding-right: 6px;" title="Добавить отпуск" data-worker_id="{{ $worker->id }}" data-day="{{$date_or_period[0]}}">
+                                        O
                                     </button>
-                                @endif
+                                    @if($worker->sent_mail_in_this_day($date_or_period[0]))
+                                        <button type="button" class="btn btn-default btn-xs" title="Письмо отправлено" disabled style="cursor: default;" >
+                                            <i class="fas fa-check"></i>
+                                        </button>
+                                    @else
+                                        <button type="button" class="btn btn-default btn-xs send_reminder" title="Отправить письмо" data-worker_id="{{ $worker->id }}" data-day="{{ $date_or_period[0] }}">
+                                            <i class="fas fa-envelope"></i>
+                                        </button>
+                                    @endif
+                                </form>
                             </td>
                         </tr>
                         @endif

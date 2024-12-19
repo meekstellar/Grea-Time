@@ -116,8 +116,8 @@
                                                             @endphp
                                                             <tr>
                                                                 <td style="width: 10px">{{ $k }}.</td>
-                                                                <td class="user_active_{{$wc_workers->worker()->active}}">{{ $wc_workers->worker()->name }} <span class="worker_positon">({{ $wc_workers->worker()->position }}@if(in_array($selectCountDays, [28,29,30,31])), {{ $worker_salary }} ₽ / мес @endif)</span></td>
-                                                                <td valign="middle" style="white-space: nowrap; width: 80px; text-align: left; @if(in_array($selectCountDays, [28,29,30,31]))font-size: .9rem;@endif">
+                                                                <td class="user_active_{{$wc_workers->worker()->active}}">{{ $wc_workers->worker()->name }} <span class="worker_positon">({{ $wc_workers->worker()->position }}@if(in_array($selectCountDays, [28,29,30,31]) && (auth()->user()->access_to_salary || auth()->user()->manager_important)), {{ $worker_salary }} ₽ / мес @endif)</span></td>
+                                                                <td valign="middle" style="white-space: nowrap; width: 80px; text-align: left; @if(in_array($selectCountDays, [28,29,30,31]) && (auth()->user()->access_to_salary || auth()->user()->manager_important))font-size: .9rem;@endif">
                                                                     @php
                                                                         $clients_hours = $wchArray[$wc->client_id][$wc_workers->worker_id];
                                                                         $pay_per_one_hour = 0;
@@ -128,7 +128,7 @@
                                                                     @endphp
                                                                     <i class="far fa-clock"></i>&nbsp;{{ $clients_hours }}&nbsp;ч.
                                                                 </td>
-                                                                @if(in_array($selectCountDays, [28,29,30,31]))
+                                                                @if(in_array($selectCountDays, [28,29,30,31]) && (auth()->user()->access_to_salary || auth()->user()->manager_important))
                                                                     <td style="width: 80px; text-align: right; white-space: nowrap;">{{ $clients_hours*$pay_per_one_hour }} {{ $currency }}</td>
                                                                 @endif
                                                             </tr>

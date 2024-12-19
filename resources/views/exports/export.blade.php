@@ -57,8 +57,7 @@
                         @endphp
                         <tr>
                             <td>{{ $k }}.</td>
-                            <td width="50" style="@if($wc_workers->worker()->active == 0) text-decoration: line-through; font-family: DejaVu Sans; @endif">{{ $wc_workers->worker()->name }} ({{ $wc_workers->worker()->position }})</td>
-                            @if(in_array($selectCountDays, [28,29,30,31]))<td style="font-family: DejaVu Sans;">{{ $worker_salary }} ₽ / мес</td>@endif
+                            <td width="50" style="@if($wc_workers->worker()->active == 0) text-decoration: line-through; @endif font-family: DejaVu Sans;">{{ $wc_workers->worker()->name }} ({{ $wc_workers->worker()->position }})</td>
                             <td style="text-align: right; font-family: DejaVu Sans;">
                                 @php
                                     $clients_hours = $wchArray[$wc->client_id][$wc_workers->worker_id];
@@ -70,7 +69,8 @@
                                 @endphp
                                 {{ $clients_hours }}&nbsp;ч.
                             </td>
-                            @if(in_array($selectCountDays, [28,29,30,31]))
+                            @if(in_array($selectCountDays, [28,29,30,31]) && (auth()->user()->access_to_salary || auth()->user()->manager_important))<td style="font-family: DejaVu Sans;">{{ $worker_salary }} ₽ / мес</td>@endif
+                            @if(in_array($selectCountDays, [28,29,30,31]) && (auth()->user()->access_to_salary || auth()->user()->manager_important))
                                 <td style="width: 80px; text-align: right; white-space: nowrap; font-family: DejaVu Sans;">{{ $clients_hours*$pay_per_one_hour }} {{ $currency }}</td>
                             @endif
                         </tr>
@@ -91,28 +91,38 @@
                     @endphp
                                 <tr>
                                     <td></td>
-                                    <td colspan="3" style="font-family: DejaVu Sans;">ИТОГО Себестоимость</td>
+                                    <td style="font-family: DejaVu Sans;">ИТОГО Себестоимость</td>
                                     <td width="11" style="text-align: right; font-family: DejaVu Sans;">{{ $all_clients_hours }} {{ $currency }}</td>
+                                    <td></td>
+                                    <td></td>
                                 </tr>
                                 <tr>
                                     <td></td>
-                                    <td colspan="3" style="font-family: DejaVu Sans;">OPEX (35%)</td>
+                                    <td style="font-family: DejaVu Sans;">OPEX (35%)</td>
                                     <td style="text-align: right; font-family: DejaVu Sans;">{{ round($OPEX,0) }} {{ $currency }}</td>
+                                    <td></td>
+                                    <td></td>
                                 </tr>
                                 <tr>
                                     <td></td>
-                                    <td colspan="3" style="font-family: DejaVu Sans;">ГОНОРАР</td>
+                                    <td style="font-family: DejaVu Sans;">ГОНОРАР</td>
                                     <td style="text-align: right; font-family: DejaVu Sans;">{{ $fee }} {{ $currency }}</td>
+                                    <td></td>
+                                    <td></td>
                                 </tr>
                                 <tr>
                                     <td></td>
-                                    <td colspan="3" style="font-family: DejaVu Sans;">ПРИБЫЛЬ</td>
+                                    <td style="font-family: DejaVu Sans;">ПРИБЫЛЬ</td>
                                     <td style="text-align: right; font-weight: bold; font-family: DejaVu Sans;">{{ round($profit,0) }} {{ $currency }}</td>
+                                    <td></td>
+                                    <td></td>
                                 </tr>
                                 <tr>
                                     <td></td>
-                                    <td colspan="3" style="font-family: DejaVu Sans;">МАРЖИНАЛЬНОСТЬ</td>
+                                    <td style="font-family: DejaVu Sans;">МАРЖИНАЛЬНОСТЬ</td>
                                     <td style="text-align: right; font-weight: bold; font-family: DejaVu Sans;">{{ $marginality }}%</td>
+                                    <td></td>
+                                    <td></td>
                                 </tr>
                     @else
                     <tr>
