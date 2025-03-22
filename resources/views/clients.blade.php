@@ -163,7 +163,7 @@
                                                             <table class="table table-sm client-table mb-0">
                                                                 <tbody>
                                                                     <tr>
-                                                                        <td colspan="2">ИТОГО Себестоимость</td>
+                                                                        <td colspan="2" style="border-top: 0">ИТОГО Себестоимость</td>
                                                                         <td style="border-top: 0; text-align: right; white-space: nowrap;"><span class="setedCostPrice">{{ $all_clients_hours }}</span> {{ $currency }}</td>
                                                                     </tr>
                                                                     <tr>
