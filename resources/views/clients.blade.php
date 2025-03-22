@@ -147,15 +147,23 @@
                                                     <div class="col-12">
                                                         @if(in_array($selectCountDays, [28,29,30,31]))
                                                             @php
-                                                                $fee =  (!empty($wc->client()->fee(\Date::parse($date_or_period[0])->format('Y') ,\Date::parse($date_or_period[0])->format('m')*1)) ? $wc->client()->fee(\Date::parse($date_or_period[0])->format('Y') ,\Date::parse($date_or_period[0])->format('m')*1)->fee : 0);
+                                                                $fee = (!empty($wc->client()->fee(\Date::parse($date_or_period[0])->format('Y'), \Date::parse($date_or_period[0])->format('m')*1)) ? $wc->client()->fee(\Date::parse($date_or_period[0])->format('Y'), \Date::parse($date_or_period[0])->format('m')*1)->fee : 0);
                                                                 $OPEX = $fee*0.35;
                                                                 $profit = $fee - $OPEX - $all_clients_hours;
-                                                                $marginality = (!empty($fee) ? round($profit*100/$fee,2) : 0);
+
+                                                                // Обработка случаев с некорректной маржинальностью
+                                                                if ($fee <= 0 || ($profit < 0 && abs($profit) > $fee)) {
+                                                                    $marginality_display = 'Нет данных';
+                                                                    $marginality = 0; // Для сохранения в базу
+                                                                } else {
+                                                                    $marginality = round($profit*100/$fee, 2);
+                                                                    $marginality_display = $marginality . '%';
+                                                                }
                                                             @endphp
                                                             <table class="table table-sm client-table mb-0">
                                                                 <tbody>
                                                                     <tr>
-                                                                        <td colspan="2" style="border-top: 0">ИТОГО Себестоимость</td>
+                                                                        <td colspan="2">ИТОГО Себестоимость</td>
                                                                         <td style="border-top: 0; text-align: right; white-space: nowrap;"><span class="setedCostPrice">{{ $all_clients_hours }}</span> {{ $currency }}</td>
                                                                     </tr>
                                                                     <tr>
@@ -172,17 +180,17 @@
                                                                     </tr>
                                                                     <tr>
                                                                         <td colspan="2"><a href="#" class="show_clients_marginality" data-toggle="modal" data-target="#popup__clients_marginality" data-client_id="{{ $wc->client_id }}" data-client_name="{{ $wc->client()->name }}">МАРЖИНАЛЬНОСТЬ</a></td>
-                                                                        <td style="text-align: right; font-weight: bold; white-space: nowrap;" class="marginality">{{ $marginality }}%</td>
+                                                                        <td style="text-align: right; font-weight: bold; white-space: nowrap;" class="marginality">{{ $marginality_display }}</td>
                                                                     </tr>
                                                                 </tbody>
                                                             </table>
 
                                                             @if(\Date::parse($date_or_period[0])->format('d')*1 == 1)
                                                                 @php
-                                                                    $ClientsMarginality = App\Models\ClientsMarginality::updateOrCreate(
-                                                                        ['client_id' => $wc->client_id, 'year' => \Date::parse($date_or_period[0])->format('Y'), 'month' => \Date::parse($date_or_period[0])->format('m')],
-                                                                        ['marginality' => $marginality]
-                                                                    );
+                                                                        $ClientsMarginality = App\Models\ClientsMarginality::updateOrCreate(
+                                                                            ['client_id' => $wc->client_id, 'year' => \Date::parse($date_or_period[0])->format('Y'), 'month' => \Date::parse($date_or_period[0])->format('m')],
+                                                                            ['marginality' => $marginality]
+                                                                        );
                                                                 @endphp
                                                             @endif
                                                         @else
