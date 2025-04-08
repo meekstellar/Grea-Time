@@ -148,7 +148,7 @@
                                                         @if(in_array($selectCountDays, [28,29,30,31]))
                                                             @php
                                                                 $fee = (!empty($wc->client()->fee(\Date::parse($date_or_period[0])->format('Y'), \Date::parse($date_or_period[0])->format('m')*1)) ? $wc->client()->fee(\Date::parse($date_or_period[0])->format('Y'), \Date::parse($date_or_period[0])->format('m')*1)->fee : 0);
-                                                                $OPEX = $fee*0.35;
+                                                                $OPEX = $fee*0.43;
                                                                 $profit = $fee - $OPEX - $all_clients_hours;
 
                                                                 // Обработка случаев с некорректной маржинальностью
@@ -167,7 +167,7 @@
                                                                         <td style="border-top: 0; text-align: right; white-space: nowrap;"><span class="setedCostPrice">{{ $all_clients_hours }}</span> {{ $currency }}</td>
                                                                     </tr>
                                                                     <tr>
-                                                                        <td colspan="2">OPEX (35%)</td>
+                                                                        <td colspan="2">OPEX (43%)</td>
                                                                         <td style="text-align: right; white-space: nowrap; white-space: nowrap;"><span class="setedOPEX">{{ round($OPEX,0) }}</span> {{ $currency }}</td>
                                                                     </tr>
                                                                     <tr>
