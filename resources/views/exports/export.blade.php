@@ -85,7 +85,7 @@
                     @if(in_array($selectCountDays, [28,29,30,31]))
                     @php
                         $fee =  (!empty($wc->client()->fee(\Date::parse($date_or_period[0])->format('Y') ,\Date::parse($date_or_period[0])->format('m')*1)) ? $wc->client()->fee(\Date::parse($date_or_period[0])->format('Y') ,\Date::parse($date_or_period[0])->format('m')*1)->fee : 0);
-                        $OPEX = $fee*0.35;
+                        $OPEX = $fee*0.43;
                         $profit = $fee - $OPEX - $all_clients_hours;
                         $marginality = (!empty($fee) ? round($profit*100/$fee,2) : 0);
                     @endphp
@@ -98,7 +98,7 @@
                                 </tr>
                                 <tr>
                                     <td></td>
-                                    <td style="font-family: DejaVu Sans;">OPEX (35%)</td>
+                                    <td style="font-family: DejaVu Sans;">OPEX (43%)</td>
                                     <td style="text-align: right; font-family: DejaVu Sans;">{{ round($OPEX,0) }} {{ $currency }}</td>
                                     <td></td>
                                     <td></td>
