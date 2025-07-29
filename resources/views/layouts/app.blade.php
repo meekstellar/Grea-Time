@@ -333,7 +333,7 @@
                 var _this = $(this);
                 var client_id = $(this).find('[name="client_id"]').val();
                 var fee = $(this).find('[name="fee"]').val();
-                var profit = parseFloat(fee-fee*0.35-$('#u'+client_id).find('.setedCostPrice').text()*1).toFixed(0);
+                var profit = parseFloat(fee-fee*0.43-$('#u'+client_id).find('.setedCostPrice').text()*1).toFixed(0);
                 var marginality = parseFloat(profit*100/fee).toFixed(2);
                 var data = {
                     'client_id' : client_id,
@@ -353,7 +353,7 @@
                             $('.modal-close').trigger('click');
                             toastr.success(data.messages);
                             $('#u'+client_id).find('.setedFee').text(fee);
-                            $('#u'+client_id).find('.setedOPEX').text(parseFloat(fee*0.35).toFixed(0));
+                            $('#u'+client_id).find('.setedOPEX').text(parseFloat(fee*0.43).toFixed(0));
                             $('#u'+client_id).find('.seted_profit').text(profit);
                             $('#u'+client_id).find('.marginality').text(marginality+'%');
 
