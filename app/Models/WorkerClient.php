@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class WorkerClient extends Model
 {
@@ -14,6 +15,11 @@ class WorkerClient extends Model
     protected $guarded = [];
 
     public $timestamps = false;
+
+    public function clientRelation(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'client_id');
+    }
 
 	public function worker()
     {
