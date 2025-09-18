@@ -23,25 +23,15 @@ class CheckSomethingAfterLogin
      */
     public function handle(Authenticated $event): void
     {
-
-        // Перевіряємо зарплату для всіх працівників за поточний місяць
-        $check_workers_salary = DB::table('workers_salary')
-            ->where('year', now()->year)
-            ->where('month', now()->month)
-            ->exists();  // Перевіряємо, чи є вже записи для поточного місяця
-
-        if (!$check_workers_salary) {
-            // Виконайте вашу дію, якщо перевірка не пройдена
-            DB::table('workers_salary')
-                ->distinct()
-                ->select('worker_id')
-                ->orderBy('worker_id')  // Вказуємо порядок сортування (наприклад, за worker_id)
-                ->chunk(100, function ($workers) {
-                    foreach ($workers as $worker) {
-                        $this->checkAndAssignSalary($worker->worker_id);
-                    }
-                });
-        }
+        DB::table('workers_salary')
+            ->distinct()
+            ->select('worker_id')
+            ->orderBy('worker_id')
+            ->chunk(100, function ($workers) {
+                foreach ($workers as $worker) {
+                    $this->checkAndAssignSalary($worker->worker_id);
+                }
+            });
 
         // Перевіряємо гонорар' для всіх працівників за поточний місяць
         $check_clients_fees = DB::table('clients_fees')
