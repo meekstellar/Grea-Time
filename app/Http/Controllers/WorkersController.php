@@ -127,8 +127,13 @@ class WorkersController extends Controller
                         [$date_or_period_with_secounds[0], $date_or_period_with_secounds[1]],
                     );
                 },
-            ], 'hours')
-            ->orderBy('client_hours_sum_hours', 'asc');
+            ], 'hours');
+
+        if ($selectCountDays === 1) {
+            $workers = $workers->orderBy('name', 'asc');
+        } else {
+            $workers = $workers->orderBy('client_hours_sum_hours', 'asc');
+        }
 
         $workersWithoutTime = User::query()
             ->where('role', User::ROLE_WORKER)
@@ -139,7 +144,8 @@ class WorkersController extends Controller
                     'created_at',
                     [$date_or_period_with_secounds[0], $date_or_period_with_secounds[1]],
                 );
-            });
+            })
+            ->orderBy('name', 'asc');
 
         if (!empty($workers_id)) {
             $workers = $workers->whereIn('id', $workers_id);
