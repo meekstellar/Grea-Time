@@ -37,7 +37,13 @@ Route::post('/add-rest-day',             [WorkersController::class, 'addRestDay'
 Route::post('/addClientHours',          [WorkersController::class, 'addClientHours'])->name('addClientHours')->middleware('auth');
 Route::post('/changeClientsHours',      [WorkersController::class, 'changeClientsHours'])->name('changeClientsHours')->middleware('auth');
 
+Route::get('/workers/export/xls',      [WorkersController::class, 'exportXls'])->name('workers.export.xls')->middleware('auth');
+
 Route::get('/clients',                  [ClientsController::class, 'index'])->name('clients')->middleware('auth');
+
+Route::get('/client-settings',           [ClientsController::class, 'clientSettings'])->name('clientSettings')->middleware('auth');
+Route::post('/delete-client/{id}',       [ClientsController::class, 'deleteClient'])->name('deleteClient')->middleware('auth');
+
 Route::post('/addNewClient',            [ClientsController::class, 'addNewClient'])->name('addNewClient')->middleware('auth');
 Route::post('/editClient',              [ClientsController::class, 'editClient'])->name('editClient')->middleware('auth');
 Route::post('/setFee',                  [ClientsController::class, 'setFee'])->name('setFee')->middleware('auth');

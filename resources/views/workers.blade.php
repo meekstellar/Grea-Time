@@ -15,6 +15,9 @@
                         <button class="btn btn-info btn-sm mr-2 addClientHoursButton" data-toggle="modal" data-target="#addClientHours"><i class="far fa-clock"></i> &nbsp;Добавить часы работы</button>
                     @endif
                     <a href="#" class="btn btn-success btn-sm" data-toggle="modal" data-target="#addNewWorker"><i class="fas fa-user-tie" aria-hidden="true"></i> &nbsp;Новый сотрудник</a>
+                    @if(!$workers->isEmpty())
+                        <a href="{{ route('workers.export.xls', ['date_or_period' => implode('--', $date_or_period)]) }}" class="btn btn-info btn-sm ml-2"><i class="fas fa-file-alt" aria-hidden="true"></i> &nbsp;Экспорт в XLS</a>
+                    @endif
                 </div>
             </div>
         </div><!-- /.container-fluid -->

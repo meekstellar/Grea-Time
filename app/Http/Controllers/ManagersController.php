@@ -58,6 +58,12 @@ class ManagersController extends Controller
                         'icon' => 'nav-icon fas fa-user-shield',
                         'classes' => 'top-nav-custom',
                     ]);
+                    $event->menu->add([
+                        'text' => 'Настройки клиентов',
+                        'url' => 'client-settings',
+                        'icon' => 'nav-icon fas fa-user-secret',
+                        'classes' => 'top-nav-custom',
+                    ]);
                 }
             });
 

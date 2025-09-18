@@ -6,12 +6,14 @@ use App\Models\User;
 use App\Models\WorkerClient;
 use App\Models\WorkerClientHours;
 use App\Models\WorkersSalary;
+use App\Services\WorkersService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Hash;
 use JeroenNoten\LaravelAdminLte\Events\BuildingMenu;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class WorkersController extends Controller
 {
@@ -20,8 +22,9 @@ class WorkersController extends Controller
      *
      * @return void
      */
-    public function __construct()
-    {
+    public function __construct(
+        public WorkersService $workersService,
+    ) {
         $this->middleware('auth');
         $this->middleware('check.code');
     }
@@ -54,6 +57,12 @@ class WorkersController extends Controller
                         'text' => 'Администраторы',
                         'url' => 'managers',
                         'icon' => 'nav-icon fas fa-user-shield',
+                        'classes' => 'top-nav-custom',
+                    ]);
+                    $event->menu->add([
+                        'text' => 'Настройки клиентов',
+                        'url' => 'client-settings',
+                        'icon' => 'nav-icon fas fa-user-secret',
                         'classes' => 'top-nav-custom',
                     ]);
                 }
@@ -170,6 +179,21 @@ class WorkersController extends Controller
             'default_month' => date("n", time()),
             'worker_ids__wrote_time' => [],
         ]);
+    }
+
+    public function exportXls(Request $request): BinaryFileResponse
+    {
+        $request->validate([
+            'date_or_period' => 'nullable|string',
+        ]);
+
+        if (!empty($request->date_or_period)) {
+            $dateOrPeriod = explode("--", $request->date_or_period);
+            $dateOrPeriodWithSeconds[] = Carbon::make($dateOrPeriod[0]);
+            $dateOrPeriodWithSeconds[] = Carbon::make($dateOrPeriod[1] ?? $dateOrPeriod[0])->endOfDay();
+        }
+
+        return $this->workersService->exportToXls($dateOrPeriodWithSeconds);
     }
 
     /**

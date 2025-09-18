@@ -17,6 +17,7 @@ class User extends Authenticatable
     use HasApiTokens, HasFactory, Notifiable;
 
     public const ROLE_WORKER = 'worker';
+    public const ROLE_CLIENT = 'client';
 
     /**
      * The attributes that are mass assignable.
