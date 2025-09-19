@@ -281,13 +281,19 @@ class ClientsController extends Controller
             return redirect()->route('workers');
         }
 
+        $time = now();
+
+        $dateOrPeriod = [$time, $time->endOfDay()];
+
         $clients = User::query()
             ->where('role', User::ROLE_CLIENT)
-            ->select(['id', 'name'])
             ->orderBy('name', 'asc')
             ->get();
 
-        return view('client-settings', compact('clients'));
+        return view('client-settings', [
+            'clients' => $clients,
+            'date_or_period' => $dateOrPeriod,
+        ]);
     }
 
     public function deleteClient(string $id): RedirectResponse

@@ -38,7 +38,10 @@
                                                 <tr class="user_data" data-id="{{ $client->id }}">
                                                     <td class="pl-3" style="width: 40px; vertical-align: middle;"><img alt="{{ $client->name }}" class="avatar-small img-circle img-fluid" src="{{ (!empty($client->image) && File::exists('storage/'.$client->image) ? asset('storage/'.$client->image) : asset('vendor/adminlte/dist/img/no-usericon.svg')) }}"></td>
                                                     <td style="vertical-align: middle;">
-                                                        {{ $client->name }}
+                                                        <form id="u{{ $client->id }}" data-client_id="{{ $client->id }}" data-id="{{ $client->id }}">
+                                                            <a href="#" class="b600 editClientClick data_name" data-toggle="modal" data-target="#popup__editClient">{{ $client->name }}</a>
+                                                            <span hidden class="data_email">{{ $client->email }}</span>
+                                                        </form>
                                                     </td>
                                                     <td style="width: 180px; text-align: right;" class="pr-3" style="vertical-align: middle;">
                                                         <form action="{{ route('deleteClient', ['id' => $client->id]) }}" method="POST">
@@ -60,6 +63,8 @@
                                 </div>
                                 @endif
                             </div>
+
+                            @include('components.workers.popup__editClientFromSettings')
                         </div>
                     </div>
                 </div>
