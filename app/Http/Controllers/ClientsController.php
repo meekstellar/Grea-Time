@@ -287,6 +287,7 @@ class ClientsController extends Controller
 
         $clients = User::query()
             ->where('role', User::ROLE_CLIENT)
+            ->active()
             ->orderBy('name', 'asc')
             ->get();
 
@@ -303,7 +304,8 @@ class ClientsController extends Controller
         }
 
         $user = User::query()->findOrFail($id);
-        $user->delete();
+        $user->active = 0;
+        $user->save();
 
         return redirect()->back()->with('status', 'Клиент <b>'.$user->name.'</b> был удален.');
     }
