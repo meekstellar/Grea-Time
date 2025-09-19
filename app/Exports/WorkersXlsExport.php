@@ -11,7 +11,8 @@ class WorkersXlsExport implements FromView
 {
     public function __construct(
         public array $dateOrPeriod,
-        public Collection $workers
+        public Collection $workers,
+        public int $selectCountDays = 1,
     ) {}
 
     public function view(): View
@@ -22,6 +23,7 @@ class WorkersXlsExport implements FromView
         return view('exports.workers_export', [
             'workers' => $this->workers,
             'dateOrPeriod' => $dateOrPeriod,
+            'selectCountDays' => $this->selectCountDays,
         ]);
     }
 }

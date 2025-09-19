@@ -62,8 +62,8 @@ class WorkersService
         }
 
         return Excel::download(
-            new WorkersXlsExport($dateOrPeriod, $workers->get()),
-            'workers_' . now()->format('Y-m-d_H-i-s') . '.xlsx'
+            new WorkersXlsExport($dateOrPeriod, $workers->get(), $selectCountDays),
+            'workers_'.now()->format('Y-m-d_H-i-s').'.xlsx',
         );
     }
 }
