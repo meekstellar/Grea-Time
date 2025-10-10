@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Exports\WorkersXlsExport;
 use App\Models\User;
+use App\Models\WorkerClientHours;
 use Maatwebsite\Excel\Facades\Excel;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
@@ -56,9 +57,14 @@ class WorkersService
             ], 'hours');
 
         if ($selectCountDays === 1) {
-            $workers = $workers->orderBy('name', 'asc');
+            $workers->orderBy(
+                WorkerClientHours::query()
+                    ->selectRaw('MAX(created_at)')
+                    ->whereColumn('workers_clients_hours.worker_id', 'users.id'),
+                'asc'
+            );
         } else {
-            $workers = $workers->orderBy('client_hours_sum_hours', 'asc');
+            $workers->orderBy('client_hours_sum_hours', 'asc');
         }
 
         return Excel::download(

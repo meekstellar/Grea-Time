@@ -138,12 +138,6 @@ class WorkersController extends Controller
                 },
             ], 'hours');
 
-        if ($selectCountDays === 1) {
-            $workers = $workers->orderBy('name', 'asc');
-        } else {
-            $workers = $workers->orderBy('client_hours_sum_hours', 'asc');
-        }
-
         $workersWithoutTime = User::query()
             ->where('role', User::ROLE_WORKER)
             ->active()
@@ -157,8 +151,19 @@ class WorkersController extends Controller
             ->orderBy('name', 'asc');
 
         if (!empty($workers_id)) {
-            $workers = $workers->whereIn('id', $workers_id);
-            $workersWithoutTime = $workersWithoutTime->whereIn('id', $workers_id);
+            $workers->whereIn('id', $workers_id);
+            $workersWithoutTime->whereIn('id', $workers_id);
+        }
+
+        if ($selectCountDays === 1) {
+            $workers->orderBy(
+                WorkerClientHours::query()
+                    ->selectRaw('MAX(created_at)')
+                    ->whereColumn('workers_clients_hours.worker_id', 'users.id'),
+                'asc'
+            );
+        } else {
+            $workers->orderBy('client_hours_sum_hours', 'asc');
         }
 
         $yearsSalary = [2024];
@@ -318,15 +323,11 @@ class WorkersController extends Controller
     public function addClientHours(Request $request)
     {
         $lastUrlForReditect = $request->lastUrl;
-        $created_at = new Carbon($request->created_at);
-        $created_at->addHour(18);
 
         $wc = new WorkerClientHours;
         $wc->worker_id = $request->worker_id;
         $wc->client_id = $request->client_id;
         $wc->hours = $request->hours;
-        $wc->created_at = $created_at;
-        $wc->updated_at = $created_at;
         $wc->save();
 
         return redirect($lastUrlForReditect.'#u'.$request->worker_id)
