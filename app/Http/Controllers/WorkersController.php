@@ -323,11 +323,19 @@ class WorkersController extends Controller
     public function addClientHours(Request $request)
     {
         $lastUrlForReditect = $request->lastUrl;
+        $createdAt = Carbon::make($request->created_at);
+
+        if (!$createdAt->isToday()) {
+            $createdAt->endOfDay();
+        } else {
+            $createdAt->setTimeFrom(now());
+        }
 
         $wc = new WorkerClientHours;
         $wc->worker_id = $request->worker_id;
         $wc->client_id = $request->client_id;
         $wc->hours = $request->hours;
+        $wc->created_at = $createdAt;
         $wc->save();
 
         return redirect($lastUrlForReditect.'#u'.$request->worker_id)
