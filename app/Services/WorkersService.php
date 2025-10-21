@@ -59,7 +59,7 @@ class WorkersService
         if ($selectCountDays === 1) {
             $workers->orderBy(
                 WorkerClientHours::query()
-                    ->selectRaw('MAX(created_at)')
+                    ->selectRaw('MAX(id)')
                     ->whereColumn('workers_clients_hours.worker_id', 'users.id'),
                 'asc'
             );
