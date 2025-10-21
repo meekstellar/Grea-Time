@@ -365,8 +365,25 @@ class WorkersController extends Controller
     public function addRestDay(Request $request)
     {
         $lastUrlForReditect = $request->lastUrl;
-        $created_at = new Carbon($request->day);
-        $created_at->addHour(18);
+        $createdAt = Carbon::make($request->day);
+
+        if (!$createdAt->isToday()) {
+            // Для прошедших дней - гарантируем порядок добавления
+            $lastRecord = WorkerClientHours::query()
+                ->whereDate('created_at', $createdAt->toDateString())
+                ->orderBy('created_at', 'desc')
+                ->first();
+
+            if ($lastRecord) {
+                // Добавляем 1 секунду к последней записи этого дня
+                $createdAt = Carbon::parse($lastRecord->created_at)->addSecond();
+            } else {
+                // Если это первая запись за день, устанавливаем время на 18:00
+                $createdAt->setTime(18, 0);
+            }
+        } else {
+            $createdAt->setTimeFrom(now());
+        }
 
         $restDayClient = User::where('position', 'Rest Day')->first();
 
@@ -375,8 +392,7 @@ class WorkersController extends Controller
             $wc->worker_id = $request->worker_id;
             $wc->client_id = $restDayClient->id;
             $wc->hours = 8;
-            $wc->created_at = $created_at;
-            $wc->updated_at = $created_at;
+            $wc->created_at = $createdAt;
             $wc->save();
         } else {
             $client_id = null;
