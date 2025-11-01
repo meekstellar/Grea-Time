@@ -326,19 +326,7 @@ class WorkersController extends Controller
         $createdAt = Carbon::make($request->created_at);
 
         if (!$createdAt->isToday()) {
-            // Для прошедших дней - гарантируем порядок добавления
-            $lastRecord = WorkerClientHours::query()
-                ->whereDate('created_at', $createdAt->toDateString())
-                ->orderBy('created_at', 'desc')
-                ->first();
-
-            if ($lastRecord) {
-                // Добавляем 1 секунду к последней записи этого дня
-                $createdAt = Carbon::parse($lastRecord->created_at)->addSecond();
-            } else {
-                // Если это первая запись за день, устанавливаем время на 18:00
-                $createdAt->setTime(18, 0);
-            }
+            $createdAt->setTime(18, 0);
         } else {
             $createdAt->setTimeFrom(now());
         }
